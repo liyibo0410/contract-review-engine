@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" class=" js"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>合同审查大盘 · 亦大合同智能审查系统</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/fx.css">
+<script>
+/* 主题防闪 + 入场动效安全网（不依赖 app.js，必须内联在 head 最前） */
+(function () {
+  try {
+    var t = localStorage.getItem('cr-theme');
+    if (t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { }
+  document.documentElement.className += ' js';
+  setTimeout(function () {
+    var v = document.querySelectorAll('.reveal:not(.in)');
+    for (var i = 0; i < v.length; i++) {
+      var r = v[i].getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) v[i].classList.add('in');
+    }
+  }, 2600);
+})();
+</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar"><a class="brand" href="/" title="返回审查大盘"><img class="brand-logo" src="/assets/logo-sm.png" alt="亦大 标识" width="30" height="31"><span class="brand-txt"><b>合同智能审查系统</b><i>亦大 · intelligent contract review</i></span></a><nav class="nav" aria-label="主导航"><a href="/" class="active" aria-current="page">审查大盘</a><a href="/workbench">智能审查工作台</a><a href="/twin">动态孪生看板</a><a href="/rules">合规规则与模板</a></nav><div class="spacer"></div><span class="env-tag" id="envTag">演示环境 · http://127.0.0.1:8793/mock/feishu/api · OCR ocr-win · PDF 浏览器通道 · v2.0.0</span><a class="btn sm ghost" href="/mock/feishu/api/todo" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M14 4h6v6"></path><path d="M20 4l-8.5 8.5"></path><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"></path></svg>模拟审批接口</a><button class="btn sm ghost" id="themeBtn" onclick="CR.toggleTheme()" title="切换到浅色主题"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path></svg><span>浅色</span></button><span class="role-bar"><span class="role-chip" id="roleChip" title="配置审批流对接参数、维护合规审查规则与标准条款库、监控审查任务状态并处理阻塞重试"><span class="rc-role">系统管理员</span><span class="rc-user">admin</span></span><select class="role-switch" id="roleSwitch" onchange="CR.roleSwitch(this.value)" aria-label="切换演示身份"><option value="legal">法务审查人</option><option value="applicant">业务经办人</option><option value="admin" selected="">系统管理员</option></select><a class="btn sm ghost" href="/logout" title="退出登录">退出</a></span></div>
+
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="8.5" rx="1.6"></rect><rect x="13.5" y="3" width="7.5" height="5" rx="1.6"></rect><rect x="13.5" y="11" width="7.5" height="10" rx="1.6"></rect><rect x="3" y="14.5" width="7.5" height="6.5" rx="1.6"></rect></svg>
+        合同审查大盘
+      </h1>
+      <p id="subTitle">共 0 个审查任务 · 高风险 0 个 · 解析受阻 0 个</p>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn" onclick="openNotify()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 9a6 6 0 1 0-12 0c0 5-2 6.5-2 6.5h16S18 14 18 9z"></path><path d="M10.5 19.5a2 2 0 0 0 3 0"></path></svg>机器人通知</button>
+    <button class="btn" data-cap="view_metrics" data-cap-label="查看运行指标" onclick="openMetrics()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 15a9 9 0 1 0-17 0"></path><path d="M12 12.5l4-4"></path><circle cx="12" cy="14" r="1.4"></circle></svg>运行指标</button>
+    <button class="btn" onclick="openAuth()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path><path d="M12 14.5v2"></path></svg>角色与权限</button>
+    <button class="btn" data-cap="submit_contract" data-cap-label="提交合同审查申请" onclick="openUpload()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="M7.5 8.5L12 4l4.5 4.5"></path><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"></path></svg>上传合同</button>
+    <button class="btn" data-cap="run_selftest" data-cap-label="执行系统自检" onclick="runSelftest()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v6c0 4.4-3 8.3-7.5 9.7C7.5 20.3 4.5 16.4 4.5 12V6z"></path><path d="M9 12l2 2 4-4"></path></svg>一键自检</button>
+    <button class="btn primary" id="btnPull" data-cap="pull_todo" data-cap-label="拉取审批待办" onclick="pullTodo()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 4v4h-4"></path></svg>拉取待办并审查</button>
+  </div>
+
+  <div class="stats" id="stats"><div class="stat " style="--c:var(--brand)"><div class="k"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M12 3.5l8.5 4.6-8.5 4.6L3.5 8.1z"></path><path d="M3.5 12.5L12 17l8.5-4.5"></path><path d="M3.5 16.5L12 21l8.5-4.5"></path></svg>审查任务总数</div><div class="v num" data-count="0">0</div><div class="x">含审批拉取与本地上传</div><div class="bar" style="margin-top:10px"><i style="width:100%"></i></div></div><div class="stat " style="--c:var(--high)"><div class="k"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M12 4.5l8.5 15h-17z"></path><path d="M12 10v4.5"></path><circle cx="12" cy="17.4" r=".9" fill="currentColor" stroke="none"></circle></svg>高风险合同</div><div class="v num" data-count="0">0</div><div class="x">需优先处置</div><div class="bar" style="margin-top:10px"><i style="width:2%"></i></div></div><div class="stat " style="--c:var(--mid)"><div class="k"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M13.5 3L5.5 13.5h5L9.5 21l8.2-10.5h-5.2z"></path></svg>中风险合同</div><div class="v num" data-count="0">0</div><div class="x">需整改后签署</div><div class="bar" style="margin-top:10px"><i style="width:2%"></i></div></div><div class="stat ok" style="--c:var(--ok)"><div class="k"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.2l2.6 2.6 4.6-5"></path></svg>审查完成</div><div class="v num" data-count="0">0</div><div class="x">已生成审查意见</div><div class="bar" style="margin-top:10px"><i style="width:2%"></i></div></div><div class="stat " style="--c:var(--mid)"><div class="k"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path><path d="M12 14.5v2"></path></svg>解析受阻</div><div class="v num" data-count="0">0</div><div class="x">待管理员重试</div><div class="bar" style="margin-top:10px"><i style="width:2%"></i></div></div><div class="stat ok" style="--c:var(--teal)"><div class="k"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M14 4h6v6"></path><path d="M20 4l-8.5 8.5"></path><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"></path></svg>回写成功</div><div class="v num" data-count="0">0</div><div class="x">已写入审批评论区</div><div class="bar" style="margin-top:10px"><i style="width:2%"></i></div></div><div class="stat hl" style="--c:var(--high)"><div class="k"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M12 4v16"></path><path d="M6 8h12"></path><path d="M6 8l-3 5.5h6z"></path><path d="M18 8l-3 5.5h6z"></path><path d="M8.5 20h7"></path></svg>高风险金额</div><div class="v num">¥0.00</div><div class="x">高风险合同累计金额</div></div></div>
+
+  <!-- ==================== v2.0 自动流转与审查队列 ==================== -->
+  <div class="flow-grid" style="margin-top:14px">
+
+    <div class="panel reveal in">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 4v4h-4"></path></svg>自动流转 · 定时拉取</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:11.5px">标准库后台线程 · 指数退避</span>
+      </div>
+      <div class="panel-body">
+        <div class="sw-row">
+          <div class="sw" id="swSched" role="switch" aria-checked="false" tabindex="0" data-cap="manage_scheduler" data-cap-label="管理定时拉取调度" onclick="toggleSched()" onkeydown="if(event.key==='Enter'||event.key===' ')toggleSched()"></div>
+          <div>
+            <b>自动拉取审批待办并审查</b>
+            <span id="schedSub">默认关闭 —— 否则演示数据会在无人操作时自己变化</span>
+          </div>
+          <div class="spacer"></div>
+          <button class="btn sm" data-cap="manage_scheduler" data-cap-label="管理定时拉取调度" onclick="schedRunNow()" id="btnSchedRun">立即拉取一次</button>
+        </div>
+        <div class="kv-grid" style="margin-top:12px" id="schedKv"><div class="kv-cell"><div class="k">累计运行</div><div class="v">0 轮<small>0 轮为手动触发</small></div></div><div class="kv-cell"><div class="k">本轮间隔</div><div class="v">0s<small>退避倍数 2×</small></div></div><div class="kv-cell"><div class="k">下一轮</div><div class="v">—<small>未排程</small></div></div><div class="kv-cell"><div class="k">累计新建</div><div class="v">0 个<small>自动审查 0 个</small></div></div><div class="kv-cell"><div class="k">连续失败</div><div class="v">0 次<small>尚未运行</small></div></div></div>
+        <div class="mode-note" id="schedNote">连续失败后间隔按退避倍数递增并封顶；成功一次即复位。命中「拉取失败」时会在审计里留痕。</div>
+      </div>
+    </div>
+
+    <div class="panel reveal" data-d="1">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6.5" rx="1.8"></rect><rect x="3" y="13.5" width="18" height="6.5" rx="1.8"></rect><path d="M7 7.2h.01M7 16.8h.01"></path></svg>审查队列与配额</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:11.5px" id="qWorkers">并发度 2 · 队列上限 50</span>
+      </div>
+      <div class="panel-body">
+        <div class="kv-grid" id="queueKv"><div class="kv-cell"><div class="k">工作线程</div><div class="v">2 个<small>队列已启用</small></div></div><div class="kv-cell"><div class="k">排队中</div><div class="v">0 个<small>在飞 0 个</small></div></div><div class="kv-cell"><div class="k">待处理案件</div><div class="v">0 个<small>上限 40</small></div></div><div class="kv-cell"><div class="k">附件占用</div><div class="v">0 MB<small>上限 2048 MB</small></div></div><div class="kv-cell" style="grid-column:1/-1"><div class="k">队列水位</div><div class="v" style="font-size:13px">0 / 50</div><div class="qbar"><i style="width:0%"></i></div></div><div class="kv-cell" style="grid-column:1/-1"><div class="k">附件存储水位</div><div class="v" style="font-size:13px">0 / 2048 MB</div><div class="qbar"><i style="width:0%"></i></div></div></div>
+        <div class="mode-note" style="margin-top:12px">
+          四道配额：单文件大小 / 队列长度 / 待处理堆积 / 附件存储总量。
+          所有触发审查的入口统一经队列，并发度由服务端钉死，前端无法绕过。
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 数据可视化行 -->
+  <div class="viz-grid">
+    <div class="panel reveal">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 15a9 9 0 1 0-17 0"></path><path d="M12 12.5l4-4"></path><circle cx="12" cy="14" r="1.4"></circle></svg>风险等级分布</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:11.5px">按当前筛选结果</span>
+      </div>
+      <div class="panel-body"><div id="vizRisk"><div class="empty" style="padding:22px 8px">当前没有可统计的任务</div></div></div>
+    </div>
+
+    <div class="panel reveal" data-d="1">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l8.5 4.6-8.5 4.6L3.5 8.1z"></path><path d="M3.5 12.5L12 17l8.5-4.5"></path><path d="M3.5 16.5L12 21l8.5-4.5"></path></svg>合同类型分布</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:11.5px">数量 · 平均金额</span>
+      </div>
+      <div class="panel-body"><div id="vizType"><div class="empty" style="padding:22px 8px">当前没有可统计的任务</div></div></div>
+    </div>
+
+    <div class="panel reveal" data-d="2">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16"></path><path d="M6 8h12"></path><path d="M6 8l-3 5.5h6z"></path><path d="M18 8l-3 5.5h6z"></path><path d="M8.5 20h7"></path></svg>合同金额区间分布</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:11.5px">按合同金额分档统计</span>
+      </div>
+      <div class="panel-body"><div id="vizAmount"><div class="empty" style="padding:22px 8px">当前没有可统计的任务</div></div></div>
+    </div>
+  </div>
+
+  <div class="card reveal" style="margin-bottom:14px">
+    <div class="panel-head">
+      <span class="ttl">示例合同集</span>
+      <span class="faint" style="font-size:12px">覆盖 DOCX / PDF / 扫描件 与 标准 / 风险 / 受阻 用例</span>
+      <div class="spacer"></div>
+      <button class="btn sm" onclick="toggleSamples()" id="btnSamples">展开</button>
+    </div>
+    <div class="panel-body" id="sampleBox" style="display:none"></div>
+  </div>
+
+  <div class="toolbar reveal">
+    <input type="search" id="kw" placeholder="搜索合同名称 / 相对方 / 单号" style="width:250px" oninput="debouncedLoad()" aria-label="搜索合同">
+    <select id="fRisk" onchange="load()" aria-label="按风险等级筛选">
+      <option value="">全部风险等级</option>
+      <option value="high">高风险</option>
+      <option value="medium">中风险</option>
+      <option value="low">低风险</option>
+      <option value="none">无风险</option>
+    </select>
+    <select id="fStatus" onchange="load()" aria-label="按审查状态筛选">
+      <option value="">全部审查状态</option>
+      <option value="pending">待处理</option>
+      <option value="parsing">解析中</option>
+      <option value="reviewing">审查中</option>
+      <option value="blocked">解析受阻</option>
+      <option value="completed">审查完成</option>
+    </select>
+    <select id="fType" onchange="load()" aria-label="按合同类型筛选">
+      <option value="">全部合同类型</option>
+      <option value="purchase">采购合同</option>
+      <option value="sales">销售合同</option>
+      <option value="service">服务合同</option>
+      <option value="labor">劳动合同</option>
+    </select>
+    <button class="btn" onclick="load()">刷新</button>
+    <div class="spacer" style="flex:1"></div>
+    <span class="faint" id="selInfo" style="font-size:12px"></span>
+    <button class="btn sm" onclick="batchReview()">批量重新审查</button>
+    <button class="btn sm" onclick="batchReport('md')">批量导出 Markdown</button>
+  </div>
+
+  <div class="card reveal" style="overflow:hidden">
+    <div class="table-wrap">
+      <table class="grid" id="tbl">
+        <thead>
+          <tr>
+            <th style="width:34px"><input type="checkbox" id="ckAll" onclick="toggleAll(this)" aria-label="全选"></th>
+            <th>合同名称 / 编号</th>
+            <th style="width:96px">申请人</th>
+            <th style="width:104px">业务类型</th>
+            <th style="width:158px" class="right">合同金额</th>
+            <th style="width:104px">审查状态</th>
+            <th style="width:96px">综合风险</th>
+            <th style="width:96px">回写状态</th>
+            <th style="width:146px">创建时间</th>
+            <th style="width:186px" class="right">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty" style="display: block;">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg>
+      <div>暂无审查任务。点击下方按钮开始。</div>
+      <div style="margin-top:12px">
+        <button class="btn primary" onclick="pullTodo()">拉取待办并审查</button>
+        <button class="btn" onclick="openUpload()">上传合同</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 上传合同 -->
+<div class="mask" id="mUpload">
+  <div class="modal">
+    <div class="mh">上传合同送审</div>
+    <div class="mb">
+      <div class="file-drop" id="drop" onclick="document.getElementById('file').click()">
+        <div style="font-size:15px;margin-bottom:4px">点击选择，或把文件拖到这里</div>
+        <div class="faint" style="font-size:12px" id="upHint">支持 DOCX / PDF / PNG / JPG</div>
+        <div id="fileName" class="mono" style="margin-top:10px;color:var(--accent)"></div>
+      </div>
+      <input type="file" id="file" style="display:none" accept=".docx,.pdf,.png,.jpg,.jpeg,.bmp" onchange="pickFile(this.files[0])">
+      <div class="sep"></div>
+      <div class="row wrap">
+        <label style="font-size:12.5px">合同类别
+          <select id="upType" style="margin-left:6px">
+            <option value="purchase">采购合同</option>
+            <option value="sales">销售合同</option>
+            <option value="service">服务合同</option>
+            <option value="labor">劳动合同</option>
+          </select>
+        </label>
+        <label style="font-size:12.5px;flex:1">合同名称
+          <input type="text" id="upTitle" placeholder="留空则取文件名" style="width:100%;margin-top:4px">
+        </label>
+      </div>
+      <div class="muted" style="font-size:12px;margin-top:10px">
+        上传后系统会立即执行「解析 → 条款切分 → 规则审查 → 摘要生成」，
+        并进入审查工作台等待法务复核。
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="CR.closeModal('mUpload')">取消</button>
+      <button class="btn primary" id="btnUp" onclick="doUpload()">上传并审查</button>
+    </div>
+  </div>
+</div>
+
+<!-- 自检 -->
+<div class="mask" id="mSelf">
+  <div class="modal" style="max-width:780px">
+    <div class="mh">系统自检与验收对照</div>
+    <div class="mb" id="selfBody"></div>
+    <div class="mf"><button class="btn primary" onclick="CR.closeModal('mSelf')">关闭</button></div>
+  </div>
+</div>
+
+<!-- 通知 -->
+<div class="mask" id="mNotify">
+  <div class="modal" style="max-width:620px">
+    <div class="mh">机器人通知</div>
+    <div class="mb" id="notifyBody"></div>
+    <div class="mf">
+      <button class="btn" onclick="CR.closeModal('mNotify')">关闭</button>
+      <button class="btn primary" id="btnNotifyTest" onclick="sendNotifyTest()">发送测试通知</button>
+    </div>
+  </div>
+</div>
+
+<!-- 运行指标 -->
+<div class="mask" id="mMetrics">
+  <div class="modal" style="max-width:760px">
+    <div class="mh">运行指标</div>
+    <div class="mb" id="metricsBody"></div>
+    <div class="mf"><button class="btn primary" onclick="CR.closeModal('mMetrics')">关闭</button></div>
+  </div>
+</div>
+
+<!-- ==================== 角色与权限（需求 2.4.2） ==================== -->
+<div class="mask" id="mAuth">
+  <div class="modal" style="max-width:820px">
+    <div class="mh">
+      <span class="ttl">角色与权限 · 需求 2.4.2 三角色闭环</span>
+      <div class="spacer"></div>
+      <button class="btn sm ghost" onclick="CR.closeModal('mAuth')">关闭</button>
+    </div>
+    <div class="mb" id="authBody"></div>
+    <div class="mf">
+      <span class="faint" style="font-size:11.5px;margin-right:auto" id="authFoot"></span>
+      <button class="btn primary" onclick="CR.closeModal('mAuth')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/app.js"></script><div class="glow g1"></div><div class="glow g2"></div><div class="scanline"></div>
+<script src="/assets/charts.js"></script>
+<script>
+let CASES = [];
+let FILE = null;
+let CFG = { max_upload_mb: 30 };
+
+const BTYPE = { purchase: '采购合同', sales: '销售合同', service: '服务合同', labor: '劳动合同' };
+
+CR.initAuth('/', '演示环境 · 模拟审批系统');
+
+function debounce(fn, ms) {
+  let t;
+  return function () { clearTimeout(t); t = setTimeout(fn, ms || 320); };
+}
+const debouncedLoad = debounce(load);
+
+/* ------------------------------------------------------------------ 数据 */
+async function load() {
+  const q = new URLSearchParams();
+  const kw = CR.$('#kw').value.trim();
+  if (kw) q.set('kw', kw);
+  const r = CR.$('#fRisk').value; if (r) q.set('risk', r);
+  const s = CR.$('#fStatus').value; if (s) q.set('status', s);
+  const t = CR.$('#fType').value; if (t) q.set('type', t);
+  if (!CASES.length) {
+    CR.$('#tbody').innerHTML = '<tr><td colspan="10">' + CR.skeleton(6) + '</td></tr>';
+    CR.$('#vizRisk').innerHTML = CR.skeleton(3);
+    CR.$('#vizType').innerHTML = CR.skeleton(3);
+    CR.$('#vizAmount').innerHTML = CR.skeleton(3);
+  }
+  try {
+    const data = await CR.api('GET', '/api/cases?' + q.toString());
+    CASES = data.items || [];
+  } catch (e) {
+    CR.$('#tbody').innerHTML = '<tr><td colspan="10"><div class="empty">加载失败：' +
+      CR.esc(e.message) +
+      '<br><button class="btn sm" style="margin-top:10px" onclick="load()">重试</button>' +
+      '</div></td></tr>';
+    return;
+  }
+  renderTable();
+  await renderStats();
+  CR.initReveal();
+}
+
+/* ------------------------------------------------------------------ KPI + 可视化 */
+async function renderStats() {
+  let st;
+  try { st = await CR.api('GET', '/api/stats'); } catch (e) { return; }
+  const bs = st.by_status || {}, br = st.by_risk || {}, bw = st.by_writeback || {};
+  const total = st.total || 0;
+  const pc = (a, b) => (b ? Math.round((a || 0) / b * 100) : 0);
+
+  CR.$('#stats').innerHTML =
+    card('审查任务总数', total, '含审批拉取与本地上传', '', 'layers', 100, 'var(--brand)') +
+    card('高风险合同', br.high || 0, '需优先处置', br.high ? 'hl' : '', 'alert',
+         pc(br.high, total), 'var(--high)') +
+    card('中风险合同', br.medium || 0, '需整改后签署', br.medium ? 'hl' : '', 'bolt',
+         pc(br.medium, total), 'var(--mid)') +
+    card('审查完成', bs.completed || 0, '已生成审查意见', 'ok', 'checkCircle',
+         pc(bs.completed, total), 'var(--ok)') +
+    card('解析受阻', st.blocked || 0, '待管理员重试', st.blocked ? 'hl' : '', 'lock',
+         pc(st.blocked, total), 'var(--mid)') +
+    card('回写成功', bw.success || 0, '已写入审批评论区', 'ok', 'external',
+         pc(bw.success, total), 'var(--teal)') +
+    card('高风险金额', CR.money(st.high_risk_amount), '高风险合同累计金额', 'hl', 'scale',
+         undefined, 'var(--high)');
+
+  // 数字滚动（金额卡片是格式化文本，不参与）
+  CR.$$('#stats .v[data-count]').forEach(el => {
+    const target = parseFloat(el.dataset.count) || 0;
+    CR.countUp(el, target, { duration: 1500, thousands: true });
+  });
+
+  CR.$('#subTitle').textContent = '共 ' + total + ' 个审查任务 · 高风险 ' +
+    (br.high || 0) + ' 个 · 解析受阻 ' + (st.blocked || 0) + ' 个';
+
+  renderViz(br);
+}
+
+/* 三张分布图：数据全部来自当前筛选结果，不做任何虚构 */
+function renderViz(br) {
+  const items = CASES || [];
+
+  // ① 风险等级分布
+  const riskItems = [
+    { label: '高风险', value: items.filter(c => c.risk_level === 'high').length, color: 'var(--high)' },
+    { label: '中风险', value: items.filter(c => c.risk_level === 'medium').length, color: 'var(--mid)' },
+    { label: '低风险', value: items.filter(c => c.risk_level === 'low').length, color: 'var(--low)' },
+    { label: '无风险', value: items.filter(c => !c.risk_level || c.risk_level === 'none').length, color: 'var(--line)' }
+  ];
+  if (!items.length) {
+    CR.$('#vizRisk').innerHTML = '<div class="empty" style="padding:22px 8px">当前没有可统计的任务</div>';
+  } else {
+    CH.donut(CR.$('#vizRisk'), riskItems, {
+      centerValue: items.length, centerLabel: '份合同', aria: '风险等级分布'
+    });
+  }
+
+  // ② 合同类型分布（数量 + 平均金额）
+  const byType = {};
+  items.forEach(c => {
+    const k = c.business_type_label || BTYPE[c.business_type] || '其他';
+    (byType[k] = byType[k] || { n: 0, sum: 0 }).n++;
+    byType[k].sum += Number(c.amount || 0);
+  });
+  const typeKeys = Object.keys(byType);
+  if (!typeKeys.length) {
+    CR.$('#vizType').innerHTML = '<div class="empty" style="padding:22px 8px">当前没有可统计的任务</div>';
+  } else {
+    const palette = ['var(--brand)', 'var(--cyan)', 'var(--brand-2)', 'var(--teal)'];
+    CH.hbars(CR.$('#vizType'), typeKeys.map((k, i) => ({
+      label: k,
+      value: byType[k].n,
+      display: byType[k].n + ' 份',
+      sub: '均 ' + CR.money(byType[k].sum / byType[k].n).replace(/<[^>]+>/g, '').trim(),
+      color: 'linear-gradient(90deg,' + palette[i % palette.length] + ',var(--brand-2))'
+    })));
+  }
+
+  // ③ 合同金额区间分布
+  const BK = [
+    [0, 100000, '< 10 万'],
+    [100000, 500000, '10–50 万'],
+    [500000, 1000000, '50–100 万'],
+    [1000000, 5000000, '100–500 万'],
+    [5000000, Infinity, '≥ 500 万']
+  ];
+  const buckets = BK.map(b => ({ label: b[2], value: 0 }));
+  items.forEach(c => {
+    const v = Number(c.amount || 0);
+    for (let i = 0; i < BK.length; i++) {
+      if (v >= BK[i][0] && v < BK[i][1]) { buckets[i].value++; break; }
+    }
+  });
+  if (!items.length) {
+    CR.$('#vizAmount').innerHTML = '<div class="empty" style="padding:22px 8px">当前没有可统计的任务</div>';
+  } else {
+    CH.hbars(CR.$('#vizAmount'), buckets.map((b, i) => ({
+      label: b.label,
+      value: b.value,
+      display: b.value + ' 份',
+      color: 'linear-gradient(90deg,var(--cyan),var(--brand))',
+      textColor: b.value ? 'var(--ink)' : 'var(--faint)'
+    })));
+  }
+}
+
+function card(k, v, x, cls, ic, pct, color) {
+  const isNum = typeof v === 'number';
+  return '<div class="stat ' + (cls || '') + '"' +
+    (color ? ' style="--c:' + color + '"' : '') + '>' +
+    '<div class="k">' + CR.icon(ic || 'dot', '', 13) + k + '</div>' +
+    '<div class="v num"' + (isNum ? ' data-count="' + v + '"' : '') + '>' + v + '</div>' +
+    '<div class="x">' + x + '</div>' +
+    (pct === undefined ? '' :
+      '<div class="bar" style="margin-top:10px"><i style="width:' + Math.max(2, pct) + '%"></i></div>') +
+    '</div>';
+}
+
+function renderTable() {
+  const tb = CR.$('#tbody');
+  if (!CASES.length) {
+    tb.innerHTML = '';
+    CR.$('#empty').style.display = 'block';
+    return;
+  }
+  CR.$('#empty').style.display = 'none';
+  tb.innerHTML = CASES.map(c => {
+    const blocked = c.review_status === 'blocked';
+    return '<tr data-id="' + c.id + '" data-risk="' + (c.risk_level || 'none') +
+      '" class="clickable" onclick="rowClick(event,' + c.id + ')">' +
+      '<td><input type="checkbox" class="ck" value="' + c.id +
+        '" onclick="event.stopPropagation();selInfo()" aria-label="选择该合同"></td>' +
+      '<td><div class="t-title">' + CR.esc(c.title) + '</div><div class="t-sub">' +
+        CR.esc(c.case_no) + ' · ' + CR.esc(c.source_label) + '</div></td>' +
+      '<td>' + CR.esc(c.applicant || '-') + '<div class="t-sub">' +
+        CR.esc(c.send_dept || '') + '</div></td>' +
+      '<td>' + CR.esc(c.business_type_label) + '</td>' +
+      '<td class="right num">' + CR.money(c.amount, c.currency) + '</td>' +
+      '<td>' + CR.statusTag(c.review_status, c.review_status_label) + '</td>' +
+      '<td>' + CR.riskTag(c.risk_level, c.risk_level_label) + '</td>' +
+      '<td>' + CR.wbTag(c.writeback_status, c.writeback_status_label) + '</td>' +
+      '<td class="num faint" style="font-size:12px">' + CR.esc(c.created_at) + '</td>' +
+      '<td class="right" onclick="event.stopPropagation()">' +
+        '<a class="btn sm primary" href="/workbench?id=' + c.id + '">审查</a> ' +
+        (blocked
+          ? '<button class="btn sm danger" onclick="retry(' + c.id + ')">重新审查</button>'
+          : '<button class="btn sm" onclick="rerun(' + c.id + ')">重审</button>') +
+      '</td></tr>';
+  }).join('');
+  selInfo();
+}
+
+function rowClick(ev, id) {
+  if (ev.target.tagName === 'INPUT' || ev.target.closest('button')
+      || ev.target.closest('a')) return;
+  location.href = '/workbench?id=' + id;
+}
+
+function selInfo() {
+  const n = CR.$$('.ck:checked').length;
+  CR.$('#selInfo').textContent = n ? ('已选 ' + n + ' 项') : '';
+}
+
+function toggleAll(ck) {
+  CR.$$('.ck').forEach(c => { c.checked = ck.checked; });
+  selInfo();
+}
+
+function selected() { return CR.$$('.ck:checked').map(c => Number(c.value)); }
+
+/* ------------------------------------------------------------------ 操作 */
+async function pullTodo() {
+  const b = CR.$('#btnPull');
+  CR.busy(b, true, '拉取中');
+  CR.overlay(true, '正在拉取待办并执行自动审查…',
+    '解析 → 条款切分 → 规则审查 → 摘要生成，逐个审批单串行处理。');
+  try {
+    const d = await CR.api('POST', '/api/pull', { auto_review: true });
+    if (!d.ok) throw new Error(d.error || '拉取失败');
+    const created = (d.created || []).length, skipped = (d.skipped || []).length;
+    const blocked = (d.reviewed || []).filter(r => r.blocked).length;
+    const highs = (d.reviewed || []).filter(r => r.risk_level === 'high').length;
+    CR.toast('已拉取并自动审查 <b>' + created + '</b> 个待办审批单' +
+      (skipped ? '，跳过 ' + skipped + ' 个（幂等控制）' : '') +
+      (highs ? '<br>其中高风险 <b>' + highs + '</b> 个' : '') +
+      (blocked ? '，解析受阻 ' + blocked + ' 个' : ''), 'ok');
+    await load();
+  } catch (e) {
+    CR.toast('拉取失败：' + CR.esc(e.message), 'err');
+  } finally {
+    CR.busy(b, false);
+    CR.overlay(false);
+  }
+}
+
+async function rerun(id) {
+  CR.overlay(true, '正在重新审查…', '重新执行解析与规则审查。');
+  try {
+    const r = await CR.api('POST', '/api/cases/' + id + '/review');
+    if (r && r.blocked) CR.toast('重新审查后仍受阻：' + CR.esc(r.reason || ''), 'err');
+    else CR.toast('已完成重新审查，命中 ' + ((r && r.hits) || 0) + ' 项', 'ok');
+    await load();
+  } catch (e) { CR.toast('审查失败：' + CR.esc(e.message), 'err'); }
+  finally { CR.overlay(false); }
+}
+
+async function retry(id) {
+  CR.overlay(true, '正在重试解析…', '把任务重新放回流转流水线。');
+  try {
+    const r = await CR.api('POST', '/api/cases/' + id + '/retry');
+    if (r && r.blocked) CR.toast('重试后仍受阻：' + CR.esc(r.reason || ''), 'err');
+    else CR.toast('重试成功，已完成审查', 'ok');
+    await load();
+  } catch (e) { CR.toast('重试失败：' + CR.esc(e.message), 'err'); }
+  finally { CR.overlay(false); }
+}
+
+async function batchReview() {
+  const ids = selected();
+  if (!ids.length) return CR.toast('请先勾选需要重新审查的合同', 'err');
+  const failed = [];
+  try {
+    for (let i = 0; i < ids.length; i++) {
+      CR.overlay(true, '正在批量审查… ' + (i + 1) + ' / ' + ids.length);
+      try {
+        await CR.api('POST', '/api/cases/' + ids[i] + '/review');
+      } catch (e) { failed.push('#' + ids[i] + ' ' + e.message); }
+    }
+  } finally { CR.overlay(false); }
+  if (failed.length) {
+    CR.toast('完成 ' + (ids.length - failed.length) + ' 个，<b>' + failed.length +
+      '</b> 个失败：' + CR.esc(failed.slice(0, 2).join('；')), 'err');
+  } else {
+    CR.toast('已完成 ' + ids.length + ' 个合同的重新审查', 'ok');
+  }
+  await load();
+}
+
+async function batchReport(fmt) {
+  const ids = selected();
+  if (!ids.length) return CR.toast('请先勾选需要导出的合同', 'err');
+  for (const id of ids) {
+    CR.download('/api/cases/' + id + '/report?format=' + fmt + '&download=1');
+    await new Promise(r => setTimeout(r, 260));
+  }
+  CR.toast('已开始下载 ' + ids.length + ' 份报告（' + fmt.toUpperCase() + '）', 'ok');
+}
+
+/* ------------------------------------------------------------------ 示例集 */
+let samplesLoaded = false;
+async function toggleSamples() {
+  const box = CR.$('#sampleBox'), b = CR.$('#btnSamples');
+  const on = box.style.display === 'none';
+  box.style.display = on ? 'block' : 'none';
+  b.textContent = on ? '收起' : '展开';
+  if (on && !samplesLoaded) {
+    box.innerHTML = CR.skeleton(4);
+    const d = await CR.api('GET', '/api/samples');
+    const lvLabel = l => l === 'high' ? '高风险' : (l === 'medium' ? '中风险'
+      : (l === 'low' ? '低风险' : '无风险'));
+    box.innerHTML = '<div class="table-wrap"><table class="grid"><thead><tr>' +
+      '<th style="width:44px">序号</th><th>示例文件</th><th style="width:96px">格式</th>' +
+      '<th style="width:112px">类别</th><th style="width:112px">预期风险</th>' +
+      '<th>用例说明</th></tr></thead><tbody>' +
+      d.samples.map(s => {
+        const e = s.expect || {};
+        const lv = e.blocked ? 'none' : e.risk_level;
+        return '<tr><td class="mono">' + CR.esc(s.code) + '</td>' +
+          '<td class="mono" style="font-size:12px">' + CR.esc(s.file) + '</td>' +
+          '<td>' + CR.esc(s.format) + '</td>' +
+          '<td>' + CR.esc(BTYPE[s.business_type] || s.business_type) + '</td>' +
+          '<td>' + (e.blocked ? '<span class="tag t-high">解析受阻</span>'
+            : CR.riskTag(lv, lvLabel(lv))) + '</td>' +
+          '<td class="muted" style="font-size:12.5px">' + CR.esc(e.note || '') +
+          '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    samplesLoaded = true;
+  }
+}
+
+/* ------------------------------------------------------------------ 上传 */
+async function openUpload() {
+  FILE = null;
+  CR.$('#fileName').textContent = '';
+  CR.$('#upHint').textContent = '支持 DOCX / PDF / PNG / JPG　单文件不超过 ' +
+    CFG.max_upload_mb + ' MB';
+  CR.openModal('mUpload');
+}
+
+function pickFile(f) {
+  FILE = f;
+  CR.$('#fileName').textContent = f
+    ? (f.name + '  ·  ' + (f.size / 1024).toFixed(1) + ' KB') : '';
+  if (f && !CR.$('#upTitle').value) {
+    CR.$('#upTitle').value = f.name.replace(/\.(docx|pdf|png|jpe?g|bmp)$/i, '');
+  }
+}
+
+(function () {
+  const drop = CR.$('#drop');
+  ['dragover', 'dragenter'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.style.borderColor = 'var(--brand)';
+  }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.style.borderColor = '';
+  }));
+  drop.addEventListener('drop', e => {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) pickFile(e.dataTransfer.files[0]);
+  });
+})();
+
+async function doUpload() {
+  if (!FILE) return CR.toast('请先选择合同文件', 'err');
+  if (FILE.size > CFG.max_upload_mb * 1024 * 1024) {
+    return CR.toast('文件超过 ' + CFG.max_upload_mb + ' MB 限制', 'err');
+  }
+  const b = CR.$('#btnUp');
+  CR.busy(b, true, '上传中');
+  CR.overlay(true, '正在上传并解析…', '解析 → 条款切分 → 规则审查。');
+  try {
+    const buf = await FILE.arrayBuffer();
+    let bin = '';
+    const bytes = new Uint8Array(buf);
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    const content = btoa(bin);
+    const d = await CR.api('POST', '/api/upload', {
+      filename: FILE.name, content: content,
+      meta: { business_type: CR.$('#upType').value, title: CR.$('#upTitle').value },
+      auto_review: true
+    });
+    CR.closeModal('mUpload');
+    if (d.duplicated) {
+      CR.toast('文件指纹重复，已复用既有任务 #' + d.case_id, 'ok');
+      await load();
+    } else {
+      CR.toast('上传并审查完成，任务 #' + d.case_id, 'ok');
+      location.href = '/workbench?id=' + d.case_id;
+    }
+  } catch (e) {
+    CR.toast('上传失败：' + CR.esc(e.message), 'err');
+  } finally {
+    CR.busy(b, false);
+    CR.overlay(false);
+  }
+}
+
+/* ------------------------------------------------------------------ 自检 / 指标 / 通知 */
+async function runSelftest() {
+  CR.openModal('mSelf');
+  CR.$('#selfBody').innerHTML = CR.skeleton(8);
+  try {
+    const d = await CR.api('GET', '/api/selftest');
+    const rows = (d.checks || []).map(c =>
+      '<tr><td style="width:76px">' + (c.passed
+        ? '<span class="tag t-ok">通过</span>' : '<span class="tag t-high">未通过</span>') +
+      '</td><td style="width:220px;font-weight:560">' + CR.esc(c.name) + '</td>' +
+      '<td class="muted" style="font-size:12.5px">' + CR.esc(c.detail || '') + '</td></tr>').join('');
+    CR.$('#selfBody').innerHTML =
+      '<div class="row" style="margin-bottom:12px"><span class="tag ' +
+      (d.passed ? 't-ok' : 't-high') + '">' + (d.passed ? '全部通过' : '存在未通过项') +
+      '</span><span class="muted">共 ' + (d.checks || []).length + ' 项验收对照，通过 ' +
+      (d.passed_count || 0) + ' 项 · 耗时 ' + d.elapsed_ms + ' ms</span></div>' +
+      '<div class="table-wrap"><table class="grid"><tbody>' + rows + '</tbody></table></div>';
+  } catch (e) {
+    CR.$('#selfBody').innerHTML = '<div class="empty">自检失败：' + CR.esc(e.message) + '</div>';
+  }
+}
+
+async function openMetrics() {
+  CR.openModal('mMetrics');
+  CR.$('#metricsBody').innerHTML = CR.skeleton(6);
+  try {
+    const m = await CR.api('GET', '/api/metrics');
+    const top = (m.top_paths || []).slice(0, 8);
+    const maxMs = Math.max.apply(null, top.map(t => t.avg_ms).concat([1]));
+    CR.$('#metricsBody').innerHTML =
+      '<div class="stats" style="margin-bottom:14px">' +
+      card('累计请求', m.requests, '自 ' + m.started_at + ' 起', '', 'pulse', undefined, 'var(--brand)') +
+      card('平均响应', CR.fmtMs(m.avg_ms), '全部请求历史均值', '', 'clock', undefined, 'var(--cyan)') +
+      card('错误数', m.errors, '错误率 ' + (m.error_rate * 100).toFixed(2) + '%',
+        m.errors ? 'hl' : '', 'alert', undefined, 'var(--high)') +
+      card('运行时长', Math.round(m.uptime_sec / 60) + ' 分钟', '进程启动至今', '', 'gauge', undefined, 'var(--teal)') +
+      card('响应总量', (m.bytes_out / 1048576).toFixed(2) + ' MB', '压缩后实际发送', '', 'server', undefined, 'var(--brand-2)') +
+      card('任务总数', m.task_total, '数据库内审查任务', '', 'db', undefined, 'var(--brand)') +
+      '</div>' +
+      '<div style="font-size:11.5px;color:var(--sub);margin-bottom:8px">' +
+      '热点接口（按累计耗时排序）</div>' +
+      top.map(t => '<div class="metric"><div class="mh"><span class="p">' + CR.esc(t.path) +
+        '</span><span class="v">' + t.count + ' 次 · 均 ' + CR.fmtMs(t.avg_ms) +
+        ' · 峰值 ' + CR.fmtMs(t.max_ms) + (t.errors ? ' · 错误 ' + t.errors : '') +
+        '</span></div><div class="bar"><i style="width:' +
+        Math.max(4, t.avg_ms / maxMs * 100) + '%"></i></div></div>').join('') +
+      ((m.slow_requests || []).length
+        ? '<div style="font-size:11.5px;color:var(--sub);margin:12px 0 6px">' +
+          '慢请求（≥ 1s）</div><div class="log">' + m.slow_requests.map(s =>
+            '<div class="r"><span class="t">' + CR.esc(s.at) + '</span>' +
+            '<span class="s failed">' + s.ms + 'ms</span><span>' + CR.esc(s.path) +
+            '</span></div>').join('') + '</div>'
+        : '<div class="faint" style="font-size:12px;margin-top:10px">' +
+          '暂无慢请求记录。审查与 OCR 属于耗时操作，正常会出现在这里。</div>');
+  } catch (e) {
+    CR.$('#metricsBody').innerHTML = '<div class="empty">读取指标失败：' +
+      CR.esc(e.message) + '</div>';
+  }
+}
+
+async function openNotify() {
+  CR.openModal('mNotify');
+  CR.$('#notifyBody').innerHTML = CR.skeleton(4);
+  try {
+    const s = await CR.api('GET', '/api/notify/status');
+    const recent = s.recent || [];
+    CR.$('#notifyBody').innerHTML =
+      '<div class="kv-list">' +
+      '<div class="r"><div class="k">启用状态</div><div class="v">' +
+        (s.enabled
+          ? (s.configured ? '<span class="tag t-ok">已启用且已配置</span>'
+                          : '<span class="tag t-mid">已启用但未填 Webhook</span>')
+          : '<span class="tag t-none">未启用</span>') + '</div></div>' +
+      '<div class="r"><div class="k">渠道 / 加签</div><div class="v">' + CR.esc(s.channel) +
+        ' ｜ 加签 ' + (s.has_secret ? '已配置' : '未配置') + '</div></div>' +
+      '<div class="r"><div class="k">Webhook</div><div class="v mono" style="font-size:11.5px">' +
+        (CR.esc(s.webhook) || '（未填写）') + '</div></div>' +
+      '<div class="r"><div class="k">发送统计</div><div class="v">入队 ' + s.stats.queued +
+        ' ｜ 成功 ' + s.stats.sent + ' ｜ 失败 ' + s.stats.failed +
+        ' ｜ 跳过 ' + s.stats.skipped + '</div></div>' +
+      '<div class="r"><div class="k">事件开关</div><div class="v">' +
+        Object.keys(s.events || {}).map(k => '<span class="tag ' +
+          (s.events[k] ? 't-ok' : 't-none') + '" style="margin:1px 3px 1px 0">' +
+          CR.esc(k) + '</span>').join('') + '</div></div></div>' +
+      (s.configured ? '' : '<div class="notice warn" style="margin-top:10px">要启用钉钉通知：' +
+        '编辑 <span class="mono">config/app.json</span>，把 ' +
+        '<span class="mono">notify.enabled</span> 设为 true 并填写 ' +
+        '<span class="mono">notify.webhook</span>；若机器人安全设置选了「加签」，再把 ' +
+        '<span class="mono">notify.secret</span> 填上 SEC 开头的密钥。</div>') +
+      (recent.length ? '<div class="field" style="margin-top:10px">' +
+        '<div class="lab">最近发送记录</div><div class="log">' +
+        recent.map(r => '<div class="r"><span class="t">' + CR.esc(r.at) +
+          '</span><span class="s ' + CR.esc(r.status === 'sent' ? 'ok'
+            : (r.status === 'failed' ? 'failed' : 'skipped')) + '">' + CR.esc(r.status) +
+          '</span><span>' + CR.esc(r.event_label) + ' · ' + CR.esc(r.title || '') +
+          (r.detail ? ' — ' + CR.esc(r.detail) : '') + '</span></div>').join('') +
+        '</div></div>' : '');
+  } catch (e) {
+    CR.$('#notifyBody').innerHTML = '<div class="empty">读取通知状态失败：' +
+      CR.esc(e.message) + '</div>';
+  }
+}
+
+async function sendNotifyTest() {
+  const b = CR.$('#btnNotifyTest');
+  CR.busy(b, true, '发送中');
+  try {
+    const r = await CR.api('POST', '/api/notify/test', { message: '测试消息已送达。' });
+    CR.toast(r.status === 'sent' ? '测试通知发送成功，请查看机器人所在群'
+      : ('发送结果：' + CR.esc(r.detail || '')), 'ok');
+  } catch (e) {
+    CR.toast('测试发送失败：' + CR.esc(e.message), 'err');
+  } finally {
+    CR.busy(b, false);
+    openNotify();
+  }
+}
+
+/* ------------------------------------------------- v2.0 权限矩阵与新增面板 */
+const CAP_ROLE = {
+  view_cases: ['legal', 'applicant', 'admin'],
+  view_detail: ['legal', 'applicant', 'admin'],
+  export_report: ['legal', 'applicant', 'admin'],
+  submit_contract: ['applicant', 'admin'],
+  pull_todo: ['applicant', 'admin'],
+  edit_suggestion: ['legal'],
+  add_opinion: ['legal'],
+  writeback: ['legal'],
+  rerun_review: ['legal', 'admin'],
+  retry_blocked: ['admin'],
+  edit_rules: ['admin'],
+  export_audit: ['legal', 'admin'],
+  notify_test: ['admin'],
+  fault_inject: ['admin'],
+  reset_data: ['admin'],
+  run_selftest: ['admin'],
+  view_metrics: ['admin'],
+  view_users: ['admin'],
+  manage_scheduler: ['admin']
+};
+
+function openAuth() {
+  CR.openModal('mAuth');
+  const me = CR.me() || {};
+  const roles = me.roles || [];
+  const caps = Object.keys(CAP_ROLE);
+  const head = '<tr><th>权限能力</th><th>说明</th>' +
+    roles.map(r => '<th style="text-align:center">' + CR.esc(r.label) + '</th>').join('') +
+    '</tr>';
+  const body = caps.map(function (c) {
+    const allow = CAP_ROLE[c];
+    return '<tr><td><code style="font-size:11.4px">' + c + '</code></td>' +
+      '<td>' + CR.esc((me.caps_label || {})[c] || c) + '</td>' +
+      roles.map(function (r) {
+        const yes = allow.indexOf(r.role) >= 0;
+        const mine = r.role === me.role;
+        return '<td class="c ' + (yes ? 'perm-yes' : 'perm-no') + '">' +
+          (yes ? '✓' : '—') + (mine ? '<div class="faint" style="font-size:10px">当前</div>' : '') +
+          '</td>';
+      }).join('') + '</tr>';
+  }).join('');
+  CR.$('#authBody').innerHTML =
+    '<div class="kv-grid" style="margin-bottom:14px">' +
+    '<div class="kv-cell"><div class="k">当前身份</div><div class="v" style="font-size:13.5px">' +
+    CR.esc(me.role_label || '-') + ' <small>' + CR.esc(me.username || '') + '</small></div></div>' +
+    '<div class="kv-cell"><div class="k">会话到期</div><div class="v" style="font-size:12.5px">' +
+    CR.esc(me.session_expires_at || '-') + '</div></div>' +
+    '<div class="kv-cell"><div class="k">已授权能力</div><div class="v">' +
+    (me.caps || []).length + ' <small>/ ' + caps.length + '</small></div></div>' +
+    '<div class="kv-cell"><div class="k">演示身份切换</div><div class="v" style="font-size:13px">' +
+    (me.demo_switch ? '已开启' : '已关闭') + '</div></div>' +
+    '</div>' +
+    '<div style="font-size:11.5px;color:var(--sub);margin-bottom:8px">' +
+    '角色能力矩阵 · 勾选为允许。权限的最终执行点在服务端路由表，前端仅做显隐。</div>' +
+    '<table class="perm-tbl">' + head + body + '</table>' +
+    '<div class="mode-note">' + CR.esc(me.role_desc || '') + '</div>';
+  CR.$('#authFoot').textContent =
+    '越权请求返回 403 并写入审计（tool=auth.guard）；未登记的写接口按失败关闭处理。';
+}
+
+/* ---------------- 自动流转（定时拉取） ---------------- */
+async function loadSched() {
+  try {
+    const s = await CR.api('GET', '/api/scheduler');
+    const sw = CR.$('#swSched');
+    if (sw) { sw.classList.toggle('on', !!s.enabled); sw.setAttribute('aria-checked', String(!!s.enabled)); }
+    CR.$('#schedSub').textContent = s.enabled
+      ? '运行中 · 每 ' + s.interval_sec + ' 秒拉取一次（退避上限 ' + s.max_interval_sec + ' 秒）'
+      : '默认关闭 —— 否则演示数据会在无人操作时自己变化';
+    const nxt = s.next_run_in_sec > 0
+      ? Math.floor(s.next_run_in_sec / 60) + ' 分 ' + (s.next_run_in_sec % 60) + ' 秒后'
+      : '—';
+    CR.$('#schedKv').innerHTML =
+      kv('累计运行', s.runs + ' 轮', s.manual_runs + ' 轮为手动触发') +
+      kv('本轮间隔', s.current_interval + 's', '退避倍数 ' + s.backoff_factor + '×') +
+      kv('下一轮', nxt, s.next_run_at || '未排程') +
+      kv('累计新建', s.created_total + ' 个', '自动审查 ' + s.reviewed_total + ' 个') +
+      kv('连续失败', s.consecutive_failures + ' 次', s.last_run_at || '尚未运行');
+    CR.$('#schedNote').innerHTML = s.last_error
+      ? '<span style="color:var(--high)">最近一次失败：' + CR.esc(s.last_error) + '</span>'
+      : '连续失败后间隔按退避倍数递增并封顶；成功一次即复位。命中「拉取失败」时会在审计里留痕。';
+  } catch (e) {
+    CR.$('#schedKv').innerHTML = '<div class="empty" style="grid-column:1/-1">读取调度状态失败：' +
+      CR.esc(e.message) + '</div>';
+  }
+}
+
+function kv(k, v, sub) {
+  return '<div class="kv-cell"><div class="k">' + CR.esc(k) + '</div><div class="v">' +
+    CR.esc(v) + (sub ? '<small>' + CR.esc(sub) + '</small>' : '') + '</div></div>';
+}
+
+async function toggleSched(force) {
+  const sw = CR.$('#swSched');
+  const target = (typeof force === 'boolean') ? force : !sw.classList.contains('on');
+  try {
+    const r = await CR.api('POST', '/api/scheduler/config', { enabled: target });
+    CR.toast(target ? '已开启自动拉取' : '已关闭自动拉取', 'ok');
+    if (r && r.status) { loadSched(); return; }
+  } catch (e) {
+    CR.toast('设置失败：' + e.message, 'err');
+  }
+  loadSched();
+}
+
+async function schedRunNow() {
+  const b = CR.$('#btnSchedRun');
+  CR.busy(b, true, '拉取中…');
+  try {
+    const r = await CR.api('POST', '/api/scheduler/run', {});
+    const t = r.trigger_result || {};
+    CR.toast('本轮：新建 ' + (t.created || 0) + ' / 跳过 ' + (t.skipped || 0) +
+      ' / 审查 ' + (t.reviewed || 0), t.ok ? 'ok' : 'err');
+    await load();
+  } catch (e) {
+    CR.toast('拉取失败：' + e.message, 'err');
+  } finally {
+    CR.busy(b, false);
+    loadSched();
+  }
+}
+
+/* ---------------- 审查队列与配额 ---------------- */
+async function loadQueue() {
+  try {
+    const q = await CR.api('GET', '/api/queue');
+    const pct = function (a, b) { return b > 0 ? Math.min(100, a / b * 100) : 0; };
+    CR.$('#qWorkers').textContent = '并发度 ' + q.workers + ' · 队列上限 ' + q.maxsize;
+    CR.$('#queueKv').innerHTML =
+      kv('工作线程', q.workers + ' 个', q.enabled ? '队列已启用' : '队列已关闭') +
+      kv('排队中', q.queued + ' 个', '在飞 ' + (q.inflight || []).length + ' 个') +
+      kv('待处理案件', q.pending_cases + ' 个', '上限 ' + q.max_pending) +
+      kv('附件占用', q.uploads_mb + ' MB', '上限 ' + q.max_total_mb + ' MB') +
+      '<div class="kv-cell" style="grid-column:1/-1"><div class="k">队列水位</div>' +
+      '<div class="v" style="font-size:13px">' + q.queued + ' / ' + q.maxsize + '</div>' +
+      '<div class="qbar"><i style="width:' + pct(q.queued, q.maxsize) + '%"></i></div></div>' +
+      '<div class="kv-cell" style="grid-column:1/-1"><div class="k">附件存储水位</div>' +
+      '<div class="v" style="font-size:13px">' + q.uploads_mb + ' / ' + q.max_total_mb + ' MB</div>' +
+      '<div class="qbar"><i style="width:' + pct(q.uploads_mb, q.max_total_mb) + '%"></i></div></div>';
+  } catch (e) {
+    CR.$('#queueKv').innerHTML = '<div class="empty" style="grid-column:1/-1">读取队列状态失败：' +
+      CR.esc(e.message) + '</div>';
+  }
+}
+
+/* ------------------------------------------------------------------ 启动 */
+(async function () {
+  let envText = '演示环境 · 模拟审批系统';
+  try {
+    const [h, c] = await Promise.all([
+      CR.api('GET', '/api/health'), CR.api('GET', '/api/config')
+    ]);
+    CFG = c || CFG;
+    envText = '演示环境 · ' +
+      (h.approval_channel === 'feishu_mock' ? '内置模拟审批' : String(h.approval_base)) +
+      ' · OCR ' + h.ocr_backend +
+      ' · PDF ' + (h.pdf_channels && h.pdf_channels.effective === 'stdlib'
+        ? '标准库直出' : '浏览器通道') +
+      ' · v' + h.version;
+  } catch (e) { }
+  // 先取当前身份与能力，再渲染顶栏并执行权限显隐（隐藏只是体验，拦截在服务端）
+  try { await CR.initAuth('/', envText); } catch (e) { CR.renderTopbar('/', envText); }
+  await load();
+  loadSched();
+  loadQueue();
+  setInterval(loadQueue, 5000);
+  setInterval(loadSched, 15000);
+  CR.initReveal();
+})();
+</script><div id="topbar-progress" class="" style="width: 0px;"></div>
+
+
+<footer class="site-footer"><div class="fl"><img src="/assets/logo-sm.png" alt="亦大"><span class="sig">（亦大）</span><span>© 2026 合同智能审查系统 v2.0 · 保留所有权利</span></div><div class="spacer"></div><div class="fl"><span>规则引擎判定 · 大模型辅以措辞 · 全程可离线运行</span><span class="dot-sep">|</span><a href="/twin">动态孪生看板</a><span class="dot-sep">|</span><a href="/mock/feishu/api/todo" target="_blank" rel="noopener">模拟审批系统</a></div></footer></body></html>

@@ -1,0 +1,31 @@
+卡片动效专项探针
+====================================================================================================
+目标 http://127.0.0.1:8803 ｜ 2026-09-19 18:16:27
+
+⓪ 环境：prefers-reduced-motion: reduce = False（已显式声明 no-preference）
+   样式表体检：{"files": ["app.css", "fx.css", "inline"], "cfxRules": 8, "probeSel": "panel reveal cfx cfx-beam in", "probeMatch": true, "hasSweep": true, "cfxAll": "", "topLevel": 710, "mediaRules": 64, "err": ""}
+     · .cfx | parent=null | .cfx { position: relative; background-image: linear-gradient(105
+     · html[data-theme="light"] .cfx | parent=null | html[data-theme="light"] .cfx { background-image: linear-gradien
+     · .cfx:hover | parent=null | .cfx:hover { border-color: rgba(61, 139, 253, 0.42); box-shadow:
+     · .cfx-lift:hover | parent=null | .cfx-lift:hover { transform: translateY(-3px); }
+     · .cfx-lift:active | parent=null | .cfx-lift:active { transform: translateY(-1px) scale(0.998); }
+     · .cfx-enter | parent=null | .cfx-enter { animation-duration: 0.52s; animation-timing-functio
+   探针元素 class='panel reveal cfx cfx-beam in' ｜ matches('.cfx')=True ｜ 顶层规则 710 条 / 媒体规则 64 条
+① 加载后约 0.3s 的动画状态：{"names": {"keyframes": 2, "fadeUp": 1, "cfxIn": 7, "cfxBeam": 5, "floatGlow": 2, "scanY": 1, "petAttn": 1, "petBreathe": 2, "petBlink": 1}, "enter": 0, "tick": 0, "card": 5, "cfx": 7, "cbe": 5, "probe": {"cls": "panel reveal cfx cfx-beam in", "inline": "animation: 0.52s cubic-bezier(0.22, 0.68, 0.36, 1) 0ms 1 normal both running cfxIn;", "bg": "linear-gradient(105deg, rgba(0, 0, 0, 0) 42%", "tp": "opacity, transform"}}
+[OK ] 浏览器真的解析到了 .cfx 规则（样式表里能找到）                     含 .cfx 的规则 8 条
+[OK ] 卡片入场动画真的在播放（cfxIn）                             cfxIn × 7 （错峰入场在跑）；被标记 .cfx 的卡片 7 个
+[OK ] 卡片的常驻效果已挂到计算样式上（悬停光泽 + 扫光动画）                   panel reveal cfx cfx-beam in ｜ 背景=linear-gradient(105deg, rg… ｜ 悬停扫光规则=已定义 ｜ transition=opacity, transform
+[OK ] 强调条流光的卡片被标记（cfx-beam）                          5 个卡片启用流光；被标记 .cfx 的卡片 7 个
+[OK ] 入场动画结束后不留内联样式残留                                残余内联样式='--c:var(--brand)' ｜ 仍在播 {"fadeUp": 1, "cfxBeam": 12, "floatGlow": 2, "scanY": 1, "petAttn": 1, "petBreathe": 2, "petBlink": 1}
+
+③ 孪生看板刷新后的动画状态：{"names": {"pulse-dot": 1, "cfxBeam": 13, "floatGlow": 2, "scanY": 1, "petBreathe": 2, "petBlink": 1}, "enter": 0, "tick": 0, "card": 21, "cfx": 32, "cbe": 13, "probe": {"cls": "tk cfx cfx-lift cfx-beam", "inline": "--c:var(--brand)", "bg": "linear-gradient(105deg, rgba(0, 0, 0, 0) 42%", "tp": "transform, border-color, box-shadow"}}
+[OK ] 定时刷新不重播入场动画（cfxIn 不再出现）                        cfxIn xNone，cfx-enter 0 个（说明入场只播了一次）
+[OK ] 刷新后卡片仍保有常驻效果（重建的 DOM 也生效）                      页面卡片总数 21
+[OK ] 数值变化检测正确（同值不跳、变值才跳）                            同值→False ｜ 变值→True
+
+⑤ 降级（prefers-reduced-motion: reduce）：reduce=True ｜ {"names": {"fadeUp": 1}, "enter": 0, "tick": 0, "card": 23, "cfx": 25, "cbe": 12, "probe": {"cls": "stat clickable cfx cfx-lift cfx-beam", "inline": "--c:var(--brand)", "bg": "none", "tp": "none"}}
+[OK ] 减少动效偏好下：入场动画不播、常驻过渡被关掉（可访问性降级生效）               cfxIn × None ｜ transition-property=none ｜ 卡片背景=none
+
+====================================================================================================
+结果：9 / 9 项通过
+====================================================================================================

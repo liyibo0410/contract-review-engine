@@ -1,0 +1,65 @@
+工作台滚动几何探针（合同正文卡片为什么「往下滑看不见」）
+====================================================================================================
+目标 http://127.0.0.1:8805 ｜ 视口 1600x1000 ｜ 2026-09-19 18:17:58
+
+⓪ 选案件（正文段落数 + 风险卡片数，取综合最大的那个）
+   #8   正文段落   0 ｜ 风险卡片  0
+   #7   正文段落   0 ｜ 风险卡片  0
+   #6   正文段落  18 ｜ 风险卡片  6
+   #5   正文段落  35 ｜ 风险卡片  4
+   #4   正文段落  36 ｜ 风险卡片  0
+   #3   正文段落  41 ｜ 风险卡片  1
+   #2   正文段落  36 ｜ 风险卡片  0
+   #1   正文段落  36 ｜ 风险卡片  3
+   → 采用案件 #5（段落 35，风险卡 4）
+
+① 静态几何（scrollY=0）
+   视口 1600x1000 ｜ 文档 scrollHeight=3534 ｜ 正文段落 35 ｜ 风险卡片 4
+   顶栏               y=   0 h=  64 bottom=  64 ｜ position=sticky top=0px overflowY=visible max-height=none ｜ client=63 scroll=64
+   .page-head       y=  86 h=  59 bottom= 145 ｜ position=static top=auto overflowY=visible max-height=none ｜ client=59 scroll=59
+   .wb 双栏           y= 163 h=3272 bottom=3436 ｜ position=static top=auto overflowY=visible max-height=none ｜ client=3272 scroll=3272
+   .wb-side 左列      y= 163 h=3272 bottom=3436 ｜ position=static top=auto overflowY=visible max-height=none ｜ client=3272 scroll=3272
+   左栏=正文卡           y= 163 h= 821 bottom= 984 ｜ position=sticky top=76px overflowY=hidden max-height=821px ｜ client=819 scroll=819
+   右栏               y= 163 h=3272 bottom=3436 ｜ position=static top=auto overflowY=visible max-height=none ｜ client=3272 scroll=3272
+   #doc 正文滚动区       y= 216 h= 767 bottom= 983 ｜ position=static top=auto overflowY=auto max-height=none ｜ client=767 scroll=1724
+   #tabBody 风险清单    y= 254 h=2200 bottom=2454 ｜ position=static top=auto overflowY=visible max-height=none ｜ client=2200 scroll=2200
+   .wb grid-template-columns=883.016px 658.969px ｜ align-items=normal
+   html overflow=hidden/auto ｜ body overflow=clip/visible
+   .wb-side h=3272（正文卡 h=821）→ sticky 可移动空间 2451 px
+   页面上的 sticky 元素：topbar top=0px；panel reveal cfx cfx-beam in top=76px
+
+   ▶ 正文卡：top=163 h=821 bottom=984（视口 1000）
+   ▶ 若卡片贴住顶栏下方（top≈76），它可用的最大高度 = 924 px
+   ▶ 而 #doc 的 max-height 写死为 none px（= 100vh − 258）
+   ▶ 卡片内除正文外还占 54 px（页头/内边距等），故正文区理论高度 = 924 − 该值
+
+② 滚动扫描（把页面滚到 0/25%/50%/75%/100%）
+   进度     scrollY  正文卡（左栏）                        正文区 #doc                              
+   0%     0        top=  163 h= 821 可见= 821           top=  216 h= 767 可见= 767 ch=767 sh=1724
+   25%    634      top=   76 h= 821 可见= 821           top=  129 h= 767 可见= 767 ch=767 sh=1724
+   50%    1267     top=   76 h= 821 可见= 821           top=  129 h= 767 可见= 767 ch=767 sh=1724
+   75%    1901     top=   76 h= 821 可见= 821           top=  129 h= 767 可见= 767 ch=767 sh=1724
+   100%   2534     top=   76 h= 821 可见= 821           top=  129 h= 767 可见= 767 ch=767 sh=1724
+
+====================================================================================================
+结论：各滚动位置下**合同正文卡片均整块可见**。
+====================================================================================================
+
+③ 点正文里的风险高亮 → 是否跳到右侧对应风险卡片
+   点第 1 个高亮：data-rid=6 ｜ 文本「试用期为 9 个月」｜ 有 onclick=True
+   点击前目标卡片位置：{"top": 841, "bottom": 1402}
+   点击后：卡片 .on=True ｜ top=247 bottom=808 ｜ 进入视口=True ｜ 页面 scrollY=594
+   此时左侧正文卡可见 821 / 821 px
+
+④ 顶栏尺寸（导航偏小 / logo 放大）
+   顶栏高度 64 px ｜ scrollWidth=1600 clientWidth=1600
+     导航「审查大盘」 88x43 ｜ font-size=14.5px ｜ padding-top=9px ｜ line-height=24.65px
+     导航「智能审查工作台」 132x43 ｜ font-size=14.5px ｜ padding-top=9px ｜ line-height=24.65px
+     导航「动态孪生看板」 117x43 ｜ font-size=14.5px ｜ padding-top=9px ｜ line-height=24.65px
+     导航「合规规则与模板」 132x43 ｜ font-size=14.5px ｜ padding-top=9px ｜ line-height=24.65px
+   logo 35x36 ｜ 位图 76x78 ｜ 文件 logo-sm.png
+   品牌字号：16px（衡鉴 V2.1.7）｜ 副标题 企业合同智能审查系统
+
+====================================================================================================
+最终判定：全部通过
+====================================================================================================

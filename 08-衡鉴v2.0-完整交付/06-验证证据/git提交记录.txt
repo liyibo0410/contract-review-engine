@@ -1,0 +1,94 @@
+﻿commit 1f41cc1d1317b84c84b6f9950f4687f63e7340c9
+Author: 鏉庡娉?<liyibo@local>
+Date:   2026-09-19 12:30:34 +0800
+
+    feat(hitl): 琛ラ綈浜哄伐瀹℃牳涓柇鐐逛笌鍔ㄤ綔娴佹按
+    
+    - 鏂板 hitl_actions 琛紝鍔ㄤ綔娴佹按鍙栦唬鐘舵€佸瓧娈碉紙璋佸湪浣曟椂鍚屾剰/淇敼/椹冲洖澶╃劧鍙拷婧級
+    - 鏂板 POST /human-review锛坅pprove/edit/reject/resume锛変笌 GET /hitl锛堜腑鏂偣鐘舵€侊級
+    - edit 鍔ㄤ綔鏀寔鏀圭骇涓庢敼鍐欏缓璁紝鑷姩閲嶇畻缁煎悎椋庨櫓绛夌骇涓庡鏌ョ粨璁?    - reject 鍚庡洖鍐欐帴鍙ｈ繑鍥?409锛屽舰鎴?HITL 闂ㄧ
+    - 鏂板 GET /api/templates/{id}锛堝惈鍙嶅悜寮曠敤锛変笌 GET /api/system/audit
+    - 淇娴嬭瘯澶瑰叿鐜闅旂缂洪櫡锛氱幆澧冨彉閲忓繀椤诲湪 conftest.py 涓缃?    - 宸ヤ綔鍙版柊澧炰汉宸ュ鏍搁潰鏉匡紙涓柇鐐?鍙墽琛屽姩浣?瀹℃牳娴佹按锛?    - 鍗曞厓娴嬭瘯 39 椤广€佹帴鍙ｅ啋鐑?64 椤瑰叏閮ㄩ€氳繃
+
+ backend/app/api/contracts.py          | 200 ++++++++++++++++
+ backend/app/api/rules.py              |  26 ++
+ backend/app/db.py                     |  20 +-
+ backend/app/schemas.py                |  32 +++
+ backend/conftest.py                   |  47 ++++
+ backend/tests/test_pipeline.py        |  15 +-
+ backend/tools/smoke_api.py            |  33 +++
+ docs/00_setup/椤圭洰浜嬪疄鍩虹嚎.md         | 440 ++++++++++++++++++++++++++++++++++
+ docs/13_delivery/鎺ュ彛鍐掔儫娴嬭瘯鎶ュ憡.txt |  23 +-
+ frontend/assets/js/workbench.js       | 139 +++++++++++
+ 10 files changed, 954 insertions(+), 21 deletions(-)
+
+commit cc72ddb54befeb77f3f7745116d225cbe69cffb6
+Author: 鏉庡娉?<liyibo@local>
+Date:   2026-09-19 12:23:23 +0800
+
+    feat(v2.0): 琛￠壌鍚堝悓鏅鸿兘瀹℃煡绯荤粺棣栫増浜や粯
+    
+    - 鍚庣: FastAPI + SQLite(WAL) 涔濊〃妯″瀷锛屼笁鏍煎紡瑙ｆ瀽寮曟搸(docx/pdf/OCR)缁熶竴鍧愭爣绯?    - 瑙勫垯寮曟搸: 32 鏉?YAML 瑙勫垯锛屽叓绉嶅垽瀹氱被鍨嬶紝鍚瑙掕В鏋?鎴戞柟/瀵规柟)
+    - LLM 灞? 璇佹嵁绾︽潫寮?Prompt + JSON 鏍￠獙 + 妯℃澘闄嶇骇
+    - 鍥炲啓: DRY_RUN 棰勮 + 骞傜瓑涓夐敭 + 鐘舵€佹満
+    - 璇勬祴: 13 浠介粍閲戞牱渚嬶紝楂橀闄╁彫鍥?100% / 璇姤 0
+    - 鍓嶇: 闆舵瀯寤烘繁鑹插伐浣滃彴(澶х洏/鍙屾爮鑱斿姩/瑙勫垯椤?璇勬祴鐪嬫澘)
+    - 宸ョ▼: Docker + CI 鍥涢亾闂ㄧ
+
+ .env.example                            |  41 ++
+ .github/workflows/ci.yml                | 156 ++++++
+ .gitignore                              |  59 +++
+ CLAUDE.md                               | 107 ++++
+ README.md                               | 177 +++++++
+ _debug1.txt                             | 116 +++++
+ _debug2.txt                             |  18 +
+ _debug3.txt                             |  15 +
+ _debug4.txt                             |  20 +
+ backend/app/__init__.py                 |   4 +
+ backend/app/api/__init__.py             |   2 +
+ backend/app/api/contracts.py            | 556 ++++++++++++++++++++
+ backend/app/api/rules.py                | 120 +++++
+ backend/app/config.py                   | 127 +++++
+ backend/app/db.py                       | 254 +++++++++
+ backend/app/eval/__init__.py            |   2 +
+ backend/app/eval/golden_cases.json      | 257 ++++++++++
+ backend/app/eval/run_eval.py            | 320 ++++++++++++
+ backend/app/main.py                     | 108 ++++
+ backend/app/rules/clause_templates.yaml | 167 ++++++
+ backend/app/rules/rules_v1.yaml         | 773 ++++++++++++++++++++++++++++
+ backend/app/schemas.py                  | 174 +++++++
+ backend/app/services/__init__.py        |   2 +
+ backend/app/services/audit.py           |  71 +++
+ backend/app/services/coordinator.py     | 333 ++++++++++++
+ backend/app/services/llm.py             | 292 +++++++++++
+ backend/app/services/parser_docx.py     | 111 ++++
+ backend/app/services/parser_ocr.py      | 106 ++++
+ backend/app/services/parser_pdf.py      | 116 +++++
+ backend/app/services/pipeline.py        | 604 ++++++++++++++++++++++
+ backend/app/services/report.py          | 131 +++++
+ backend/app/services/rule_engine.py     | 559 ++++++++++++++++++++
+ backend/app/services/writeback.py       | 211 ++++++++
+ backend/app/services/writer.py          | 283 ++++++++++
+ backend/demo.py                         | 311 +++++++++++
+ backend/tests/test_parsers.py           | 165 ++++++
+ backend/tests/test_pipeline.py          | 158 ++++++
+ backend/tests/test_rule_engine.py       | 180 +++++++
+ backend/tools/gen_samples.py            | 881 ++++++++++++++++++++++++++++++++
+ backend/tools/smoke_api.py              | 357 +++++++++++++
+ deploy/Dockerfile                       |  61 +++
+ deploy/docker-compose.yml               |  64 +++
+ deploy/nginx/hengjian.conf              |  49 ++
+ docs/13_delivery/鎺ュ彛鍐掔儫娴嬭瘯鎶ュ憡.txt   |  80 +++
+ frontend/assets/css/app.css             | 361 +++++++++++++
+ frontend/assets/js/common.js            | 200 ++++++++
+ frontend/assets/js/dashboard.js         | 194 +++++++
+ frontend/assets/js/eval.js              | 101 ++++
+ frontend/assets/js/rules.js             | 147 ++++++
+ frontend/assets/js/workbench.js         | 547 ++++++++++++++++++++
+ frontend/index.html                     | 113 ++++
+ frontend/pages/eval.html                |  61 +++
+ frontend/pages/rules.html               |  51 ++
+ frontend/pages/workbench.html           |  51 ++
+ pyproject.toml                          |  41 ++
+ start.bat                               |  61 +++
+ 56 files changed, 10626 insertions(+)

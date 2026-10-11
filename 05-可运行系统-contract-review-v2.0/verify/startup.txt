@@ -1,0 +1,6 @@
+OK  run.py 启动成功，/api/health HTTP 200
+    版本 1.0.0 ｜ PDF 通道 可用 ｜ 规则类型 labor,purchase,sales,service
+OK   GET /  15471 字节
+OK   GET /workbench?id=1  22653 字节
+OK   GET /rules  13235 字节
+已关闭启动进程

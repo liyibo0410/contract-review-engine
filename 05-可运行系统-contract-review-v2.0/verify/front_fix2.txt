@@ -1,0 +1,3 @@
+  ok   ui/assets/app.js :: '<button class="btn sm ghost hide-xs" id="themeBtn" oncl
+  ok   ui/assets/app.css :: 主题按钮窄屏只留图标
+  ok   tools/run_all.py :: "assistant": ("tools/check_assistant.py", "AI 助手：意图/数据/引

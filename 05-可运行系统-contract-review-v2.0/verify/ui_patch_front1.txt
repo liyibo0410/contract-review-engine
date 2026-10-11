@@ -1,0 +1,9 @@
+  ok   ui/assets/app.js :: '<div class="spacer"></div>',
+  ok   ui/assets/app.js :: function renderRoleBar() {
+  ok   ui/index.html :: function card(k, v, x, cls, ic, pct, color) {
+  ok   ui/index.html :: CR.$('#stats').innerHTML =
+  ok   ui/index.html :: async function openDrill(cfg) {
+  ok   ui/index.html :: const pc = (a, b) => (b ? Math.round((a || 0) / b * 100) : 0);
+  ok   ui/index.html :: let CASES = [];
+  ok   ui/index.html :: CR.$('#subTitle').textContent = '共 ' + total + ' 个审查任务 · 高风险 '
+  ok   ui/index.html :: <!-- ==================== 角色与权限（需求 2.4.2） ====================

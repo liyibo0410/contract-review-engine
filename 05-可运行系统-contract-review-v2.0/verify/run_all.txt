@@ -1,0 +1,5 @@
+consistency exit=0   改动一致性核查 ｜ consistency: missing=0
+js        exit=0   前端脚本语法校验 ｜ 前端脚本语法校验：17 个脚本，失败 0 个
+twin      exit=0   孪生看板数据真实性校验 ｜ twin data check: PASS
+assistant exit=0   AI 助手：意图/数据/引导校验 ｜ assistant check: 26 / 26
+devcheck  exit=0   开发期编译/导入/关键路径自检 ｜ devcheck problems: 0

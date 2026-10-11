@@ -1,0 +1,567 @@
+# -*- coding: utf-8 -*-
+"""SQLite 持久层 + 任务状态机（零第三方依赖）。
+
+表结构对齐架构图「工程支撑与交付」一节：
+    contract_cases / contract_documents / review_results / audit_logs
+另加 writeback_logs 承载回写状态流转（not_written/writing/success/failed）。
+"""
+from __future__ import annotations
+
+import json
+import os
+import sqlite3
+import threading
+import time
+import uuid
+
+# ---------------------------------------------------------------- 状态枚举
+S_PENDING = "pending"        # 待处理
+S_PARSING = "parsing"        # 解析中
+S_REVIEWING = "reviewing"    # 审查中
+S_BLOCKED = "blocked"        # 解析受阻
+S_COMPLETED = "completed"    # 审查完成
+STATUS_LABEL = {
+    S_PENDING: "待处理",
+    S_PARSING: "解析中",
+    S_REVIEWING: "审查中",
+    S_BLOCKED: "解析受阻",
+    S_COMPLETED: "审查完成",
+}
+
+WB_NOT_WRITTEN = "not_written"
+WB_WRITING = "writing"
+WB_SUCCESS = "success"
+WB_FAILED = "failed"
+WB_LABEL = {
+    WB_NOT_WRITTEN: "未回写",
+    WB_WRITING: "回写中",
+    WB_SUCCESS: "回写成功",
+    WB_FAILED: "回写失败",
+}
+
+R_HIGH = "high"
+R_MEDIUM = "medium"
+R_LOW = "low"
+R_NONE = "none"
+RISK_LABEL = {R_HIGH: "高风险", R_MEDIUM: "中风险", R_LOW: "低风险", R_NONE: "无风险"}
+RISK_WEIGHT = {R_NONE: 0, R_LOW: 1, R_MEDIUM: 2, R_HIGH: 3}
+
+# 解析引擎标识
+ENGINE_DOCX = "docx-xml"
+ENGINE_PDF = "pdf-text"
+ENGINE_OCR = "ocr-win"
+ENGINE_NONE = "-"
+
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS contract_cases (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    case_no             TEXT    NOT NULL UNIQUE,
+    title               TEXT    NOT NULL,
+    applicant           TEXT,
+    send_dept           TEXT,
+    business_type       TEXT,              -- purchase / sales / service / labor
+    counterparty        TEXT,
+    credit_code         TEXT,
+    amount              REAL,
+    currency            TEXT DEFAULT 'CNY',
+    perform_period      TEXT,
+    effective_condition TEXT,
+    source              TEXT DEFAULT 'local',   -- approval(审批拉取) / local(本地上传)
+    approval_instance   TEXT,
+    document_id         INTEGER,
+    doc_sha256          TEXT,
+    review_status       TEXT DEFAULT 'pending',
+    writeback_status    TEXT DEFAULT 'not_written',
+    risk_level          TEXT DEFAULT 'none',
+    conclusion          TEXT,              -- pass / rectify / reject
+    blocked_reason      TEXT,
+    lawyer_opinion      TEXT,
+    created_at          TEXT,
+    updated_at          TEXT
+);
+
+CREATE TABLE IF NOT EXISTS contract_documents (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    case_id       INTEGER NOT NULL,
+    filename      TEXT    NOT NULL,
+    doc_type      TEXT,                    -- docx / pdf / image
+    parse_engine  TEXT,
+    parse_status  TEXT DEFAULT 'pending',  -- ok / blocked
+    parse_error   TEXT,
+    page_count    INTEGER DEFAULT 0,
+    para_count    INTEGER DEFAULT 0,
+    char_count    INTEGER DEFAULT 0,
+    ocr_confidence REAL DEFAULT 0,
+    need_manual   INTEGER DEFAULT 0,
+    sha256        TEXT,
+    file_path     TEXT,
+    text_path     TEXT,
+    created_at    TEXT
+);
+
+CREATE TABLE IF NOT EXISTS review_results (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    case_id      INTEGER NOT NULL,
+    rule_id      TEXT,
+    rule_name    TEXT,
+    risk_level   TEXT,
+    clause_type  TEXT,
+    match_mode   TEXT,
+    evidence     TEXT,
+    page_no      INTEGER,
+    para_index   INTEGER,
+    char_start   INTEGER,
+    char_end     INTEGER,
+    reason       TEXT,
+    legal_basis  TEXT,
+    suggestion   TEXT,
+    suggestion_final TEXT,
+    adopted      INTEGER DEFAULT 0,
+    lawyer_note  TEXT,
+    created_at   TEXT
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    case_id    INTEGER,
+    step       TEXT,
+    tool       TEXT,
+    status     TEXT,
+    detail     TEXT,
+    created_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS writeback_logs (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    case_id     INTEGER NOT NULL,
+    mode        TEXT,                      -- dry_run / live
+    channel     TEXT,                      -- feishu_mock
+    status      TEXT,
+    payload     TEXT,
+    comment_id  TEXT,
+    error       TEXT,
+    created_at  TEXT
+);
+
+-- v2.0 新增：RBAC 账号与登录会话（需求 2.4.2 三角色）
+CREATE TABLE IF NOT EXISTS app_users (
+    username    TEXT PRIMARY KEY,
+    display     TEXT,
+    role        TEXT NOT NULL,             -- legal / applicant / admin
+    pwd_hash    TEXT NOT NULL,             -- pbkdf2$迭代次数$salt$hash
+    enabled     INTEGER DEFAULT 1,
+    created_at  TEXT,
+    last_login  TEXT
+);
+
+CREATE TABLE IF NOT EXISTS app_sessions (
+    token       TEXT PRIMARY KEY,
+    username    TEXT NOT NULL,
+    role        TEXT NOT NULL,
+    created_at  TEXT,
+    expires_at  TEXT,
+    last_seen   TEXT,
+    client      TEXT
+);
+
+-- 索引：覆盖列表筛选、幂等去重、详情聚合三类高频查询
+CREATE INDEX IF NOT EXISTS idx_results_case    ON review_results(case_id, risk_level);
+CREATE INDEX IF NOT EXISTS idx_audit_case      ON audit_logs(case_id, id);
+CREATE INDEX IF NOT EXISTS idx_docs_case       ON contract_documents(case_id);
+CREATE INDEX IF NOT EXISTS idx_wb_case         ON writeback_logs(case_id, id);
+-- approval_instance 唯一性由应用层（pull_from_approval）保证，这里用普通索引，
+-- 避免历史数据存在重复值时导致建库直接失败
+CREATE INDEX IF NOT EXISTS idx_cases_appr ON contract_cases(approval_instance);
+CREATE INDEX IF NOT EXISTS idx_cases_sha       ON contract_cases(doc_sha256);
+CREATE INDEX IF NOT EXISTS idx_cases_status    ON contract_cases(review_status, risk_level);
+-- v2.0：会话按过期时间清理；越权与登录写审计，检索走 tool 前缀
+CREATE INDEX IF NOT EXISTS idx_sessions_exp    ON app_sessions(expires_at);
+CREATE INDEX IF NOT EXISTS idx_audit_tool      ON audit_logs(tool, id);
+"""
+
+
+def _now() -> str:
+    return time.strftime("%Y-%m-%d %H:%M:%S")
+
+
+# 可更新字段白名单（与建表语句保持一致；白名单同时起到防注入与防误用的作用）
+_CASE_FIELDS = {
+    "title", "applicant", "send_dept", "business_type", "counterparty",
+    "credit_code", "amount", "currency", "perform_period", "effective_condition",
+    "source", "approval_instance", "document_id", "doc_sha256",
+    "review_status", "writeback_status", "risk_level", "conclusion",
+    "blocked_reason", "lawyer_opinion",
+}
+_RESULT_FIELDS = {
+    "rule_name", "risk_level", "clause_type", "match_mode", "evidence",
+    "page_no", "para_index", "char_start", "char_end", "reason",
+    "legal_basis", "suggestion", "suggestion_final", "adopted", "lawyer_note",
+}
+
+
+def new_case_no(prefix: str = "HT") -> str:
+    return "%s-%s-%s" % (prefix, time.strftime("%Y%m%d"), uuid.uuid4().hex[:6].upper())
+
+
+class Store:
+    """线程安全的轻量持久层。单连接 + 互斥锁，足够支撑演示与单机部署。"""
+
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+        os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
+        self._lock = threading.RLock()
+        self._conn = sqlite3.connect(db_path, check_same_thread=False)
+        self._conn.row_factory = sqlite3.Row
+        with self._lock:
+            # WAL + NORMAL：单机多线程下读写不互相阻塞，显著降低页面卡顿；
+            # busy_timeout 避免并发写入直接抛 database is locked。
+            try:
+                self._conn.execute("PRAGMA journal_mode=WAL")
+                self._conn.execute("PRAGMA synchronous=NORMAL")
+                self._conn.execute("PRAGMA busy_timeout=5000")
+                self._conn.execute("PRAGMA foreign_keys=ON")
+            except sqlite3.Error:
+                pass
+            self._conn.executescript(SCHEMA)
+            self._conn.commit()
+
+    # ------------------------------------------------------------ 基础
+    def _q(self, sql: str, args=()):
+        with self._lock:
+            cur = self._conn.execute(sql, args)
+            rows = cur.fetchall()
+            return [dict(r) for r in rows]
+
+    def _q1(self, sql: str, args=()):
+        r = self._q(sql, args)
+        return r[0] if r else None
+
+    def _x(self, sql: str, args=()):
+        with self._lock:
+            cur = self._conn.execute(sql, args)
+            self._conn.commit()
+            return cur.lastrowid
+
+    def audit(self, case_id, step: str, tool: str, status: str, detail: str = ""):
+        self._x(
+            "INSERT INTO audit_logs(case_id,step,tool,status,detail,created_at)"
+            " VALUES(?,?,?,?,?,?)",
+            (case_id, step, tool, status, detail, _now()),
+        )
+
+    # ------------------------------------------------------------ 合同案件
+    def create_case(self, **kw) -> int:
+        fields = dict(
+            case_no=kw.get("case_no") or new_case_no(),
+            title=kw.get("title") or "未命名合同",
+            applicant=kw.get("applicant") or "李奕波",
+            send_dept=kw.get("send_dept") or "采购部",
+            business_type=kw.get("business_type") or "purchase",
+            counterparty=kw.get("counterparty") or "",
+            credit_code=kw.get("credit_code") or "",
+            amount=kw.get("amount"),
+            currency=kw.get("currency") or "CNY",
+            perform_period=kw.get("perform_period") or "",
+            effective_condition=kw.get("effective_condition") or "",
+            source=kw.get("source") or "local",
+            approval_instance=kw.get("approval_instance") or "",
+            doc_sha256=kw.get("doc_sha256") or "",
+            review_status=kw.get("review_status") or S_PENDING,
+            writeback_status=kw.get("writeback_status") or WB_NOT_WRITTEN,
+            risk_level=kw.get("risk_level") or R_NONE,
+            conclusion=kw.get("conclusion") or "",
+            blocked_reason=kw.get("blocked_reason") or "",
+            created_at=_now(),
+            updated_at=_now(),
+        )
+        cols = ",".join(fields.keys())
+        marks = ",".join("?" * len(fields))
+        cid = self._x(
+            "INSERT INTO contract_cases (%s) VALUES (%s)" % (cols, marks),
+            tuple(fields.values()),
+        )
+        self.audit(cid, "create_case", "store.create_case", "ok",
+                   "来源=%s 单据号=%s" % (fields["source"], fields["case_no"]))
+        return cid
+
+    def update_case(self, case_id: int, **kw):
+        """按字段白名单更新案件，防止误传字段导致 SQL 拼接异常。"""
+        safe = {k: v for k, v in kw.items() if k in _CASE_FIELDS}
+        if not safe:
+            if kw:
+                self.audit(case_id, "store", "store.update_case", "skipped",
+                           "忽略非法字段：%s" % "、".join(sorted(kw)))
+            return
+        safe["updated_at"] = _now()
+        sets = ",".join("%s=?" % k for k in safe)
+        self._x("UPDATE contract_cases SET %s WHERE id=?" % sets,
+                tuple(safe.values()) + (case_id,))
+
+    def get_case(self, case_id: int):
+        return self._q1("SELECT * FROM contract_cases WHERE id=?", (case_id,))
+
+    def list_cases(self, risk=None, status=None, btype=None, kw=None, writeback=None):
+        sql = "SELECT * FROM contract_cases WHERE 1=1"
+        args = []
+        if risk:
+            sql += " AND risk_level=?"
+            args.append(risk)
+        if status:
+            sql += " AND review_status=?"
+            args.append(status)
+        if writeback:
+            sql += " AND writeback_status=?"
+            args.append(writeback)
+        if btype:
+            sql += " AND business_type=?"
+            args.append(btype)
+        if kw:
+            sql += " AND (title LIKE ? OR counterparty LIKE ? OR case_no LIKE ?)"
+            args += ["%%%s%%" % kw] * 3
+        sql += " ORDER BY id DESC"
+        return self._q(sql, args)
+
+    def rollup(self):
+        """大盘与孪生看板共用的真实聚合。
+
+        全部走 SQL 聚合，不做任何估算：任务数 / 金额、解析产出（页·段·字符·OCR 置信度）、
+        规则命中与采纳数、回写成功数、审计条数。
+        """
+        c = self._q1("SELECT COUNT(*) n, COALESCE(SUM(amount),0) amt "
+                     "FROM contract_cases") or {}
+        d = self._q1("SELECT COUNT(*) n, COALESCE(SUM(page_count),0) pages, "
+                     "COALESCE(SUM(para_count),0) paras, "
+                     "COALESCE(SUM(char_count),0) chars, "
+                     "COALESCE(AVG(NULLIF(ocr_confidence,0)),0) ocr "
+                     "FROM contract_documents WHERE char_count > 0") or {}
+        r = self._q1("SELECT COUNT(*) n, "
+                     "COALESCE(SUM(CASE WHEN adopted=1 THEN 1 ELSE 0 END),0) adopted "
+                     "FROM review_results") or {}
+        by_risk = {x["risk_level"]: x["n"] for x in self._q(
+            "SELECT risk_level, COUNT(*) n FROM review_results GROUP BY risk_level")}
+        wb = self._q1("SELECT COUNT(*) n FROM writeback_logs "
+                      "WHERE status='success'") or {}
+        wb_all = self._q1("SELECT COUNT(*) n FROM writeback_logs") or {}
+        au = self._q1("SELECT COUNT(*) n FROM audit_logs") or {}
+        return {
+            "cases": c.get("n", 0), "amount_total": c.get("amt", 0) or 0,
+            "docs": d.get("n", 0), "pages": d.get("pages", 0) or 0,
+            "paras": d.get("paras", 0) or 0, "chars": d.get("chars", 0) or 0,
+            "ocr_avg": round(float(d.get("ocr", 0) or 0), 3),
+            "hits": r.get("n", 0), "adopted": r.get("adopted", 0) or 0,
+            "hits_by_risk": by_risk,
+            "writeback_success": wb.get("n", 0), "writeback_total": wb_all.get("n", 0),
+            "audit": au.get("n", 0),
+        }
+
+    def case_by_sha(self, sha: str):
+        return self._q1("SELECT * FROM contract_cases WHERE doc_sha256=?", (sha,))
+
+    def case_by_approval(self, instance: str):
+        return self._q1(
+            "SELECT * FROM contract_cases WHERE approval_instance=?", (instance,))
+
+    def stats(self):
+        total = self._q1("SELECT COUNT(*) c FROM contract_cases")["c"]
+        by_status = {r["review_status"]: r["c"] for r in self._q(
+            "SELECT review_status, COUNT(*) c FROM contract_cases GROUP BY review_status")}
+        by_risk = {r["risk_level"]: r["c"] for r in self._q(
+            "SELECT risk_level, COUNT(*) c FROM contract_cases GROUP BY risk_level")}
+        wb = {r["writeback_status"]: r["c"] for r in self._q(
+            "SELECT writeback_status, COUNT(*) c FROM contract_cases GROUP BY writeback_status")}
+        return {"total": total, "by_status": by_status, "by_risk": by_risk,
+                "by_writeback": wb}
+
+    # ------------------------------------------------------------ 文档
+    def add_document(self, case_id: int, **kw) -> int:
+        fields = dict(
+            case_id=case_id,
+            filename=kw.get("filename") or "contract",
+            doc_type=kw.get("doc_type") or "unknown",
+            parse_engine=kw.get("parse_engine") or ENGINE_NONE,
+            parse_status=kw.get("parse_status") or "pending",
+            parse_error=kw.get("parse_error") or "",
+            page_count=kw.get("page_count") or 0,
+            para_count=kw.get("para_count") or 0,
+            char_count=kw.get("char_count") or 0,
+            ocr_confidence=kw.get("ocr_confidence") or 0,
+            need_manual=1 if kw.get("need_manual") else 0,
+            sha256=kw.get("sha256") or "",
+            file_path=kw.get("file_path") or "",
+            text_path=kw.get("text_path") or "",
+            created_at=_now(),
+        )
+        cols = ",".join(fields.keys())
+        marks = ",".join("?" * len(fields))
+        did = self._x("INSERT INTO contract_documents (%s) VALUES (%s)" % (cols, marks),
+                      tuple(fields.values()))
+        self.update_case(case_id, document_id=did)
+        return did
+
+    def get_document(self, doc_id: int):
+        return self._q1("SELECT * FROM contract_documents WHERE id=?", (doc_id,))
+
+    def case_document(self, case_id: int):
+        return self._q1(
+            "SELECT * FROM contract_documents WHERE case_id=? ORDER BY id DESC LIMIT 1",
+            (case_id,))
+
+    # ------------------------------------------------------------ 审查结果
+    def clear_results(self, case_id: int):
+        self._x("DELETE FROM review_results WHERE case_id=?", (case_id,))
+
+    def add_results(self, case_id: int, items: list):
+        for it in items:
+            self._x(
+                "INSERT INTO review_results(case_id,rule_id,rule_name,risk_level,clause_type,"
+                "match_mode,evidence,page_no,para_index,char_start,char_end,reason,legal_basis,"
+                "suggestion,adopted,created_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,?)",
+                (case_id, it.get("rule_id"), it.get("rule_name"), it.get("risk_level"),
+                 it.get("clause_type"), it.get("match_mode"), it.get("evidence"),
+                 it.get("page_no"), it.get("para_index"), it.get("char_start"),
+                 it.get("char_end"), it.get("reason"), it.get("legal_basis"),
+                 it.get("suggestion"), _now()),
+            )
+
+    def results(self, case_id: int):
+        rows = self._q(
+            "SELECT * FROM review_results WHERE case_id=? ORDER BY "
+            "CASE risk_level WHEN 'high' THEN 0 WHEN 'medium' THEN 1 WHEN 'low' THEN 2 "
+            "ELSE 3 END, id", (case_id,))
+        return rows
+
+    def get_result(self, rid: int):
+        return self._q1("SELECT * FROM review_results WHERE id=?", (rid,))
+
+    def update_result(self, rid: int, **kw):
+        """按字段白名单更新风险项（法务复核）。"""
+        safe = {k: v for k, v in kw.items() if k in _RESULT_FIELDS}
+        if not safe:
+            return
+        sets = ",".join("%s=?" % k for k in safe)
+        self._x("UPDATE review_results SET %s WHERE id=?" % sets,
+                tuple(safe.values()) + (rid,))
+
+    def overall_risk(self, case_id: int) -> str:
+        rows = self.results(case_id)
+        best = R_NONE
+        for r in rows:
+            if RISK_WEIGHT.get(r["risk_level"], 0) > RISK_WEIGHT[best]:
+                best = r["risk_level"]
+        return best
+
+    # ------------------------------------------------------------ 审计 / 回写
+    def audit_list(self, case_id=None, limit=200):
+        if case_id:
+            return self._q("SELECT * FROM audit_logs WHERE case_id=? ORDER BY id DESC LIMIT ?",
+                           (case_id, limit))
+        return self._q("SELECT * FROM audit_logs ORDER BY id DESC LIMIT ?", (limit,))
+
+    def add_writeback(self, case_id: int, mode: str, channel: str, status: str,
+                      payload: str, comment_id: str = "", error: str = "") -> int:
+        return self._x(
+            "INSERT INTO writeback_logs(case_id,mode,channel,status,payload,comment_id,error,"
+            "created_at) VALUES(?,?,?,?,?,?,?,?)",
+            (case_id, mode, channel, status, payload, comment_id, error, _now()),
+        )
+
+    def writeback_list(self, case_id: int):
+        return self._q(
+            "SELECT * FROM writeback_logs WHERE case_id=? ORDER BY id DESC", (case_id,))
+
+    # ------------------------------------------------------------ 账号 / 会话（v2.0 RBAC）
+    def user_get(self, username: str):
+        return self._q1("SELECT * FROM app_users WHERE username=?", (username,))
+
+    def user_upsert(self, username: str, display: str, role: str, pwd_hash: str,
+                    reset: bool = False):
+        """种子账号写入。
+
+        reset=False 时**不覆盖已有密码** —— 否则每次重启都会把管理员改过的
+        密码重置回配置默认值，线上等于密码失守。
+        """
+        exist = self.user_get(username)
+        if exist is None:
+            self._x("INSERT INTO app_users(username,display,role,pwd_hash,enabled,"
+                    "created_at,last_login) VALUES(?,?,?,?,1,?,NULL)",
+                    (username, display, role, pwd_hash, _now()))
+            return True
+        if reset:
+            self._x("UPDATE app_users SET display=?,role=?,pwd_hash=?,enabled=1 WHERE username=?",
+                    (display, role, pwd_hash, username))
+            return True
+        self._x("UPDATE app_users SET display=?,role=? WHERE username=?",
+                (display, role, username))
+        return False
+
+    def user_list(self):
+        rows = self._q("SELECT username,display,role,enabled,created_at,last_login "
+                       "FROM app_users ORDER BY role,username")
+        return rows
+
+    def user_set_password(self, username: str, pwd_hash: str):
+        self._x("UPDATE app_users SET pwd_hash=? WHERE username=?", (pwd_hash, username))
+
+    def user_mark_login(self, username: str):
+        self._x("UPDATE app_users SET last_login=? WHERE username=?", (_now(), username))
+
+    def session_create(self, token: str, username: str, role: str,
+                       ttl_sec: int, client: str = ""):
+        now = time.time()
+        self._x("INSERT OR REPLACE INTO app_sessions"
+                "(token,username,role,created_at,expires_at,last_seen,client)"
+                " VALUES(?,?,?,?,?,?,?)",
+                (token, username, role, _now(),
+                 time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(now + ttl_sec)),
+                 _now(), client[:120]))
+
+    def session_get(self, token: str):
+        row = self._q1("SELECT * FROM app_sessions WHERE token=?", (token,))
+        if not row:
+            return None
+        try:
+            exp = time.mktime(time.strptime(row["expires_at"], "%Y-%m-%d %H:%M:%S"))
+        except (ValueError, TypeError):
+            exp = 0
+        if exp < time.time():
+            self.session_delete(token)
+            return None
+        self._x("UPDATE app_sessions SET last_seen=? WHERE token=?", (_now(), token))
+        return row
+
+    def session_delete(self, token: str):
+        self._x("DELETE FROM app_sessions WHERE token=?", (token,))
+
+    def session_purge(self) -> int:
+        """清理过期会话，返回清理条数（启动与定时任务调用）。"""
+        rows = self._q("SELECT token,expires_at FROM app_sessions")
+        dead = []
+        now = time.time()
+        for r in rows:
+            try:
+                if time.mktime(time.strptime(r["expires_at"], "%Y-%m-%d %H:%M:%S")) < now:
+                    dead.append(r["token"])
+            except (ValueError, TypeError):
+                dead.append(r["token"])
+        for t in dead:
+            self._x("DELETE FROM app_sessions WHERE token=?", (t,))
+        return len(dead)
+
+    def session_list(self):
+        return self._q("SELECT token,username,role,created_at,expires_at,last_seen,client "
+                       "FROM app_sessions ORDER BY last_seen DESC")
+
+    def session_count(self) -> int:
+        return self._q1("SELECT COUNT(*) c FROM app_sessions")["c"]
+
+    def export_all(self):
+        return {
+            "cases": self._q("SELECT * FROM contract_cases ORDER BY id"),
+            "documents": self._q("SELECT * FROM contract_documents ORDER BY id"),
+            "results": self._q("SELECT * FROM review_results ORDER BY id"),
+            "audit": self._q("SELECT * FROM audit_logs ORDER BY id"),
+            "writeback": self._q("SELECT * FROM writeback_logs ORDER BY id"),
+        }
+
+    def dumps_export(self) -> str:
+        return json.dumps(self.export_all(), ensure_ascii=False, indent=2)

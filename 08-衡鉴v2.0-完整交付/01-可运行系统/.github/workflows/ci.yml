@@ -1,0 +1,156 @@
+# ============================================================
+#  衡鉴 · CI 流水线
+#  四道门禁全部前置（对应《集成联调计划》里的质量门）：
+#    lint → test → eval(回归跑分) → build(镜像)
+#  其中 eval 是这套系统的特色门禁：规则改动导致命中率退化会直接把流水线打红。
+# ============================================================
+name: ci
+
+on:
+  push:
+    branches: [main, develop, "feature/**", "fix/**"]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_LINK_MODE: copy
+  PYTHONIOENCODING: utf-8
+
+jobs:
+  # ---------------------------------------------------------- 门禁一：静态检查
+  lint:
+    name: "门禁1 · 静态检查"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv venv --python 3.11 .venv
+      - run: uv pip install --python .venv/bin/python ruff
+      - name: Ruff 检查
+        run: .venv/bin/ruff check backend/app backend/tools --select E,F,W --ignore E501
+      - name: 规则库 YAML 合法性
+        run: |
+          .venv/bin/python - <<'PY'
+          import yaml, sys, pathlib
+          p = pathlib.Path("backend/app/rules/rules_v1.yaml")
+          d = yaml.safe_load(p.read_text(encoding="utf-8"))
+          rules = d.get("rules", [])
+          ids = [r["id"] for r in rules]
+          assert len(ids) == len(set(ids)), "规则 ID 重复"
+          assert len(rules) >= 30, f"规则数量不足：{len(rules)}"
+          levels = {}
+          for r in rules:
+              levels[r["level"]] = levels.get(r["level"], 0) + 1
+              assert r["type"] in {"keyword","regex","numeric","imbalance",
+                                   "imbalance_regex","missing_clause",
+                                   "required_combo","absent"}, r["type"]
+          print("规则库校验通过：", len(rules), "条", levels)
+          t = yaml.safe_load(pathlib.Path("backend/app/rules/clause_templates.yaml")
+                             .read_text(encoding="utf-8"))
+          ids_t = [x["id"] for x in t["templates"]]
+          missing = {r.get("advice_ref") for r in rules if r.get("advice_ref")} - set(ids_t)
+          assert not missing, f"规则引用了不存在的示范条款：{missing}"
+          print("示范条款交叉引用校验通过：", len(ids_t), "套")
+          PY
+
+  # ---------------------------------------------------------- 门禁二：单元测试
+  test:
+    name: "门禁2 · 单元测试"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv venv --python 3.11 .venv
+      - run: uv pip install --python .venv/bin/python -e . pytest httpx
+      - name: 生成样例合同
+        run: cd backend && ../.venv/bin/python tools/gen_samples.py
+      - name: 安装 OCR 引擎
+        run: uv pip install --python .venv/bin/python rapidocr-onnxruntime || echo "OCR 安装失败，跳过扫描件用例"
+      - name: pytest
+        env:
+          HJ_LLM_ENABLED: "0"
+        run: cd backend && ../.venv/bin/python -m pytest -q
+
+  # ---------------------------------------------------------- 门禁三：回归跑分
+  eval:
+    name: "门禁3 · 规则回归跑分"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - run: uv venv --python 3.11 .venv
+      - run: uv pip install --python .venv/bin/python -e .
+      - run: cd backend && ../.venv/bin/python tools/gen_samples.py
+      - run: uv pip install --python .venv/bin/python rapidocr-onnxruntime || true
+      - name: 跑黄金样例集
+        env:
+          HJ_LLM_ENABLED: "0"
+        run: cd backend && ../.venv/bin/python -m app.eval.run_eval --no-persist --json --out eval.json
+      - name: 断言命中率未退化
+        run: |
+          .venv/bin/python - <<'PY'
+          import json, sys
+          s = json.load(open("backend/eval.json"))["summary"]
+          print(json.dumps(s, ensure_ascii=False, indent=2))
+          ok = True
+          if s["high_recall"] < 1.0:
+              print(f"::error::高风险召回率退化至 {s['high_recall']}"); ok = False
+          if s["false_positive"] > 0:
+              print(f"::error::出现 {s['false_positive']} 条误报"); ok = False
+          if s["parse_success_rate"] < 1.0:
+              print(f"::error::解析成功率退化至 {s['parse_success_rate']}"); ok = False
+          sys.exit(0 if ok else 1)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-report
+          path: |
+            backend/eval.json
+            backend/app/eval/reports/*.md
+
+  # ---------------------------------------------------------- 门禁四：镜像构建
+  build:
+    name: "门禁4 · 构建镜像"
+    runs-on: ubuntu-latest
+    needs: [test, eval]
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: 构建并加载镜像
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile
+          push: false
+          load: true
+          tags: hengjian:ci-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: 镜像冒烟（容器启动后健康检查）
+        run: |
+          docker run -d --name hj -p 8130:8130 hengjian:ci-${{ github.sha }}
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8130/api/system/health > /tmp/health.json; then
+              echo "健康检查通过："; cat /tmp/health.json; exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::容器健康检查超时"; docker logs hj; exit 1
+      - name: 清理
+        if: always()
+        run: docker rm -f hj || true

@@ -1,0 +1,49 @@
+线上前端优化复验（公网 HTTP，无 SSH）
+================================================================================================
+目标 http://39.96.200.45:8160 ｜ 2026-09-19 14:11:10
+
+会话：已获取（admin）
+[OK ] 已登录取到会话 Cookie
+
+① 版本口径
+[OK ] 线上 /api/health 报 version=2.1.6 ｜ 交付版本=2.1.6
+
+② 静态资源缓存策略与条件请求（本次优化的重点）
+   /assets/app.css          200 ｜  17.6 KB ｜ cache-control=no-cache, must-revalidate ｜ etag=W/"6aae2710-10cbc"
+       条件请求：200 → 304（0.0 KB）
+   /assets/app.js           200 ｜  10.8 KB ｜ cache-control=no-cache, must-revalidate ｜ etag=W/"6aae2710-77d1"
+       条件请求：200 → 304（0.0 KB）
+   /assets/fx.css           200 ｜   6.7 KB ｜ cache-control=no-cache, must-revalidate ｜ etag=W/"6aae2710-63ce"
+       条件请求：200 → 304（0.0 KB）
+   /assets/logo-sm.png      200 ｜  11.5 KB ｜ cache-control=no-cache, must-revalidate ｜ etag=W/"6aae2710-2e0d"
+       条件请求：200 → 304（0.0 KB）
+   /assets/favicon.png      200 ｜   6.3 KB ｜ cache-control=no-cache, must-revalidate ｜ etag=W/"6aae2710-1947"
+       条件请求：200 → 304（0.0 KB）
+   /assets/charts.js        200 ｜   4.5 KB ｜ cache-control=no-cache, must-revalidate ｜ etag=W/"6aae2710-36a5"
+       条件请求：200 → 304（0.0 KB）
+   合计：6 个静态资源全部命中 304 时，单次导航省 ≈ 57.4 KB（线上传输口径）
+[OK ] 静态资源可缓存且全部支持 304 条件请求
+
+③ 安全口径未被放松（页面与接口仍应 no-store）
+   /                200 ｜ cache-control=no-store
+   /login           200 ｜ cache-control=no-store
+   /api/health      200 ｜ cache-control=no-store
+[OK ] 页面 HTML 与接口响应仍为 no-store
+
+④ logo 瘦身是否生效（优化前 23.3 KB / 优化后应 ≈ 11.5 KB）
+   /assets/logo-sm.png 实际 11789 字节（11.5 KB）
+[OK ] logo 已瘦身（11.5 KB）
+
+⑤ 按页裁剪：workbench 不应再引 charts.js
+   大盘落点校验：含「审查大盘」=True（说明带会话拿到了真页面，不是登录页）
+   工作台落点校验：含「智能审查工作台」=True
+[OK ] 两份页面都确认为**登录后**的真实页面（不是被 302 到登录页）
+   /（大盘）          返回  15922 字节 → 解压  54377 字节 ｜ 含 charts.js：True
+   /workbench?id=1   返回  15444 字节 → 解压  48443 字节 ｜ 含 charts.js：False
+[OK ] workbench 已去除未使用的 charts.js
+[OK ] 大盘仍引用 charts.js（它的 CH.donut / CH.hbars 是真在用，没被误删）
+[OK ] app.js 仍引用 logo 路径（静态资源注入点未被改坏）
+
+================================================================================================
+复验结果：0 项未通过
+================================================================================================

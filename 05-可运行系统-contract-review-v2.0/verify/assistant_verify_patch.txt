@@ -1,0 +1,3 @@
+  ok   tools/verify_http.py :: # ---------- 统计卡下钻依赖的回写筛选
+  ok   tools/verify_render.py :: probe_authed("模拟审批系统美化页渲染（替代裸 JSON）", "/mock", [
+  ok   tools/verify_render.py :: mobile_shot("/twin", "08_手机端_孪生看板.png", [

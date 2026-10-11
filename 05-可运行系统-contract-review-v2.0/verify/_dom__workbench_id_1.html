@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" class=" js"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>智能审查工作台 · 亦大合同智能审查系统</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/fx.css">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('cr-theme');
+    if (t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { }
+  document.documentElement.className += ' js';
+  setTimeout(function () {
+    var v = document.querySelectorAll('.reveal:not(.in)');
+    for (var i = 0; i < v.length; i++) {
+      var r = v[i].getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) v[i].classList.add('in');
+    }
+  }, 2600);
+})();
+</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar"><a class="brand" href="/" title="返回审查大盘"><img class="brand-logo" src="/assets/logo-sm.png" alt="亦大 标识" width="30" height="31"><span class="brand-txt"><b>合同智能审查系统</b><i>亦大 · intelligent contract review</i></span></a><nav class="nav" aria-label="主导航"><a href="/">审查大盘</a><a href="/workbench" class="active" aria-current="page">智能审查工作台</a><a href="/twin">动态孪生看板</a><a href="/rules">合规规则与模板</a></nav><div class="spacer"></div><span class="env-tag" id="envTag">演示环境 · 在线审查</span><a class="btn sm ghost" href="/mock/feishu/api/todo" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M14 4h6v6"></path><path d="M20 4l-8.5 8.5"></path><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"></path></svg>模拟审批接口</a><button class="btn sm ghost" id="themeBtn" onclick="CR.toggleTheme()" title="切换到浅色主题"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path></svg><span>浅色</span></button><span class="role-bar"><span class="role-chip" id="roleChip" title="配置审批流对接参数、维护合规审查规则与标准条款库、监控审查任务状态并处理阻塞重试"><span class="rc-role">系统管理员</span><span class="rc-user">admin</span></span><select class="role-switch" id="roleSwitch" onchange="CR.roleSwitch(this.value)" aria-label="切换演示身份"><option value="legal">法务审查人</option><option value="applicant">业务经办人</option><option value="admin" selected="">系统管理员</option></select><a class="btn sm ghost" href="/logout" title="退出登录">退出</a></span></div>
+
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1 id="hTitle">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg>
+        智能审查工作台
+      </h1>
+      <p id="hSub" class="mono" style="font-size:12px"></p>
+    </div>
+    <div class="spacer"></div>
+    <div class="row wrap" id="hTags"></div>
+    <button class="btn" onclick="location.href='/'"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6l-6 6 6 6"></path></svg>返回大盘</button>
+    <button class="btn" data-cap="export_report" data-cap-label="下载审查报告" onclick="exportReport('md')"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12"></path><path d="M7.5 11.5L12 16l4.5-4.5"></path><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"></path></svg>导出 Markdown</button>
+    <button class="btn" data-cap="export_report" data-cap-label="下载审查报告" onclick="exportPdf()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg>导出 PDF</button>
+    <button class="btn primary gated" id="btnWb" data-cap="writeback" data-cap-label="回写审批意见" onclick="doWriteback('live')" title="当前角色无此权限：回写审批意见" disabled=""><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l.8-4.2L15.5 5a2.1 2.1 0 0 1 3 3L7.8 18.7z"></path><path d="M13.5 7l3 3"></path></svg>写回审批意见</button>
+  </div>
+
+  <div id="blockedBox"></div>
+  <div id="diagBox"></div>
+
+  <div class="wb">
+    <!-- ============================ 左：合同正文视窗 ============================ -->
+    <div class="panel reveal in">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg>合同正文</span>
+        <span class="faint" id="docInfo" style="font-size:12px"></span>
+        <div class="spacer"></div>
+        <div class="pager compact" id="pager"></div>
+      </div>
+      <div class="doc-scroll" id="doc"><div class="empty">加载失败：案件不存在<br><button class="btn sm" style="margin-top:10px" onclick="load()">重试</button></div></div>
+    </div>
+
+    <!-- ============================ 右：审查结果 + 协同 ============================ -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <div class="panel reveal in" data-d="1">
+        <div class="tabs" id="tabs">
+          <button class="on" data-t="risk" onclick="setTab('risk')">风险清单 <span class="faint" id="nRisk"></span></button>
+          <button data-t="clause" onclick="setTab('clause')">条款结构</button>
+          <button data-t="meta" onclick="setTab('meta')">元数据</button>
+          <button data-t="audit" onclick="setTab('audit')">审计日志</button>
+        </div>
+        <div class="panel-head" id="riskFilter" style="gap:8px;flex-wrap:wrap">
+          <div class="chips" id="riskChips"></div>
+          <div class="spacer"></div>
+          <label class="row" style="font-size:12px;gap:5px;color:var(--sub)">
+            <input type="checkbox" id="onlyPending" onchange="renderTabs()"> 仅看未采纳
+          </label>
+          <button class="btn sm ghost" onclick="toggleCollapse()" id="btnCollapse">全部折叠</button>
+        </div>
+        <div class="panel-body" id="tabBody"></div>
+      </div>
+
+      <div class="panel reveal" data-d="2">
+        <div class="panel-head">
+          <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l.8-4.2L15.5 5a2.1 2.1 0 0 1 3 3L7.8 18.7z"></path><path d="M13.5 7l3 3"></path></svg>审批协同与回写</span>
+          <div class="spacer"></div>
+          <span id="notifyState" class="faint" style="font-size:11.5px"></span>
+          <span id="wbState"></span>
+        </div>
+        <div class="panel-body">
+          <div id="summaryBox"></div>
+          <div class="sep"></div>
+          <div class="field">
+            <div class="lab">法务人工批注（将随审查意见一并写回审批评论区）</div>
+            <textarea id="opinion" rows="3" style="width:100%" placeholder="例：第二、四条须按下述示范条款修改后方可用印；第六条补充保密期限。"></textarea>
+          </div>
+          <div class="row" style="margin-top:10px;flex-wrap:wrap">
+            <button class="btn sm gated" data-cap="add_opinion" data-cap-label="补充法务批注" onclick="saveOpinion()" title="当前角色无此权限：补充法务批注" disabled="">保存批注</button>
+            <button class="btn sm gated" data-cap="writeback" data-cap-label="回写审批意见" onclick="doWriteback('dry_run')" title="当前角色无此权限：回写审批意见" disabled="">预览回写内容</button>
+            <button class="btn sm primary gated" data-cap="writeback" data-cap-label="回写审批意见" onclick="doWriteback('live')" title="当前角色无此权限：回写审批意见" disabled="">写回审批单</button>
+            <button class="btn sm ghost" onclick="openComments()">查看审批评论区</button>
+          </div>
+          <div class="row" style="margin-top:9px">
+            <span class="faint" style="font-size:11.5px">
+              快捷键：<span class="kbd">J</span>/<span class="kbd">K</span> 切换风险项　
+              <span class="kbd">A</span> 采纳当前项　<span class="kbd">Esc</span> 关闭弹层</span>
+          </div>
+          <div id="wbResult" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 回写预览 / 结果 -->
+<div class="mask" id="mComment">
+  <div class="modal" style="max-width:820px">
+    <div class="mh" id="cmTitle">待写入审批评论区的审查意见</div>
+    <div class="mb">
+      <div class="quote" id="cmBody" style="max-height:56vh;overflow:auto"></div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="copyComment()">复制全文</button>
+      <div class="spacer" style="flex:1"></div>
+      <button class="btn" onclick="CR.closeModal('mComment')">关闭</button>
+      <button class="btn primary" id="cmOk" onclick="confirmWb()" style="display:none">确认写入审批单</button>
+    </div>
+  </div>
+</div>
+
+<!-- 通知（钉钉） -->
+<div class="mask" id="mNotify">
+  <div class="modal" style="max-width:600px">
+    <div class="mh">机器人通知</div>
+    <div class="mb" id="notifyBody"></div>
+    <div class="mf">
+      <button class="btn" onclick="CR.closeModal('mNotify')">关闭</button>
+      <button class="btn primary" id="btnNotifyTest" onclick="sendNotifyTest()">发送测试通知</button>
+    </div>
+  </div>
+</div>
+
+<script src="/assets/app.js"></script><div class="glow g1"></div><div class="glow g2"></div><div class="scanline"></div>
+<script src="/assets/charts.js"></script>
+<script>
+let CASE_ID = Number(CR.qs('id') || 1);
+let D = null;
+let PAGE = 1;
+let TAB = 'risk';
+let RLEVEL = '';           // 风险等级筛选：'' / high / medium / low
+let CURSOR = -1;           // 键盘导航游标
+let PF = null;             // 当前弹层展示的评论正文（供复制）
+
+CR.initAuth('/workbench', '演示环境 · 在线审查');
+
+/* ------------------------------------------------------------------ 载入 */
+async function load() {
+  CR.$('#doc').innerHTML = CR.skeleton(10);
+  CR.$('#tabBody').innerHTML = CR.skeleton(6);
+  try {
+    D = await CR.api('GET', '/api/cases/' + CASE_ID);
+  } catch (e) {
+    CR.$('#doc').innerHTML = '<div class="empty">加载失败：' + CR.esc(e.message) +
+      '<br><button class="btn sm" style="margin-top:10px" onclick="load()">重试</button></div>';
+    CR.$('#tabBody').innerHTML = '';
+    return;
+  }
+  renderHead();
+  renderBlocked();
+  renderDiag();
+  renderDoc();
+  renderTabs();
+  renderSide();
+  renderWriteback();
+  loadNotifyStatus();
+  if (CR.gate) CR.gate();            // 动态渲染出来的按钮也要按能力显隐
+  watchStatus();
+  CR.initReveal();
+}
+
+/* -------------------------------------------------- v2.0 流转过程可见（M9）
+   任务处于 pending / parsing / reviewing 时按 1s 轮询，把「正在解析 → 正在审查」
+   的过程显示出来，而不是让用户对着一个静态页面猜系统是不是卡住了。 */
+let WATCH = null;
+const RUNNING = ['pending', 'parsing', 'reviewing'];
+
+function watchStatus() {
+  if (WATCH) { clearInterval(WATCH); WATCH = null; }
+  if (!D || !D.case || RUNNING.indexOf(D.case.review_status) < 0) return;
+  let ticks = 0;
+  WATCH = setInterval(async function () {
+    ticks++;
+    try {
+      const c = await CR.api('GET', '/api/cases/' + CASE_ID);
+      const st = c.case ? c.case.review_status : '';
+      if (RUNNING.indexOf(st) < 0 || ticks > 240) {
+        clearInterval(WATCH); WATCH = null;
+        if (RUNNING.indexOf(st) < 0) { await load(); CR.toast('审查已完成，页面已刷新', 'ok'); }
+        return;
+      }
+      const lab = { pending: '待处理', parsing: '解析中', reviewing: '审查中' }[st] || st;
+      const tag = CR.$('#hTags');
+      if (tag) {
+        let t = CR.$('#liveTag');
+        if (!t) {
+          t = document.createElement('span');
+          t.id = 'liveTag';
+          t.className = 'tag run';
+          tag.appendChild(t);
+        }
+        t.textContent = lab + ' · 第 ' + ticks + ' 秒';
+      }
+    } catch (e) { /* 忽略单次轮询失败，下一轮继续 */ }
+  }, 1000);
+}
+
+function renderHead() {
+  const c = D.case;
+  CR.$('#hTitle').innerHTML = CR.icon('doc', '', 21) + CR.esc(c.title);
+  CR.$('#hSub').textContent = c.case_no + ' · ' + c.source_label +
+    (c.approval_instance ? ' · ' + c.approval_instance : '') +
+    ' · 文件指纹 ' + (c.doc_sha256 || '').slice(0, 16);
+  CR.$('#hTags').innerHTML =
+    CR.statusTag(c.review_status, c.review_status_label) +
+    CR.riskTag(c.risk_level, c.risk_level_label) +
+    '<span class="tag ' + (c.conclusion === 'reject' ? 't-high' : c.conclusion === 'rectify' ? 't-mid' : c.conclusion === 'pass' ? 't-ok' : 't-none') + '">' + CR.esc(c.conclusion_label) + '</span>' +
+    CR.wbTag(c.writeback_status, c.writeback_status_label);
+  document.title = c.title + ' · 智能审查工作台 · 亦大';
+}
+
+function renderBlocked() {
+  const c = D.case;
+  const box = CR.$('#blockedBox');
+  if (c.review_status !== 'blocked') { box.innerHTML = ''; return; }
+  box.innerHTML = '<div class="notice bad" style="margin-bottom:14px">' +
+    '<div class="row"><span class="tag t-high">解析受阻</span>' +
+    '<b>合同未能进入自动审查</b><div class="spacer" style="flex:1"></div>' +
+    '<button class="btn sm primary" onclick="doRetry()">重新审查</button></div>' +
+    '<div style="font-size:12.5px;margin-top:6px">' + CR.esc(c.blocked_reason || '') + '</div>' +
+    '<div style="font-size:12px;margin-top:6px;color:var(--sub)">' +
+    '处理建议：① 加密文件请解密后重新上传；② 图片型 PDF 请上传清晰扫描件图片（系统走内置 OCR）；' +
+    '③ 旧版 .doc 请另存为 .docx。修正文件后点「重新审查」，任务会重新进入流转流水线。</div></div>';
+}
+
+function renderDiag() {
+  const box = CR.$('#diagBox');
+  const diag = D.rule_diag || [];
+  const parts = [];
+  if (diag.length) {
+    parts.push('<div class="notice warn" style="margin-bottom:14px">' +
+      '<div class="nt">规则库存在无效正则（该规则已跳过匹配）</div>' +
+      diag.slice(0, 6).map(d => CR.esc(d.where) + ' → ' + CR.esc(d.error) +
+        '<br><span class="mono" style="font-size:11px">' + CR.esc(d.pattern) + '</span>').join('<br>') +
+      '<div style="margin-top:6px"><a href="/rules">前往规则页修正 →</a></div></div>');
+  }
+  if (D.paragraphs_truncated) {
+    parts.push('<div class="notice warn" style="margin-bottom:14px">文档段落数 ' +
+      D.paragraphs_total + ' 超过展示上限，正文视窗仅显示前 ' +
+      (D.paragraphs || []).length + ' 段（审查与命中锚点不受影响）。</div>');
+  }
+  box.innerHTML = parts.join('');
+}
+
+/* ------------------------------------------------------------------ 正文视窗 */
+function risksByPara() {
+  const map = {};
+  (D.results || []).forEach(r => {
+    if (r.char_start === null || r.char_start === undefined
+        || r.para_index === null || r.para_index === undefined) return;
+    (map[r.para_index] = map[r.para_index] || []).push(r);
+  });
+  return map;
+}
+
+function span(t) { return t ? CR.esc(t) : ''; }
+
+function paraHtml(p, risks) {
+  const text = p.text;
+  if (!risks || !risks.length) return span(text);
+  const S = p.char_start;
+  const marks = risks.map(r => ({
+    a: Math.max(0, r.char_start - S),
+    b: Math.min(text.length, r.char_end - S),
+    lv: r.risk_level, id: r.id
+  })).filter(m => m.b > m.a).sort((x, y) => x.a - y.a);
+  let out = '', cur = 0;
+  marks.forEach(m => {
+    if (m.a < cur) return;
+    out += span(text.slice(cur, m.a));
+    out += '<mark class="hl ' + m.lv + '" data-rid="' + m.id +
+      '" tabindex="0" role="button" title="点击定位到右侧风险卡片"' +
+      ' aria-label="定位到风险项 ' + m.id + '">' +
+      CR.esc(text.slice(m.a, m.b)) + '</mark>';
+    cur = m.b;
+  });
+  return out + span(text.slice(cur));
+}
+
+function pageList() {
+  const pages = {};
+  (D.paragraphs || []).forEach(p => { (pages[p.page] = pages[p.page] || []).push(p); });
+  return Object.keys(pages).map(Number).sort((a, b) => a - b);
+}
+
+function renderPager(pageNums) {
+  const cur = PAGE, total = pageNums.length;
+  const nums = [];
+  const push = n => { if (n >= 1 && n <= total && nums.indexOf(n) < 0) nums.push(n); };
+  push(1); push(total);
+  for (let i = cur - 1; i <= cur + 1; i++) push(i);
+  if (cur <= 3) for (let i = 1; i <= Math.min(4, total); i++) push(i);
+  if (cur >= total - 2) for (let i = Math.max(1, total - 3); i <= total; i++) push(i);
+  nums.sort((a, b) => a - b);
+
+  let html = '<button class="pg" onclick="goPage(' + Math.max(1, cur - 1) +
+    ')" title="上一页" aria-label="上一页"' + (cur <= 1 ? ' disabled' : '') + '>‹</button>';
+  let prev = 0;
+  nums.forEach(n => {
+    if (prev && n - prev > 1) html += '<span class="ellipsis">…</span>';
+    html += '<button class="pg ' + (n === cur ? 'on' : '') +
+      '" onclick="goPage(' + n + ')">' + n + '</button>';
+    prev = n;
+  });
+  html += '<button class="pg" onclick="goPage(' + Math.min(total, cur + 1) +
+    ')" title="下一页" aria-label="下一页"' + (cur >= total ? ' disabled' : '') + '>›</button>';
+  html += '<span class="lab">跳至</span><input type="number" min="1" max="' + total +
+    '" value="' + cur + '" onchange="goPage(Math.max(1,Math.min(' + total +
+    ',+this.value||1)))" aria-label="跳转到页码">';
+  CR.$('#pager').innerHTML = html;
+}
+
+function renderDoc() {
+  const d = D.document;
+  const pageNums = pageList();
+  if (!pageNums.length) {
+    CR.$('#doc').innerHTML = '<div class="empty">无可展示的正文段落' +
+      (D.case.review_status === 'blocked' ? '（文档解析受阻）' : '') +
+      '。<br><span class="faint" style="font-size:12px">' +
+      '该合同可能尚未审查，或解析未产出有效文本。</span></div>';
+    CR.$('#pager').innerHTML = '';
+    CR.$('#docInfo').innerHTML = d ? (CR.esc(d.parse_engine) + ' · ' + d.parse_status) : '';
+    return;
+  }
+  if (pageNums.indexOf(PAGE) < 0) PAGE = pageNums[0];
+
+  CR.$('#docInfo').innerHTML = d
+    ? (CR.esc(d.filename) + ' ｜ 引擎 <span class="mono">' + CR.esc(d.parse_engine) +
+       '</span> ｜ ' + d.page_count + ' 页 / ' + d.para_count + ' 段 / ' + d.char_count + ' 字符' +
+       (d.ocr_confidence ? (' ｜ OCR ' + d.ocr_confidence) : '') +
+       (d.need_manual ? ' ｜ <span class="tag t-high">需人工复核</span>' : ''))
+    : '';
+
+  renderPager(pageNums);
+
+  const map = risksByPara();
+  const list = (D.paragraphs || []).filter(p => p.page === PAGE);
+  CR.$('#doc').innerHTML = '<div class="doc-page">' +
+    '<div class="pg-label">第 ' + PAGE + ' 页 / 共 ' + pageNums.length +
+    ' 页　·　本页 ' + list.length + ' 段</div>' +
+    list.map(p => '<p class="doc-para ' + (p.is_heading ? 'head' : '') +
+      '" id="para-' + p.index + '" data-page="' + p.page + '">' +
+      '<span class="pno">' + ('P' + p.page + '·' + String(p.index).padStart(3, '0')) + '</span>' +
+      (p.is_heading ? '' : '<span class="faint" style="font-size:11px;margin-right:6px">' +
+        CR.esc(p.clause_label || '') + '</span>') +
+      paraHtml(p, map[p.index]) + '</p>').join('') + '</div>';
+
+  // 点击已在 mark 上用内联 onclick 绑定，这里只补键盘可达性（原实现会重复绑定导致触发两次）
+  CR.$$('mark.hl').forEach(m => m.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); pick(this.dataset.rid); }
+  }));
+}
+
+function goPage(n) {
+  PAGE = n;
+  renderDoc();
+  CR.$('#doc').scrollTop = 0;
+}
+
+/* ------------------------------------------------------------------ Tab 与筛选 */
+function setTab(t) {
+  TAB = t;
+  CR.$$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  renderTabs();
+}
+
+function visibleRisks() {
+  let rs = (D.results || []).slice();
+  if (RLEVEL) rs = rs.filter(r => r.risk_level === RLEVEL);
+  const cb = CR.$('#onlyPending');
+  if (cb && cb.checked) rs = rs.filter(r => !r.adopted);
+  return rs;
+}
+
+function renderRiskChips() {
+  const all = D.results || [];
+  const cnt = lv => all.filter(r => r.risk_level === lv).length;
+  const items = [['', '全部', all.length], ['high', '高', cnt('high')],
+                 ['medium', '中', cnt('medium')], ['low', '低', cnt('low')]];
+  CR.$('#riskChips').innerHTML = items
+    .filter(it => it[0] === '' || it[2] > 0)
+    .map(it => '<button class="chip ' + it[0] + (RLEVEL === it[0] ? ' on' : '') +
+      '" onclick="setLevel(\'' + it[0] + '\')">' + it[1] +
+      '<span class="n">' + it[2] + '</span></button>').join('');
+}
+
+function setLevel(lv) {
+  RLEVEL = lv;
+  CURSOR = -1;
+  renderTabs();
+}
+
+function renderTabs() {
+  const n = (D.results || []).length;
+  CR.$('#nRisk').textContent = n ? '(' + n + ')' : '(0)';
+  CR.$('#riskFilter').style.display = (TAB === 'risk') ? 'flex' : 'none';
+  const body = CR.$('#tabBody');
+  if (TAB === 'risk') {
+    renderRiskChips();
+    body.innerHTML = renderRiskList();
+  } else if (TAB === 'clause') body.innerHTML = renderClauses();
+  else if (TAB === 'meta') body.innerHTML = renderMeta();
+  else body.innerHTML = renderAudit();
+}
+
+function renderRiskList() {
+  const all = D.results || [];
+  if (!all.length) {
+    return '<div class="empty">' + CR.icon('checkCircle', '', 30) +
+      '<div>未命中规则库中的风险项。</div>' +
+      '<span class="faint" style="font-size:12px">规则版本 ' + CR.esc(D.rules_version || '-') +
+      '，本类型共加载 ' + (D.rules_loaded || []).length + ' 条规则。</span></div>';
+  }
+  const rs = visibleRisks();
+  if (!rs.length) return '<div class="empty">当前筛选条件下没有风险项。</div>';
+
+  return rs.map((r, i) => {
+    const loc = (r.page_no !== null && r.page_no !== undefined)
+      ? ('第 ' + r.page_no + ' 页 · 第 ' + r.para_index + ' 段')
+      : '<span class="faint">全文未检出（无定位锚点）</span>';
+    const alts = (r.suggestion_alternatives || []);
+    const ev = r.evidence || '';
+    return '<div class="risk-card ' + r.risk_level + (r.adopted ? ' done' : '') +
+      '" id="card-' + r.id + '" data-rid="' + r.id + '" data-idx="' + i +
+      '" onclick="pick(' + r.id + ')">' +
+      '<div class="rh">' + CR.riskTag(r.risk_level, r.risk_level_label) +
+        '<span class="rn">' + (i + 1) + '. ' + CR.esc(r.rule_name) + '</span>' +
+        '<span class="rid">' + CR.esc(r.rule_id) + '</span>' +
+        (r.adopted ? '<span class="mark">' + CR.icon('check', '', 11) + '已采纳</span>' : '') +
+        '<span class="acts">' +
+          '<button class="ico" title="折叠 / 展开" aria-label="折叠或展开" onclick="event.stopPropagation();foldCard(' + r.id + ')">' + CR.icon('chevron', '', 13) + '</button>' +
+          '<button class="ico" title="复制推荐条款" aria-label="复制推荐条款" onclick="event.stopPropagation();copySugg(' + r.id + ')">' + CR.icon('copy', '', 13) + '</button>' +
+          ((r.page_no !== null && r.page_no !== undefined)
+            ? '<button class="ico" title="定位原文" aria-label="定位原文" onclick="event.stopPropagation();pick(' + r.id + ')">' + CR.icon('target', '', 13) + '</button>' : '') +
+        '</span>' +
+      '</div>' +
+      '<div class="meta"><span>条款类型：' + CR.esc(r.clause_type) + '</span>' +
+        '<span>匹配方式：' + CR.esc(r.match_mode) + '</span>' +
+        '<span>' + loc + '</span></div>' +
+      '<div class="body">' +
+        (ev ? '<div class="quote' + (ev.length > 160 ? ' clip' : '') +
+          '" onclick="event.stopPropagation();this.classList.toggle(\'clip\')">原文片段：' +
+          CR.esc2(ev) + '</div>' : '') +
+        '<div class="field"><div class="lab">风险成因</div>' +
+          '<div style="font-size:12.5px;line-height:1.85">' + CR.esc(r.reason) + '</div></div>' +
+        '<div class="field"><div class="lab">法律 / 合规依据</div>' +
+          '<div style="font-size:12.5px;line-height:1.85">' + CR.esc(r.legal_basis) + '</div></div>' +
+        '<div class="field"><div class="lab">推荐修改条款（可编辑，编辑后点「采纳」保存）</div>' +
+          '<textarea class="sugg" id="sg-' + r.id + '" rows="4" style="width:100%" ' +
+          'onclick="event.stopPropagation()">' +
+          CR.esc(r.suggestion_final || r.suggestion || '') + '</textarea>' +
+          (alts.length ? '<details class="alt-opt" onclick="event.stopPropagation()">' +
+            '<summary>备选方案 ' + alts.length + ' 套</summary>' +
+            alts.map((a, ai) =>
+              '<div style="margin-top:6px"><b>' + CR.esc(a.title) + '</b>' +
+              '<div class="quote" data-alt="' + CR.esc(a.text) + '">' + CR.esc(a.text) + '</div>' +
+              '<div class="faint" style="font-size:11.5px;margin-top:3px">' + CR.esc(a.note || '') + '</div>' +
+              '<button class="btn sm" style="margin-top:5px" data-cap="edit_suggestion" data-cap-label="采纳/调整修改建议" onclick="useAlt(' + r.id + ',' + ai + ')">用此方案替换</button></div>').join('') +
+            '</details>' : '') +
+        '</div>' +
+        '<div class="field"><div class="lab">法务批注</div>' +
+          '<input type="text" id="nt-' + r.id + '" style="width:100%" ' +
+          'placeholder="可补充处理意见" onclick="event.stopPropagation()" value="' +
+          CR.esc(r.lawyer_note || '') + '"></div>' +
+        '<div class="row" style="margin-top:9px">' +
+          '<button class="btn sm primary" data-cap="edit_suggestion" data-cap-label="采纳/调整修改建议" onclick="event.stopPropagation();adopt(' + r.id + ',true)">采纳建议</button>' +
+          (r.adopted ? '<button class="btn sm" data-cap="edit_suggestion" data-cap-label="采纳/调整修改建议" onclick="event.stopPropagation();adopt(' + r.id + ',false)">取消采纳</button>' : '') +
+          '<button class="btn sm ghost" onclick="event.stopPropagation();copySugg(' + r.id + ')">复制条款</button>' +
+        '</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function foldCard(rid) {
+  const c = CR.$('#card-' + rid);
+  if (c) c.classList.toggle('collapsed');
+}
+
+let ALL_FOLDED = false;
+function toggleCollapse() {
+  ALL_FOLDED = !ALL_FOLDED;
+  CR.$$('.risk-card').forEach(c => c.classList.toggle('collapsed', ALL_FOLDED));
+  CR.$('#btnCollapse').textContent = ALL_FOLDED ? '全部展开' : '全部折叠';
+}
+
+function renderClauses() {
+  const cov = D.coverage || {};
+  const cls = D.clauses || [];
+  const rate = Math.round((cov.coverage_rate || 0) * 100);
+  return '<div class="row" style="justify-content:space-between;margin-bottom:8px">' +
+    '<span style="font-size:12.5px">条款覆盖度 <b class="num">' + rate + '%</b>（' +
+    (cov.present || []).length + ' / ' + (cov.total_types || 0) + ' 类）</span>' +
+    '<span class="faint" style="font-size:11.5px">共切分 ' + cls.length + ' 个条款</span></div>' +
+    '<div class="bar" style="margin-bottom:12px"><i style="width:' + rate + '%"></i></div>' +
+    '<div class="kv-list" style="margin-bottom:12px">' +
+    '<div class="r"><div class="k">已识别</div><div class="v">' +
+      (cov.present || []).map(x => '<span class="tag t-ok" style="margin:1px 3px 1px 0">' +
+        CR.esc(x) + '</span>').join('') + '</div></div>' +
+    '<div class="r"><div class="k">未识别</div><div class="v">' +
+      ((cov.missing || []).length
+        ? (cov.missing || []).map(x => '<span class="tag t-none" style="margin:1px 3px 1px 0">' +
+          CR.esc(x) + '</span>').join('')
+        : '无') + '</div></div></div>' +
+    '<div class="table-wrap"><table class="grid"><thead><tr><th style="width:36px">#</th><th>条款</th>' +
+    '<th style="width:104px">类型</th><th style="width:52px">页码</th>' +
+    '<th style="width:82px">段落</th><th style="width:56px" class="right">字数</th>' +
+    '</tr></thead><tbody>' + cls.map(c =>
+      '<tr class="clickable" onclick="goPara(' + c.page + ',' + c.para_start + ')">' +
+      '<td class="mono">' + c.seq + '</td>' +
+      '<td style="font-size:12.5px">' + CR.esc((c.title || '').slice(0, 46)) + '</td>' +
+      '<td style="font-size:12px">' + CR.esc(c.clause_label) + '</td>' +
+      '<td class="num">' + c.page + '</td>' +
+      '<td class="num faint">' + c.para_start + '-' + c.para_end + '</td>' +
+      '<td class="num right">' + c.char_count + '</td></tr>').join('') +
+    '</tbody></table></div>';
+}
+
+function renderMeta() {
+  const c = D.case, m = D.meta || {}, d = D.document || {};
+  const rows = [
+    ['合同标题', c.title], ['合同编号', c.case_no], ['送审部门', c.send_dept],
+    ['申请人', c.applicant], ['相对方主体', c.counterparty || m.party_b],
+    ['统一社会信用代码', c.credit_code || m.credit_code || '未载明'],
+    ['合同金额', c.amount_text], ['币种', c.currency],
+    ['履约周期', c.perform_period || m.perform_period],
+    ['生效条件', c.effective_condition || m.effective_condition],
+    ['合同类别', c.business_type_label], ['来源', c.source_label],
+    ['审批单号', c.approval_instance || '-'], ['解析引擎', d.parse_engine],
+    ['解析状态', d.parse_status], ['OCR 置信度', d.ocr_confidence || '-'],
+    ['页数 / 段落 / 字符', (d.page_count || 0) + ' / ' + (d.para_count || 0) +
+      ' / ' + (d.char_count || 0)],
+    ['文件指纹 SHA256', d.sha256], ['规则版本', D.rules_version || '-'],
+    ['正文段落总数', D.paragraphs_total || (D.paragraphs || []).length],
+    ['创建时间', c.created_at]
+  ];
+  return '<div class="kv-list">' + rows.map(r =>
+    '<div class="r"><div class="k">' + CR.esc(r[0]) + '</div><div class="v">' +
+    CR.esc(r[1]) + '</div></div>').join('') + '</div>';
+}
+
+function renderAudit() {
+  const rows = D.audit || [];
+  if (!rows.length) return '<div class="empty">暂无审计记录</div>';
+  return '<div class="log">' + rows.map(r =>
+    '<div class="r"><span class="t">' + CR.esc(r.created_at) + '</span>' +
+    '<span class="s ' + CR.esc(r.status) + '">' + CR.esc(r.status) + '</span>' +
+    '<span>' + CR.esc(r.step) + ' · ' + CR.esc(r.tool) +
+    (r.detail ? (' — ' + CR.esc(r.detail)) : '') + '</span></div>').join('') + '</div>';
+}
+
+/* ------------------------------------------------------------------ 回写区 */
+function renderSide() {
+  const s = D.summary || {}, c = D.case;
+  const st = s.stats || { high: 0, medium: 0, low: 0 };
+  const all = D.results || [];
+  const adopted = all.filter(r => r.adopted).length;
+  const prog = all.length ? Math.round(adopted / all.length * 100) : 0;
+
+  CR.$('#summaryBox').innerHTML =
+    '<div class="row" style="margin-bottom:9px">' + CR.riskTag(c.risk_level, c.risk_level_label) +
+    '<b style="font-size:13.5px">' + CR.esc(c.conclusion_label) + '</b>' +
+    '<div class="spacer" style="flex:1"></div>' +
+    '<span class="faint num" style="font-size:12px">高 ' + st.high + ' · 中 ' + st.medium +
+    ' · 低 ' + st.low + '</span></div>' +
+    CR.distBar({ high: st.high, medium: st.medium, low: st.low }) +
+    '<div class="summary-line" style="margin-top:10px">' + CR.esc(s.headline || '') + '</div>' +
+    renderModeCompare(s) +
+    ((s.attention || []).length ? '<ul class="attn">' +
+      s.attention.map(a => '<li>' + CR.esc(a) + '</li>').join('') + '</ul>' : '') +
+    // 建议采纳进度（真实数据：已采纳 / 风险项总数）
+    (all.length ?
+      '<div class="row" style="margin-top:12px"><span class="faint" style="font-size:11.5px">' +
+      '建议采纳进度</span><div class="spacer" style="flex:1"></div>' +
+      '<span class="num" style="font-size:12px;color:var(--cyan)">' + adopted + ' / ' + all.length +
+      '</span></div><div class="bar" style="margin-top:5px"><i style="width:' +
+      Math.max(2, prog) + '%"></i></div>' : '') +
+    '<div class="faint" style="font-size:11.5px;margin-top:9px">摘要生成方式：' +
+      (s.summary_source === 'llm' ? '大模型润色' : '确定性规则模板') +
+      '　·　风险判定：规则引擎（大模型不参与判定）</div>';
+  const ta = CR.$('#opinion');
+  if (ta && !ta.value) ta.value = c.lawyer_opinion || '';
+}
+
+/* -------------------------------------------------- v2.0 规则/模型模式对照（P1-05）
+   同一份命中证据链，两种表达并排。未配 Key 时明示当前模式与未启用原因，
+   保证「对照视图一定可演示」—— 拿不到真实润色也看得到两种模式的差别。 */
+function renderModeCompare(s) {
+  const mc = D.mode_compare || {};
+  const mi = D.mode_info || {};
+  const cur = mc.current || s.mode || 'rule';
+  const rule = mc.rule || {};
+  const model = mc.model || {};
+  const on = !!model.available;
+
+  return '<div style="margin-top:14px;border-top:1px dashed var(--line-2);padding-top:12px">' +
+    '<div class="row" style="margin-bottom:9px">' +
+    '<span style="font-size:12.4px;font-weight:600">审查表达模式对照</span>' +
+    '<div class="spacer" style="flex:1"></div>' +
+    '<span class="mode-badge ' + (on ? 'live' : 'off') + '">当前：' +
+    CR.esc(cur === 'rule+llm' ? '规则 + 模型润色' : '规则引擎') + '</span></div>' +
+
+    '<div class="mode-grid">' +
+    '<div class="mode-col' + (cur === 'rule' ? ' cur' : '') + '">' +
+    '<h4>' + CR.icon('shield', '', 13) + '规则引擎模式' +
+    '<span class="mode-badge ' + (cur === 'rule' ? 'live' : 'off') + '">' +
+    (cur === 'rule' ? '当前生效' : '可切换') + '</span></h4>' +
+    '<div class="body">' + CR.esc(rule.headline || s.headline_rule || s.headline || '') + '</div>' +
+    '<div class="mode-note">' + CR.esc(rule.note ||
+      '确定性模板生成，可复现、可审计，零依赖') + '</div></div>' +
+
+    '<div class="mode-col' + (cur === 'rule+llm' ? ' cur' : '') + '">' +
+    '<h4>' + CR.icon('cpu', '', 13) + '规则 + 模型润色模式' +
+    '<span class="mode-badge ' + (on ? 'live' : 'off') + '">' +
+    (on ? (cur === 'rule+llm' ? '当前生效' : '可切换') : '未启用') + '</span></h4>' +
+    '<div class="body">' + (on && model.headline
+      ? CR.esc(model.headline)
+      : '<span class="faint">未启用模型润色 —— 当前沿用规则模板输出，风险结论与等级完全一致，'
+        + '差别仅在中文字面表达。</span>') + '</div>' +
+    '<div class="mode-note">' + CR.esc(model.reason
+      ? '未启用原因：' + model.reason
+      : (model.note || '仅在规则结论之上改写措辞，不参与风险判定')) +
+    (model.model ? '　·　模型 ' + CR.esc(model.model) : '') + '</div></div>' +
+    '</div>' +
+
+    '<div class="mode-note">' + CR.esc(mi.note ||
+      '风险判定 100% 由确定性规则引擎产出，大模型只改写措辞、不参与判定。') + '</div>' +
+
+    // 页眉页脚剔除留痕：剔除行可查，锚点仍可定位
+    ((D.stripped || []).length ?
+      '<div class="striplist" style="margin-top:12px">' +
+      '<div style="font-size:11.5px;color:var(--sub);margin-bottom:5px">' +
+      '已剔除页眉/页脚 ' + D.stripped.length + ' 行（剔除后重算坐标，锚点仍可精确定位）</div>' +
+      D.stripped.slice(0, 6).map(x =>
+        '<div><code>' + CR.esc(x.text) + '</code> ' +
+        '<span class="faint">第 ' + x.page + ' 页 · ' +
+        (x.channel === 'repeat' ? '跨页重复' : '页码/密级形态') + '</span></div>').join('') +
+      '</div>'
+      : '<div class="mode-note" style="margin-top:10px">本文档未检出跨页重复的页眉/页脚短行，' +
+        '未做剔除。条款标题与含实体词的行受保护名单保护，永不被剔除。</div>') +
+    '</div>';
+}
+
+function renderWriteback() {
+  const wb = D.writeback_logs || [];
+  const st = D.case.writeback_status;
+  CR.$('#wbState').innerHTML = CR.wbTag(st, D.case.writeback_status_label);
+  if (!wb.length) {
+    CR.$('#wbResult').innerHTML = '<div class="faint" style="font-size:12px">' +
+      '尚未回写。系统只会写入审查意见评论，不提供通过 / 拒绝 / 转交等改变审批结论的能力。</div>';
+    return;
+  }
+  const last = wb[0];
+  CR.$('#wbResult').innerHTML =
+    '<div class="kv-list"><div class="r"><div class="k">最近回写</div><div class="v">' +
+      CR.esc(last.created_at) + '　模式 ' + CR.esc(last.mode) + '　通道 ' +
+      CR.esc(last.channel) + '　状态 ' + CR.esc(last.status_label) +
+      (last.comment_id ? ('　评论 <span class="mono">' + CR.esc(last.comment_id) + '</span>') : '') +
+      '</div></div>' +
+    (last.error ? '<div class="r"><div class="k">错误信息</div>' +
+      '<div class="v" style="color:var(--high)">' + CR.esc(last.error) + '</div></div>' : '') +
+    '</div>' +
+    ((D.approval_comments || []).length
+      ? '<div class="field"><div class="lab">审批单评论区（模拟飞书审批）</div>' +
+        D.approval_comments.map(c => '<div class="quote"><b>' + CR.esc(c.author) +
+          '</b> <span class="faint">' + CR.esc(c.created_at) + '</span><br>' +
+          CR.esc2(c.text.slice(0, 320)) + (c.text.length > 320 ? ' …' : '') + '</div>').join('') +
+        '</div>'
+      : '<div class="faint" style="font-size:12px;margin-top:8px">审批单评论区暂无评论。</div>') +
+    (last.status === 'failed'
+      ? '<button class="btn sm danger" data-cap="writeback" data-cap-label="回写审批意见" style="margin-top:8px" onclick="doWriteback(\'live\')">重试回写</button>'
+      : '');
+}
+
+async function loadNotifyStatus() {
+  try {
+    const s = await CR.api('GET', '/api/notify/status');
+    const el = CR.$('#notifyState');
+    el.innerHTML = (!s.enabled || !s.configured)
+      ? '<a href="#" onclick="event.preventDefault();openNotify()">通知未启用</a>'
+      : '<a href="#" onclick="event.preventDefault();openNotify()">通知已启用 · 成功 ' +
+        s.stats.sent + ' / 失败 ' + s.stats.failed + '</a>';
+  } catch (e) { }
+}
+
+async function openNotify() {
+  CR.$('#notifyBody').innerHTML = CR.skeleton(4);
+  CR.openModal('mNotify');
+  try {
+    const s = await CR.api('GET', '/api/notify/status');
+    const recent = s.recent || [];
+    CR.$('#notifyBody').innerHTML =
+      '<div class="kv-list">' +
+      '<div class="r"><div class="k">启用状态</div><div class="v">' +
+        (s.enabled
+          ? (s.configured ? '<span class="tag t-ok">已启用且已配置</span>'
+                          : '<span class="tag t-mid">已启用但未填 Webhook</span>')
+          : '<span class="tag t-none">未启用</span>') + '</div></div>' +
+      '<div class="r"><div class="k">渠道 / 加签</div><div class="v">' + CR.esc(s.channel) +
+        ' ｜ 加签 ' + (s.has_secret ? '已配置' : '未配置') + '</div></div>' +
+      '<div class="r"><div class="k">Webhook</div><div class="v mono" style="font-size:11.5px">' +
+        (CR.esc(s.webhook) || '（未填写）') + '</div></div>' +
+      '<div class="r"><div class="k">发送统计</div><div class="v">入队 ' + s.stats.queued +
+        ' ｜ 成功 ' + s.stats.sent + ' ｜ 失败 ' + s.stats.failed +
+        ' ｜ 跳过 ' + s.stats.skipped + '</div></div>' +
+      '<div class="r"><div class="k">事件开关</div><div class="v">' +
+        Object.keys(s.events || {}).map(k => '<span class="tag ' +
+          (s.events[k] ? 't-ok' : 't-none') + '" style="margin:1px 3px 1px 0">' +
+          CR.esc(k) + '</span>').join('') + '</div></div>' +
+      '</div>' +
+      (s.configured ? '' : '<div class="notice warn" style="margin-top:10px">要启用钉钉通知：编辑 ' +
+        '<span class="mono">config/app.json</span>，把 <span class="mono">notify.enabled</span> ' +
+        '设为 true，填写 <span class="mono">notify.webhook</span>（钉钉自定义机器人地址）；' +
+        '若机器人安全设置选了「加签」，再把 <span class="mono">notify.secret</span> 填上 SEC 开头的密钥。</div>') +
+      (recent.length ? '<div class="field" style="margin-top:10px"><div class="lab">最近发送记录</div>' +
+        '<div class="log">' + recent.map(r => '<div class="r"><span class="t">' + CR.esc(r.at) +
+          '</span><span class="s ' + CR.esc(r.status === 'sent' ? 'ok' :
+            (r.status === 'failed' ? 'failed' : 'skipped')) + '">' + CR.esc(r.status) +
+          '</span><span>' + CR.esc(r.event_label) + ' · ' + CR.esc(r.title || '') +
+          (r.detail ? ' — ' + CR.esc(r.detail) : '') + '</span></div>').join('') +
+        '</div></div>' : '');
+  } catch (e) {
+    CR.$('#notifyBody').innerHTML = '<div class="empty">读取通知状态失败：' +
+      CR.esc(e.message) + '</div>';
+  }
+}
+
+async function sendNotifyTest() {
+  const b = CR.$('#btnNotifyTest');
+  CR.busy(b, true, '发送中');
+  try {
+    const r = await CR.api('POST', '/api/notify/test', { message: '测试消息已送达。' });
+    CR.toast(r.status === 'sent' ? '测试通知发送成功，请查看机器人所在群'
+      : ('发送结果：' + CR.esc(r.detail || '')), 'ok');
+  } catch (e) {
+    CR.toast('测试发送失败：' + CR.esc(e.message), 'err');
+  } finally {
+    CR.busy(b, false);
+  }
+}
+
+/* ------------------------------------------------------------------ 交互 */
+function pick(rid) {
+  rid = Number(rid);
+  const r = (D.results || []).find(x => x.id === rid);
+  if (!r) return;
+  if (TAB !== 'risk') setTab('risk');
+  CR.$$('.risk-card').forEach(c => c.classList.toggle('on', Number(c.dataset.rid) === rid));
+  CURSOR = CR.$$('.risk-card').findIndex(c => Number(c.dataset.rid) === rid);
+  const card = CR.$('#card-' + rid);
+  if (card) {
+    if (card.classList.contains('collapsed')) card.classList.remove('collapsed');
+    card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  if (r.page_no !== null && r.page_no !== undefined) {
+    if (PAGE !== r.page_no) { PAGE = r.page_no; renderDoc(); }
+    const mk = CR.$('mark[data-rid="' + rid + '"]');
+    if (mk) {
+      mk.classList.add('flash');
+      mk.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(() => mk.classList.remove('flash'), 1100);
+    }
+  }
+}
+
+function goPara(page, paraIndex) {
+  PAGE = page;
+  renderDoc();
+  const el = CR.$('#para-' + paraIndex);
+  if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function useAlt(rid, ai) {
+  const ta = CR.$('#sg-' + rid);
+  const card = CR.$('#card-' + rid);
+  const nodes = card ? card.querySelectorAll('[data-alt]') : [];
+  if (!ta || !nodes[ai]) return;
+  ta.value = nodes[ai].dataset.alt;
+  CR.toast('已用备选方案替换编辑区内容，点「采纳建议」保存', 'ok');
+}
+
+async function copySugg(rid) {
+  const ta = CR.$('#sg-' + rid);
+  if (!ta) return;
+  const ok = await CR.copyText(ta.value);
+  CR.toast(ok ? '推荐条款已复制到剪贴板' : '复制失败，请手动选择文本', ok ? 'ok' : 'err');
+}
+
+async function adopt(rid, on) {
+  const ta = CR.$('#sg-' + rid);
+  const nt = CR.$('#nt-' + rid);
+  if (!ta) return;
+  try {
+    await CR.api('PATCH', '/api/results/' + rid, {
+      suggestion_final: ta.value, adopted: on, lawyer_note: nt ? nt.value : ''
+    });
+    CR.toast(on ? '已采纳该修改建议' : '已取消采纳', 'ok');
+    D = await CR.api('GET', '/api/cases/' + CASE_ID);
+    renderTabs();
+    renderSide();
+    renderWriteback();
+  } catch (e) { CR.toast('保存失败：' + CR.esc(e.message), 'err'); }
+}
+
+async function saveOpinion() {
+  try {
+    await CR.api('POST', '/api/cases/' + CASE_ID + '/opinion',
+                 { opinion: CR.$('#opinion').value });
+    CR.toast('法务批注已保存', 'ok');
+  } catch (e) { CR.toast('保存失败：' + CR.esc(e.message), 'err'); }
+}
+
+async function doWriteback(mode) {
+  const b = CR.$('#btnWb');
+  if (mode === 'live') CR.busy(b, true, '回写中');
+  try {
+    await CR.api('POST', '/api/cases/' + CASE_ID + '/opinion',
+                 { opinion: CR.$('#opinion').value });
+    const d = await CR.api('POST', '/api/cases/' + CASE_ID + '/writeback', { mode: mode });
+    PF = d.comment_text || '';
+    CR.$('#cmTitle').textContent = (mode === 'dry_run'
+      ? '预览：待写入审批评论区的审查意见'
+      : '回写结果：' + (d.message || ''));
+    CR.$('#cmBody').textContent = PF;
+    CR.$('#cmOk').style.display = (mode === 'dry_run') ? 'inline-flex' : 'none';
+    CR.openModal('mComment');
+    if (mode === 'live') {
+      CR.toast(d.ok
+        ? ('回写成功，评论标识 <span class="mono">' + CR.esc(d.comment_id) + '</span>')
+        : ('回写失败：' + CR.esc(d.error || '')), d.ok ? 'ok' : 'err');
+    }
+    D = await CR.api('GET', '/api/cases/' + CASE_ID);
+    renderHead(); renderSide(); renderWriteback(); renderTabs();
+  } catch (e) {
+    CR.toast('回写失败：' + CR.esc(e.message), 'err');
+  } finally { CR.busy(b, false); }
+}
+
+async function copyComment() {
+  const ok = await CR.copyText(PF || '');
+  CR.toast(ok ? '审查意见已复制' : '复制失败', ok ? 'ok' : 'err');
+}
+
+async function confirmWb() {
+  CR.closeModal('mComment');
+  await doWriteback('live');
+}
+
+function exportReport(fmt) {
+  CR.download('/api/cases/' + CASE_ID + '/report?format=' + fmt + '&download=1');
+  CR.toast('已开始下载 Markdown 审查意见报告', 'ok');
+}
+
+function exportPdf() {
+  const w = window.open('/api/cases/' + CASE_ID + '/report?format=pdf&print=1', '_blank');
+  if (!w) CR.toast('浏览器拦截了新窗口，请允许弹窗后重试', 'err');
+  else CR.toast('PDF 通道已触发；若打开的是打印预览，选择「另存为 PDF」即可', 'ok');
+}
+
+async function doRetry() {
+  CR.overlay(true, '正在重新解析与审查…', '修正文件后重新进入流转流水线。');
+  try {
+    const r = await CR.api('POST', '/api/cases/' + CASE_ID + '/retry');
+    if (r && r.blocked) CR.toast('重试后仍受阻：' + CR.esc(r.reason || ''), 'err');
+    else CR.toast('重试成功，已完成审查', 'ok');
+    await load();
+  } catch (e) { CR.toast('重试失败：' + CR.esc(e.message), 'err'); }
+  finally { CR.overlay(false); }
+}
+
+function openComments() {
+  const inst = D.case.approval_instance;
+  if (!inst) return CR.toast('该合同尚未绑定审批单，请先执行一次回写', 'err');
+  const w = window.open('/mock/feishu/api/instances/' + inst + '/comments', '_blank');
+  if (!w) CR.toast('浏览器拦截了新窗口', 'err');
+}
+
+/* ------------------------------------------------------------------ 快捷键 */
+document.addEventListener('keydown', function (e) {
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+  if (e.key === 'Escape') {
+    ['mComment', 'mNotify'].forEach(id => CR.closeModal(id));
+    return;
+  }
+  if (TAB !== 'risk') return;
+  const cards = CR.$$('.risk-card');
+  if (!cards.length) return;
+  if (e.key === 'j' || e.key === 'J') {
+    CURSOR = Math.min(cards.length - 1, (CURSOR < 0 ? -1 : CURSOR) + 1);
+    pick(cards[CURSOR].dataset.rid);
+    e.preventDefault();
+  } else if (e.key === 'k' || e.key === 'K') {
+    CURSOR = Math.max(0, (CURSOR < 0 ? cards.length : CURSOR) - 1);
+    pick(cards[CURSOR].dataset.rid);
+    e.preventDefault();
+  } else if (e.key === 'a' || e.key === 'A') {
+    if (CURSOR >= 0 && cards[CURSOR]) {
+      adopt(cards[CURSOR].dataset.rid, true);
+      e.preventDefault();
+    }
+  }
+});
+
+load();
+</script><div id="topbar-progress" class="" style="width: 0px;"></div>
+
+
+<footer class="site-footer"><div class="fl"><img src="/assets/logo-sm.png" alt="亦大"><span class="sig">（亦大）</span><span>© 2026 合同智能审查系统 v2.0 · 保留所有权利</span></div><div class="spacer"></div><div class="fl"><span>规则引擎判定 · 大模型辅以措辞 · 全程可离线运行</span><span class="dot-sep">|</span><a href="/twin">动态孪生看板</a><span class="dot-sep">|</span><a href="/mock/feishu/api/todo" target="_blank" rel="noopener">模拟审批系统</a></div></footer></body></html>

@@ -1,0 +1,29 @@
+交互态前端体检（CDP）
+====================================================================================================
+目标 http://127.0.0.1:8801 ｜ 2026-09-19 18:24:11
+
+下钻弹窗 @1600x1000：弹窗 {'w': 1120, 'h': 871, 'x': 240, 'y': 65, 'right': 1360, 'bottom': 935, 'sw': 1118, 'sh': 869, 'cw': 1118, 'ch': 869, 'ovfY': 'auto', 'ovfX': 'auto', 'vis': 'visible', 'disp': 'block'}
+        在视口内=True ｜ 表格 {'w': 1082, 'h': 545, 'x': 259, 'y': 276, 'right': 1341, 'bottom': 820, 'sw': 1082, 'sh': 545, 'cw': 1082, 'ch': 545, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'table'} ｜ 横向可滚动=True
+下钻弹窗 @980x900：弹窗 {'w': 932, 'h': 792, 'x': 24, 'y': 54, 'right': 956, 'bottom': 846, 'sw': 930, 'sh': 957, 'cw': 930, 'ch': 790, 'ovfY': 'auto', 'ovfX': 'auto', 'vis': 'visible', 'disp': 'block'}
+        在视口内=True ｜ 表格 {'w': 894, 'h': 633, 'x': 43, 'y': 265, 'right': 937, 'bottom': 898, 'sw': 894, 'sh': 633, 'cw': 894, 'ch': 633, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'table'} ｜ 横向可滚动=True
+下钻弹窗 @390x844：弹窗 {'w': 342, 'h': 743, 'x': 24, 'y': 51, 'right': 366, 'bottom': 793, 'sw': 340, 'sh': 2604, 'cw': 340, 'ch': 741, 'ovfY': 'auto', 'ovfX': 'auto', 'vis': 'visible', 'disp': 'block'}
+        在视口内=True ｜ 表格 {'w': 595, 'h': 2110, 'x': 39, 'y': 407, 'right': 634, 'bottom': 2517, 'sw': 595, 'sh': 2110, 'cw': 595, 'ch': 2110, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'table'} ｜ 横向可滚动=True
+助手面板 @1600x1000：面板 {'w': 392, 'h': 481, 'x': 1188, 'y': 427, 'right': 1580, 'bottom': 908, 'sw': 390, 'sh': 479, 'cw': 390, 'ch': 479, 'ovfY': 'hidden', 'ovfX': 'hidden', 'vis': 'visible', 'disp': 'flex'}
+        消息区 {'w': 390, 'h': 256, 'x': 1189, 'y': 477, 'right': 1579, 'bottom': 733, 'sw': 390, 'sh': 256, 'cw': 390, 'ch': 256, 'ovfY': 'auto', 'ovfX': 'auto', 'vis': 'visible', 'disp': 'flex'} ｜ 快捷提问 {'w': 390, 'h': 114, 'x': 1189, 'y': 733, 'right': 1579, 'bottom': 847, 'sw': 390, 'sh': 114, 'cw': 390, 'ch': 114, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'flex'} ｜ 宠物按钮 {'w': 62, 'h': 62, 'x': 1518, 'y': 918, 'right': 1580, 'bottom': 980, 'sw': 60, 'sh': 60, 'cw': 60, 'ch': 60, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'flex'}
+助手面板 @390x844：面板 {'w': 366, 'h': 481, 'x': 12, 'y': 287, 'right': 378, 'bottom': 768, 'sw': 364, 'sh': 479, 'cw': 364, 'ch': 479, 'ovfY': 'hidden', 'ovfX': 'hidden', 'vis': 'visible', 'disp': 'flex'}
+        消息区 {'w': 364, 'h': 256, 'x': 13, 'y': 337, 'right': 377, 'bottom': 593, 'sw': 364, 'sh': 256, 'cw': 364, 'ch': 256, 'ovfY': 'auto', 'ovfX': 'auto', 'vis': 'visible', 'disp': 'flex'} ｜ 快捷提问 {'w': 364, 'h': 114, 'x': 13, 'y': 593, 'right': 377, 'bottom': 707, 'sw': 364, 'sh': 114, 'cw': 364, 'ch': 114, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'flex'} ｜ 宠物按钮 {'w': 54, 'h': 54, 'x': 324, 'y': 778, 'right': 378, 'bottom': 832, 'sw': 52, 'sh': 52, 'cw': 52, 'ch': 52, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'flex'}
+新手引导 @1600x1000：聚光灯 {'w': 1570, 'h': 136, 'x': 15, 'y': 159, 'right': 1585, 'bottom': 294, 'sw': 1570, 'sh': 136, 'cw': 1570, 'ch': 136, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'block'}
+        气泡 {'w': 352, 'h': 230, 'x': 22, 'y': 299, 'right': 374, 'bottom': 529, 'sw': 350, 'sh': 228, 'cw': 350, 'ch': 228, 'ovfY': 'hidden', 'ovfX': 'hidden', 'vis': 'visible', 'disp': 'block'} ｜ 首步目标 #stats {'w': 1556, 'h': 122, 'x': 22, 'y': 166, 'right': 1578, 'bottom': 287, 'sw': 1556, 'sh': 122, 'cw': 1556, 'ch': 122, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'grid'}
+        气泡是否压住高亮区=False
+新手引导 @390x844：聚光灯 {'w': 382, 'h': 394, 'x': 4, 'y': 1, 'right': 386, 'bottom': 395, 'sw': 382, 'sh': 394, 'cw': 382, 'ch': 394, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'block'}
+        气泡 {'w': 366, 'h': 208, 'x': 12, 'y': 400, 'right': 378, 'bottom': 608, 'sw': 364, 'sh': 206, 'cw': 364, 'ch': 206, 'ovfY': 'hidden', 'ovfX': 'hidden', 'vis': 'visible', 'disp': 'block'} ｜ 首步目标 #stats {'w': 368, 'h': 844, 'x': 11, 'y': 0, 'right': 379, 'bottom': 844, 'sw': 368, 'sh': 844, 'cw': 368, 'ch': 844, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'grid'}
+        气泡是否压住高亮区=False
+        （目标高 844 > 视口 70%，聚光灯已封顶到 394）
+工作台：风险卡片 {'w': 625, 'h': 565, 'x': 936, 'y': 269, 'right': 1561, 'bottom': 834, 'sw': 621, 'sh': 563, 'cw': 621, 'ch': 563, 'ovfY': 'hidden', 'ovfX': 'hidden', 'vis': 'visible', 'disp': 'block'}
+        正文容器 {'w': 881, 'h': 767, 'x': 23, 'y': 216, 'right': 904, 'bottom': 983, 'sw': 881, 'sh': 875, 'cw': 881, 'ch': 767, 'ovfY': 'auto', 'ovfX': 'auto', 'vis': 'visible', 'disp': 'block'} ｜ 点卡片后正文滚动位置 108
+模拟审批页：详情容器 {'w': 778, 'h': 343, 'x': 641, 'y': 260, 'right': 1419, 'bottom': 604, 'sw': 778, 'sh': 343, 'cw': 778, 'ch': 343, 'ovfY': 'visible', 'ovfX': 'visible', 'vis': 'visible', 'disp': 'block'} ｜ 字段格 8 个 ｜ 评论 0 条
+
+====================================================================================================
+发现问题：0 项
+  无 —— 弹窗 / 助手面板 / 引导气泡 / 工作台 / 模拟审批页的交互态均正常。
+====================================================================================================

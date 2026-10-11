@@ -1,0 +1,97 @@
+衡鉴品牌化（一次性变更）：合同智能审查系统 → 衡鉴 V2.1.7
+============================================================================================
+命中替换 39 处 ｜ 已是新值 4 处 ｜ 精确项未命中 14 处
+口径：品牌名 = 衡鉴 V2.1.7（对外展示）；技术版本 = app/__init__.py 的 __version__（语义化）
+============================================================================================
+[write] app\__init__.py
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] app\assistant.py
+  ✓ 泛化 ×2 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] app\notify.py
+  ! 未命中 :: lines.append("> %s ｜ 合同智能审查系统 v%s ｜ 已按字段规则脱敏"
+  ! 未命中 :: lines.append("> %s ｜ 衡鉴 V2.0.2 ｜ 已按字段规则脱敏"
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] app\output.py
+  ✓ 泛化 ×5 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] app\pdf_min.py
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] app\server.py
+  ! 未命中 :: meta_lines=["合同智能审查系统 v%s" % __version__])
+  ! 未命中 :: meta_lines=["衡鉴 V2.0.2" % __version__])
+  ✓ 泛化 ×3 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] app\writeback.py
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] mock\feishu.py
+  ✓ 泛化 ×2 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] deploy\deploy_to_server.py
+  ! 未命中 :: Description=Contract Review System (合同智能审查系统) v1.0
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] deploy\deploy_v2.py
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] deploy\verify_remote_v2.py
+  ! 未命中 :: "合同智能审查系统 v%s · 线上实例巡检" % _app.__version__)
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] tools\bench.py
+  ! 未命中 :: "合同智能审查系统 v%s · 性能基准（bench）" % _app.__version__)
+  ! 未命中 :: "衡鉴 V2.0.2 · 性能基准（bench）" % _app.__version__)
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] tools\check_consistency.py
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+  ✓ 泛化 ×1 :: V2.1.6 → V2.1.7
+[write] tools\patch_version.py
+  ✓ 泛化 ×4 :: 合同智能审查系统 v2.0.0 → 衡鉴 V2.1.7
+  ✓ 泛化 ×1 :: 合同智能审查系统 v2.0.1 → 衡鉴 V2.1.7
+  ✓ 泛化 ×3 :: 合同智能审查系统 v%s → 衡鉴 V2.1.7
+[write] tools\probe_current_failures.py
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] tools\run_selftest.py
+  ! 未命中 :: " 合同智能审查系统 v%s · 验收自检（selftest）" % _app.__version__,
+  ! 未命中 :: " 衡鉴 V2.0.2 · 验收自检（selftest）" % _app.__version__,
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] tools\test_notify.py
+  ✓ 泛化 ×2 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] tools\verify_http.py
+  ! 未命中 :: "/", "合同智能审查系统".encode("utf-8"), "text/html"),
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\denied.html
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\index.html
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\login.html
+  ! 未命中 ::  <img src="/assets/logo-sm.png" alt="亦大 标识" id="loginLogo" width="38" height="
+  ✓ 泛化 ×3 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\mock.html
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\rules.html
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\twin.html
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\workbench.html
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\assets\app.js
+  ! 未命中 ::  const BRAND = { name: '合同智能审查系统', owner: '亦大', version: 'v2.0' };
+  ! 未命中 ::  '<span class="brand-txt"><b>' + BRAND.name + '</b>', '<i>' + BRAND.owner + ' 
+  = 已是新值 :: alt="' + BRAND.full + ' 标识" width="30" height="31">',
+  = 已是新值 :: '" alt="' + BRAND.full + '">' +
+  = 已是新值 :: '<span class="sig">（' + BRAND.en + '）</span>' +
+  = 已是新值 :: '<span>© ' + new Date().getFullYear() + ' ' + BRAND.full + ' · 保留所有权利</span>' 
+  ✓ 泛化 ×2 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+  ✓ 泛化 ×1 :: V2.1.6 → V2.1.7
+[write] ui\assets\pet.js
+  ✓ 泛化 ×2 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\assets\app.css
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] ui\assets\fx.css
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] PRD.md
+  ✓ 泛化 ×2 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] README.md
+  ✓ 泛化 ×3 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] SPEC.md
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] docs\验收对照表.md
+  ✓ 泛化 ×1 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] run.py
+  ✓ 泛化 ×3 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7
+[write] selftest.py
+  ✓ 泛化 ×2 :: 衡鉴 V2.1.6 → 衡鉴 V2.1.7

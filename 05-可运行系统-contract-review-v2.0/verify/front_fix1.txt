@@ -1,0 +1,9 @@
+  ok   ui/assets/app.js :: function renderTopbar(active, envText) {
+  ok   ui/assets/app.js :: '<span class="env-tag" id="envTag">' + esc(envText || '本
+  ok   ui/assets/app.js :: function initAuth(active, envText) {
+  ok   ui/index.html :: envText = '演示环境 · ' +
+  ok   ui/index.html :: let envText = '演示环境 · 模拟审批系统';
+  MISS ui/assets/app.css :: .env-tag { display: none; }              /* 收起环境标签 */
+  ok   ui/assets/app.css :: 追加 v2.1.1 修复块
+  ok   ui/assets/pet.js :: // 首次进入邀请一次（每会话一次，不打扰）
+  ok   ui/assets/pet.js :: '.pet-btn:hover .pet-tip{opacity:1;transform:translateX(

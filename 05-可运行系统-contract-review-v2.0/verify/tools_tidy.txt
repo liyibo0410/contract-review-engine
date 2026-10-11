@@ -1,0 +1,58 @@
+tools/ 目录整理结果
+====================================================================================
+移入 _onetime/：18 个
+
+  [MOVE] tools/patch_ui.py → tools/_onetime/patch_ui.py
+  [MOVE] tools/patch_http.py → tools/_onetime/patch_http.py
+  [MOVE] tools/patch_render.py → tools/_onetime/patch_render.py
+  [MOVE] tools/patch_render2.py → tools/_onetime/patch_render2.py
+  [MOVE] tools/patch_render3.py → tools/_onetime/patch_render3.py
+  [MOVE] tools/patch_render4.py → tools/_onetime/patch_render4.py
+  [MOVE] tools/patch_v201_backend.py → tools/_onetime/patch_v201_backend.py
+  [MOVE] tools/patch_v201_front1.py → tools/_onetime/patch_v201_front1.py
+  [MOVE] tools/patch_assistant_backend.py → tools/_onetime/patch_assistant_backend.py
+  [MOVE] tools/patch_assistant_verify.py → tools/_onetime/patch_assistant_verify.py
+  [MOVE] tools/patch_assistant_integrate.py → tools/_onetime/patch_assistant_integrate.py
+  [MOVE] tools/patch_pet_mount.py → tools/_onetime/patch_pet_mount.py
+  [MOVE] tools/fix_assistant1.py → tools/_onetime/fix_assistant1.py
+  [MOVE] tools/fix_front1.py → tools/_onetime/fix_front1.py
+  [MOVE] tools/fix_front2.py → tools/_onetime/fix_front2.py
+  [MOVE] tools/patch_version.py → tools/_onetime/patch_version.py
+  [MOVE] tools/probe_http_login.py → tools/_onetime/probe_http_login.py
+  [MOVE] tools/probe_twin.py → tools/_onetime/probe_twin.py
+  [WRITE] tools/_onetime/README.md
+
+------------------------------------------------------------------------------------
+仍在使用（27 个）：
+  audit_frontend.py        前端逐页体检（8 维度 × 6 页）
+  audit_interactive.py     前端交互态体检
+  bench.py                 性能基准
+  build_samples.py         （未登记说明）
+  capture_screens.py       （未登记说明）
+  cdp.py                   零依赖 CDP 客户端（供前端体检用）
+  check_assistant.py       AI 助手专项校验（意图/数据/不编造/引导）
+  check_conn_noise.py      客户端早断连不再打 traceback
+  check_consistency.py     改动一致性核查：确认编辑真的落盘
+  check_js.py              前端脚本语法校验（node --check）
+  check_twin_data.py       孪生看板数据真实性对账
+  contracts.py             （未登记说明）
+  debug_pdf.py             （未登记说明）
+  devcheck.py              开发期编译/导入/关键路径自检
+  probe_topbar.py          顶栏几何体检（7 档视口）
+  reset_data.py            重置演示数据
+  run_all.py               一键跑齐全部验证（入口）
+  run_selftest.py          验收自检执行器
+  stats.py                 （未登记说明）
+  sync_delivery.py         （未登记说明）
+  sync_delivery_after_deploy.py （未登记说明）
+  test_notify.py           钉钉通知连通性自测
+  tidy_tools.py            （未登记说明）
+  verify_acceptance.py     （未登记说明）
+  verify_http.py           HTTP 全链路冒烟
+  verify_render.py         页面渲染与截图校验
+  verify_startup.py        （未登记说明）
+
+提示：以下脚本未登记说明，建议补进 KEEP 清单：build_samples.py、capture_screens.py、contracts.py、debug_pdf.py、stats.py、sync_delivery.py、sync_delivery_after_deploy.py、tidy_tools.py、verify_acceptance.py、verify_startup.py
+
+====================================================================================
+安全声明：本脚本只做移动与新增说明文件，未删除任何内容。

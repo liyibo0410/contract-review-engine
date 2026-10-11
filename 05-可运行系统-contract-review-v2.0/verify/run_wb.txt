@@ -1,0 +1,4 @@
+$ python tools/probe_workbench.py
+exit=0
+----------------------------------------------------------------------------------------
+workbench geom done: case=5, 问题 0 项

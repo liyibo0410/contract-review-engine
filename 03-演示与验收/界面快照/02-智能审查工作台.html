@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>企业软件采购合同 · 智能审查工作台</title>
+  <style>
+/* ==========================================================================
+   合同审批审查系统 · 设计系统
+   深色专业风：低饱和背景 + 高对比正文 + 克制的动效（仅 150ms 过渡）
+   ========================================================================== */
+
+:root {
+  --bg:        #0E1116;
+  --bg-soft:   #121821;
+  --panel:     #161D27;
+  --panel-2:   #1B2330;
+  --line:      #242D3A;
+  --line-soft: #1D252F;
+
+  --text:      #E7ECF3;
+  --text-2:    #9BA6B6;
+  --text-3:    #6B7787;
+
+  --brand:     #4C8DFF;
+  --brand-2:   #2F6FE4;
+  --brand-dim: rgba(76, 141, 255, .12);
+
+  --high:      #E5484D;
+  --high-bg:   rgba(229, 72, 77, .12);
+  --high-line: rgba(229, 72, 77, .34);
+  --medium:    #F5A524;
+  --medium-bg: rgba(245, 165, 36, .12);
+  --medium-line: rgba(245, 165, 36, .34);
+  --low:       #30A46C;
+  --low-bg:    rgba(48, 164, 108, .12);
+  --low-line:  rgba(48, 164, 108, .32);
+
+  --radius:    10px;
+  --radius-sm: 7px;
+  --shadow:    0 8px 28px rgba(0, 0, 0, .34);
+  --mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* --- 顶栏 ---------------------------------------------------------------- */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(14, 17, 22, .86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1560px; margin: 0 auto; padding: 0 22px;
+  height: 58px; display: flex; align-items: center; gap: 26px;
+}
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: linear-gradient(140deg, var(--brand), var(--brand-2));
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 12px; letter-spacing: .4px; color: #fff;
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.25; }
+.brand-text strong { font-size: 14px; font-weight: 600; }
+.brand-text em { font-style: normal; font-size: 10px; color: var(--text-3); letter-spacing: .6px; text-transform: uppercase; }
+
+.nav { display: flex; gap: 4px; margin-left: 6px; }
+.nav a {
+  padding: 7px 13px; border-radius: var(--radius-sm);
+  color: var(--text-2); font-size: 13px;
+  transition: background .15s ease, color .15s ease;
+}
+.nav a:hover { background: var(--panel); color: var(--text); }
+.nav a.on { background: var(--brand-dim); color: #9CC2FF; }
+
+.engine-chip {
+  margin-left: auto; display: flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--text-3);
+  border: 1px solid var(--line); border-radius: 20px; padding: 5px 12px;
+  max-width: 380px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.engine-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); flex: none; }
+.engine-chip .dot.live { background: var(--low); box-shadow: 0 0 8px var(--low); }
+
+/* --- 页面骨架 ------------------------------------------------------------ */
+.page { max-width: 1560px; margin: 0 auto; padding: 22px; }
+
+.page-head { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+.page-head h1 { font-size: 20px; margin: 0; font-weight: 600; letter-spacing: .2px; }
+.page-head .sub { color: var(--text-3); font-size: 12.5px; padding-bottom: 2px; }
+.page-head .spacer { flex: 1; }
+
+.grid { display: grid; gap: 14px; }
+
+/* --- 卡片 / 面板 --------------------------------------------------------- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.panel-head {
+  padding: 13px 16px; border-bottom: 1px solid var(--line-soft);
+  display: flex; align-items: center; gap: 10px;
+}
+.panel-head h2 { font-size: 13.5px; margin: 0; font-weight: 600; }
+.panel-head .spacer { flex: 1; }
+.panel-body { padding: 16px; }
+.panel-body.tight { padding: 0; }
+
+/* --- 统计卡 -------------------------------------------------------------- */
+.stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 13px 15px;
+}
+.stat .k { font-size: 11.5px; color: var(--text-3); }
+.stat .v { font-size: 24px; font-weight: 600; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.stat.high .v { color: var(--high); }
+.stat.medium .v { color: var(--medium); }
+.stat.low .v { color: var(--low); }
+
+/* --- 表格 ---------------------------------------------------------------- */
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th {
+  text-align: left; font-weight: 500; color: var(--text-3); font-size: 11.5px;
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+  background: var(--bg-soft); position: sticky; top: 0; white-space: nowrap;
+}
+table.data td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+table.data tbody tr { transition: background .15s ease; }
+table.data tbody tr:hover { background: var(--panel-2); }
+table.data .name { font-weight: 500; }
+table.data .muted { color: var(--text-3); font-size: 12px; }
+table.data .num { font-variant-numeric: tabular-nums; text-align: right; }
+
+/* --- 标签 ---------------------------------------------------------------- */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; padding: 2px 9px; border-radius: 20px;
+  border: 1px solid var(--line); color: var(--text-2); white-space: nowrap;
+}
+.tag.high   { color: #FF9EA1; background: var(--high-bg);   border-color: var(--high-line); }
+.tag.medium { color: #F7C878; background: var(--medium-bg); border-color: var(--medium-line); }
+.tag.low    { color: #7BD8A8; background: var(--low-bg);    border-color: var(--low-line); }
+.tag.info   { color: #9CC2FF; background: var(--brand-dim); border-color: rgba(76,141,255,.3); }
+.tag.warn   { color: #F7C878; background: var(--medium-bg); border-color: var(--medium-line); }
+.tag.ok     { color: #7BD8A8; background: var(--low-bg); border-color: var(--low-line); }
+
+/* --- 按钮 ---------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer;
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--line); font-size: 12.5px;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.btn:hover { background: #222C3A; border-color: #303B4A; }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 500; }
+.btn.primary:hover { background: var(--brand-2); border-color: var(--brand-2); }
+.btn.ghost { background: transparent; }
+.btn.sm { padding: 5px 10px; font-size: 12px; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+.route-btn { font-weight: 500; }
+
+/* --- 表单 ---------------------------------------------------------------- */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 11.5px; color: var(--text-3); }
+input[type=text], input[type=search], select, textarea {
+  width: 100%; padding: 8px 11px; font-size: 13px; font-family: inherit;
+  background: var(--bg-soft); color: var(--text);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  outline: none; transition: border-color .15s ease;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--brand); }
+textarea { resize: vertical; line-height: 1.6; }
+select { cursor: pointer; }
+.toolbar { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.toolbar .field { min-width: 140px; }
+
+/* --- 工作台 -------------------------------------------------------------- */
+.workspace { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+
+.doc-view {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  max-height: calc(100vh - 168px); overflow-y: auto;
+}
+.doc-meta {
+  display: flex; flex-wrap: wrap; gap: 7px; padding: 12px 16px;
+  border-bottom: 1px solid var(--line-soft); position: sticky; top: 0;
+  background: var(--panel); z-index: 5;
+}
+.chip {
+  font-size: 11.5px; padding: 3px 9px; border-radius: 6px;
+  background: var(--bg-soft); border: 1px solid var(--line); color: var(--text-2);
+}
+.chip b { color: var(--text); font-weight: 500; }
+.chip.flagged { border-color: var(--brand); color: #9CC2FF; background: var(--brand-dim); }
+
+.doc-body { padding: 8px 0 40px; }
+.doc-page-label {
+  font-size: 11px; color: var(--text-3); letter-spacing: 1px;
+  padding: 10px 18px 4px; border-bottom: 1px dashed var(--line-soft); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.doc-page-label::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+
+.doc-line {
+  padding: 4px 18px; font-size: 13.5px; line-height: 1.85; white-space: pre-wrap; word-break: break-word;
+  border-left: 2px solid transparent; transition: background .15s ease;
+}
+.doc-line.heading { font-weight: 600; color: #C9D6E8; margin-top: 6px; }
+.doc-line.meta-hl { background: var(--brand-dim); border-left-color: var(--brand); }
+.doc-line mark.risk {
+  background: var(--high-bg); color: #FFB4B6; border-radius: 3px; padding: 1px 2px;
+  box-shadow: inset 0 -1px 0 var(--high-line); cursor: pointer;
+}
+.doc-line mark.risk.medium { background: var(--medium-bg); color: #F7C878; box-shadow: inset 0 -1px 0 var(--medium-line); }
+.doc-line mark.risk.low    { background: var(--low-bg);    color: #7BD8A8; box-shadow: inset 0 -1px 0 var(--low-line); }
+.doc-line mark.risk.active { outline: 2px solid var(--brand); background: rgba(76,141,255,.28); color: #fff; }
+.doc-line mark.field { background: rgba(76,141,255,.16); color: #AFCBFF; border-radius: 3px; padding: 1px 2px; }
+
+/* 风险面板 */
+.risk-panel { display: flex; flex-direction: column; gap: 12px; }
+.risk-list { display: flex; flex-direction: column; gap: 10px; max-height: calc(100vh - 300px); overflow-y: auto; padding-right: 3px; }
+
+.risk-card {
+  background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--line);
+  border-radius: var(--radius); padding: 13px 15px; cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.risk-card:hover { background: var(--panel-2); }
+.risk-card.high   { border-left-color: var(--high); }
+.risk-card.medium { border-left-color: var(--medium); }
+.risk-card.low    { border-left-color: var(--low); }
+.risk-card.active { border-color: var(--brand); background: var(--panel-2); }
+.risk-card.adopted { opacity: .72; }
+
+.risk-head { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.risk-head .title { font-weight: 600; font-size: 13.5px; flex: 1; }
+.risk-cols { display: flex; flex-direction: column; gap: 7px; font-size: 12.5px; color: var(--text-2); }
+.risk-cols .row { display: flex; gap: 8px; }
+.risk-cols .row .k { color: var(--text-3); flex: none; width: 62px; font-size: 11.5px; padding-top: 1px; }
+.risk-cols .row .v { flex: 1; color: var(--text-2); word-break: break-word; }
+.risk-cols .v.basis { color: #A9B8CC; }
+.suggest-box {
+  margin-top: 8px; padding: 10px 12px; border-radius: var(--radius-sm);
+  background: rgba(48, 164, 108, .08); border: 1px solid rgba(48, 164, 108, .22);
+  font-size: 12.5px; color: #C6E9D6; white-space: pre-wrap;
+}
+.suggest-box .lb { font-size: 11px; color: #7BD8A8; display: block; margin-bottom: 4px; }
+.risk-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.risk-actions .spacer { flex: 1; }
+.risk-actions .src { font-size: 11px; color: var(--text-3); }
+
+.summary-box {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px;
+}
+.summary-box h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; }
+.summary-box p { margin: 0 0 8px; font-size: 12.5px; color: var(--text-2); }
+.summary-box .metrics { display: flex; gap: 16px; font-size: 12px; color: var(--text-3); }
+.summary-box .metrics b { font-size: 15px; font-weight: 600; color: var(--text); display: block; }
+
+.blocked-box {
+  background: var(--high-bg); border: 1px solid var(--high-line); border-radius: var(--radius);
+  padding: 15px 17px;
+}
+.blocked-box h3 { margin: 0 0 6px; font-size: 13.5px; color: #FFB4B6; }
+.blocked-box p { margin: 0 0 12px; font-size: 12.5px; color: #E9B9BB; }
+
+/* --- 规则页 -------------------------------------------------------------- */
+.rules-layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 14px; align-items: start; }
+.rule-item {
+  padding: 11px 15px; border-bottom: 1px solid var(--line-soft); cursor: pointer;
+  display: flex; flex-direction: column; gap: 5px; transition: background .15s ease;
+}
+.rule-item:hover { background: var(--panel-2); }
+.rule-item.active { background: var(--brand-dim); }
+.rule-item .n { font-size: 13px; font-weight: 500; }
+.rule-item .m { display: flex; gap: 7px; align-items: center; font-size: 11px; color: var(--text-3); }
+.rule-item .id { font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
+
+.code {
+  font-family: var(--mono); font-size: 12px; line-height: 1.75;
+  background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 11px 13px; white-space: pre-wrap; word-break: break-all; color: #B8C9E0;
+}
+
+.kv-list { display: flex; flex-direction: column; gap: 9px; }
+.kv-list .row { display: flex; gap: 10px; font-size: 12.5px; }
+.kv-list .k { width: 74px; flex: none; color: var(--text-3); font-size: 11.5px; padding-top: 1px; }
+.kv-list .v { flex: 1; color: var(--text-2); word-break: break-word; }
+.kv-list .v.mono { font-family: var(--mono); font-size: 12px; color: #B8C9E0; }
+
+/* --- 审批系统 ------------------------------------------------------------ */
+.approval-layout { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 14px; align-items: start; }
+.comment {
+  padding: 13px 16px; border-bottom: 1px solid var(--line-soft);
+}
+.comment .who { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.comment .who .name { font-size: 12.5px; font-weight: 500; }
+.comment .who .time { font-size: 11px; color: var(--text-3); margin-left: auto; }
+.comment .avatar {
+  width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; background: var(--panel-2); border: 1px solid var(--line); color: var(--text-2); flex: none;
+}
+.comment .avatar.sys { background: var(--brand-dim); border-color: rgba(76,141,255,.34); color: #9CC2FF; }
+.comment .body { font-size: 12.5px; color: var(--text-2); white-space: pre-wrap; line-height: 1.75; }
+.comment .body strong { color: var(--text); }
+
+/* --- 报告 ---------------------------------------------------------------- */
+.report-preview {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 30px 36px; max-width: 900px;
+}
+.report-preview h1 { font-size: 20px; margin: 0 0 18px; text-align: center; font-weight: 600; }
+.report-preview h2 { font-size: 14.5px; margin: 22px 0 10px; color: #C9D6E8; border-left: 3px solid var(--brand); padding-left: 10px; }
+.report-preview h3 { font-size: 13px; margin: 16px 0 7px; color: #AFCBFF; }
+.report-preview table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 10px 0; }
+.report-preview th, .report-preview td { border: 1px solid var(--line); padding: 7px 11px; text-align: left; }
+.report-preview th { background: var(--bg-soft); color: var(--text-3); font-weight: 500; width: 150px; }
+.report-preview ul { margin: 6px 0 6px 18px; padding: 0; }
+.report-preview li { margin-bottom: 4px; font-size: 12.5px; color: var(--text-2); }
+.report-preview p { font-size: 12.5px; color: var(--text-2); }
+
+/* --- 空态 / 提示 --------------------------------------------------------- */
+.empty { padding: 44px 20px; text-align: center; color: var(--text-3); font-size: 13px; }
+.empty .big { font-size: 15px; color: var(--text-2); margin-bottom: 6px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 20px);
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+  padding: 11px 18px; border-radius: var(--radius); box-shadow: var(--shadow);
+  font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  z-index: 90; max-width: 70vw;
+}
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.toast.err { border-color: var(--high-line); color: #FFB4B6; }
+.toast.ok { border-color: var(--low-line); color: #7BD8A8; }
+
+.loading { padding: 26px; text-align: center; color: var(--text-3); font-size: 13px; }
+.flash { animation: flash 1.15s ease; }
+@keyframes flash {
+  0%   { background: rgba(76, 141, 255, .30); }
+  100% { background: transparent; }
+}
+
+@media (max-width: 1280px) {
+  .stats { grid-template-columns: repeat(3, 1fr); }
+  .workspace, .rules-layout, .approval-layout { grid-template-columns: 1fr; }
+  .doc-view, .risk-list { max-height: none; }
+}
+
+</style>
+</head>
+<body><div style="background:#1B2330;border-bottom:1px solid #242D3A;color:#9BA6B6;font-size:12px;padding:8px 22px;font-family:Microsoft YaHei UI,sans-serif">界面快照 · 智能审查工作台（左栏原文高亮 ↔ 右栏风险卡片双向联动）</div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">CR</span>
+      <span class="brand-text">
+        <strong>合同审批审查系统</strong>
+        <em>Contract Review Platform</em>
+      </span>
+    </a>
+    <nav class="nav">
+      <a href="/" class="on">合同审查大盘</a>
+      <a href="/rules" class="">合规规则与模板</a>
+      <a href="/approval" class="">模拟审批系统</a>
+    </nav>
+    <div class="engine-chip" title="规则引擎模式（大模型未启用，使用内置示范条款库）">
+      <span class="dot "></span>
+      规则引擎模式（大模型未启用，使用内置示范条款库）
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  
+<div class="page-head">
+  <h1>企业软件采购合同</h1>
+  <span class="sub">CR-20260918-0001 · C-2026-001-企业软件采购合同.docx · 2 页</span>
+  <span class="spacer"></span>
+  <a class="btn" href="/">返回大盘</a>
+  <a class="btn" href="/report/1">审查报告</a>
+  <button class="btn primary" id="btn-writeback"
+          >写回审批意见</button>
+</div>
+
+
+
+<div class="workspace">
+  <!-- 左栏：合同正文 -->
+  <div class="doc-view">
+    <div class="doc-meta" id="doc-meta"></div>
+    <div class="doc-body" id="doc-body"></div>
+  </div>
+
+  <!-- 右栏：风险与协同 -->
+  <div class="risk-panel">
+    <div class="summary-box" id="summary"></div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h2>审查结果与建议</h2>
+        <span class="spacer"></span>
+        <span class="muted" id="risk-count"></span>
+      </div>
+      <div class="panel-body">
+        <div class="risk-list" id="risk-list"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>审批协同与回写</h2></div>
+      <div class="panel-body">
+        <div class="field" style="margin-bottom:10px">
+          <label>法务人工批注（将一并写入审批单评论区）</label>
+          <textarea id="lawyer-note" rows="4" placeholder="例如：同意系统判定，知识产权条款须按建议修改后重新提交审批。">同意系统判定，知识产权与付款条款须按建议修改后重新提交审批.</textarea>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" id="btn-writeback2">一键写回审批单</button>
+          <button class="btn" id="btn-save-note">保存批注</button>
+          <button class="btn" id="btn-export-pdf">导出 PDF 报告</button>
+          <button class="btn ghost" id="btn-export-md">导出 Markdown</button>
+        </div>
+        <div class="kv-list" style="margin-top:14px" id="writeback-info"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="payload" type="application/json">{"task": {"id": 1, "contract_id": 1, "review_no": "CR-20260918-0001", "title": "企业软件采购合同", "status": "completed", "writeback_status": "success", "risk_level": "high", "risk_high": 2, "risk_medium": 1, "risk_low": 0, "conclusion": "建议拒绝", "summary": "存在 2 项高风险：到货即付全款且未设验收前置条件、知识产权归属供应商。另有 1 项中风险：涉及源代码但未约定交付或托管。综合判定为高风险，建议在完成上述条款修订后再行签署。", "block_code": "", "block_reason": "", "applicant": "李奕波", "department": "战略采购部", "business_type": "采购", "amount": "1,280,000.00元", "currency": "人民币", "page_count": 2, "parse_mode": "docx", "lawyer_note": "同意系统判定，知识产权与付款条款须按建议修改后重新提交审批.", "created_at": "2026-09-18 21:08:04", "updated_at": "2026-09-18 21:09:33", "finished_at": "2026-09-18 21:08:04", "filename": "C-2026-001-企业软件采购合同.docx", "file_format": "docx", "stored_path": "D:\\workbuddy work\\2026-09-18-20-38-21\\contract-review\\data\\samples\\C-2026-001-企业软件采购合同.docx", "c_parse_mode": "", "status_label": "审查完成", "writeback_status_label": "回写成功", "risk_level_label": "高风险"}, "document": {"full_text": "企业软件采购合同\n合同编号：CR-PUR-2026-0018\n合同双方\n甲方（采购方）\n名称：中原智造装备制造有限公司\n统一社会信用代码：91410300MA3X8K2N7B\n住所地：河南省洛阳市涧西区中州西路 15 号\n法定代表人：王一鸣\n乙方（供应商）\n名称：云启软件技术有限公司\n统一社会信用代码：91310115MA1H8YW23K\n住所地：上海市浦东新区张江高科技园区博云路 2 号\n法定代表人：陈立行\n鉴于甲方拟采购企业资产管理软件系统，乙方具备相应的软件研发与实施能力，双方经友好协商，就本次软件采购事宜达成如下协议：\n第一条 标的物与数量\n1.1 甲方向乙方采购企业资产管理软件系统 V3.0 一套，含 200 个用户授权，具体功能清单见附件一《采购清单》。\n1.2 乙方应于交货时向甲方提供软件安装介质及用户手册；软件源代码由乙方保留。\n第二条 合同金额与付款方式\n2.1 本合同总金额为人民币壹佰贰拾捌万元整（¥1,280,000.00 元），含增值税、实施服务费及一年期免费维护。\n2.2 本合同签订后 10 个工作日内，甲方向乙方支付合同总额 30% 的预付款；货物运抵甲方指定地点后 10 个工作日内，甲方一次性支付剩余全部款项。\n2.3 乙方应于每次收款前向甲方开具等额增值税专用发票。\n第三条 交付与实施\n3.1 乙方应于本合同生效之日起 60 日内完成软件交付、部署及上线试运行。\n3.2 交付地点为甲方住所地，运输及相关费用由乙方承担。\n第四条 验收\n4.1 乙方完成交付后，甲方应在 15 个工作日内依照附件二《技术规格与验收标准》组织验收，验收合格的出具书面验收单。\n4.2 验收不合格的，乙方应在 10 个工作日内免费整改并重新提交验收。\n第五条 知识产权\n5.1 本合同项下软件产品的知识产权归乙方所有，甲方仅获得本合同约定的非独占使用许可。\n5.2 甲方不得对软件进行反向工程、反编译或拆解，不得将软件许可转让给第三方。\n第六条 质量保证\n6.1 乙方对所交付软件提供自验收合格之日起 12 个月的质量保证期。\n6.2 质保期内因软件自身缺陷导致功能异常的，乙方应在接到通知后 48 小时内响应并免费修复。\n第七条 保密义务\n7.1 双方对因签订及履行本合同而知悉的对方商业秘密、技术资料与报价信息负有保密义务，保密期限为本合同终止后 5 年。\n7.2 未经对方书面同意，任何一方不得向第三方披露上述信息或将其用于本合同之外的目的。\n第八条 不可抗力\n8.1 因不可抗力不能履行本合同的，根据不可抗力的影响，部分或全部免除责任。\n8.2 遇不可抗力一方应在事件发生后 5 个工作日内书面通知对方，并在 15 日内提供有权机构出具的证明。\n第九条 违约责任\n9.1 甲方逾期付款的，每逾期一日按未付款项的 0.05% 向乙方支付违约金。\n9.2 乙方逾期交付的，每逾期一日按合同总价款的 0.05% 向甲方支付违约金，累计不超过合同总价款的 20%。\n第十条 争议解决\n10.1 因本合同引起的或与本合同有关的任何争议，双方应友好协商解决；协商不成的，任何一方均可向甲方所在地有管辖权的人民法院提起诉讼。\n第十一条 合同生效与其他\n11.1 本合同自双方法定代表人或授权代表签字并加盖公章之日起生效。\n11.2 本合同履行期限自 2026 年 10 月 1 日起至 2027 年 9 月 30 日止。\n11.3 本合同一式肆份，双方各执贰份，具有同等法律效力。\n甲方（盖章）：____________________ 乙方（盖章）：____________________\n签署日期：2026 年 9 月 20 日", "page_estimated": true, "ocr_confidence": null}, "meta": {"title": {"key": "title", "label": "合同标题", "value": "企业软件采购合同", "char_start": 0, "char_end": 8, "page": 1, "confidence": "high", "evidence": ""}, "party_a": {"key": "party_a", "label": "甲方", "value": "中原智造装备制造有限公司", "char_start": 47, "char_end": 59, "page": 1, "confidence": "high", "evidence": "甲方（采购方）\n名称：中原智造装备制造有限公司"}, "party_b": {"key": "party_b", "label": "乙方", "value": "云启软件技术有限公司", "char_start": 132, "char_end": 142, "page": 1, "confidence": "high", "evidence": "乙方（供应商）\n名称：云启软件技术有限公司"}, "credit_code": {"key": "credit_code", "label": "统一社会信用代码", "value": "91410300MA3X8K2N7B", "char_start": 69, "char_end": 87, "page": 1, "confidence": "high", "evidence": "91410300MA3X8K2N7B"}, "amount": {"key": "amount", "label": "合同金额", "value": "1,280,000.00元", "char_start": 416, "char_end": 430, "page": 1, "confidence": "high", "evidence": "¥1,280,000.00 元"}, "currency": {"key": "currency", "label": "币种", "value": "人民币", "char_start": -1, "char_end": -1, "page": 0, "confidence": "medium", "evidence": ""}, "term": {"key": "term", "label": "履行期限", "value": "2026年10月1日 至 2027年9月30日", "char_start": 1380, "char_end": 1419, "page": 2, "confidence": "high", "evidence": "履行期限自 2026 年 10 月 1 日起至 2027 年 9 月 30 日"}, "effect": {"key": "effect", "label": "生效条件", "value": "本合同自双方法定代表人或授权代表签字并加盖公章之日起生效", "char_start": 1342, "char_end": 1370, "page": 2, "confidence": "medium", "evidence": "本合同自双方法定代表人或授权代表签字并加盖公章之日起生效"}, "contract_no": {"key": "contract_no", "label": "合同编号", "value": "CR-PUR-2026-0018", "char_start": 14, "char_end": 30, "page": 1, "confidence": "high", "evidence": "合同编号：CR-PUR-2026-0018"}, "sign_date": {"key": "sign_date", "label": "签署日期", "value": "2026年9月20日", "char_start": 1513, "char_end": 1528, "page": 2, "confidence": "high", "evidence": "签署日期：2026 年 9 月 20 日"}}, "clauses": [{"id": 1, "task_id": 1, "seq": 1, "clause_type": "其他", "title": "企业软件采购合同", "content": "企业软件采购合同\n合同编号：CR-PUR-2026-0018", "char_start": 0, "char_end": 30, "page": 1, "para_index": 0}, {"id": 2, "task_id": 1, "seq": 2, "clause_type": "其他", "title": "合同双方", "content": "合同双方", "char_start": 31, "char_end": 35, "page": 1, "para_index": 2}, {"id": 3, "task_id": 1, "seq": 3, "clause_type": "主体资质", "title": "甲方（采购方）", "content": "甲方（采购方）\n名称：中原智造装备制造有限公司\n统一社会信用代码：91410300MA3X8K2N7B\n住所地：河南省洛阳市涧西区中州西路 15 号\n法定代表人：王一鸣", "char_start": 36, "char_end": 120, "page": 1, "para_index": 3}, {"id": 4, "task_id": 1, "seq": 4, "clause_type": "主体资质", "title": "乙方（供应商）", "content": "乙方（供应商）\n名称：云启软件技术有限公司\n统一社会信用代码：91310115MA1H8YW23K\n住所地：上海市浦东新区张江高科技园区博云路 2 号\n法定代表人：陈立行\n鉴于甲方拟采购企业资产管理软件系统，乙方具备相应的软件研发与实施能力，双方经友好协商，就本次软件采购事宜达成如下协议：", "char_start": 121, "char_end": 266, "page": 1, "para_index": 8}, {"id": 5, "task_id": 1, "seq": 5, "clause_type": "标的物", "title": "第一条 标的物与数量", "content": "第一条 标的物与数量\n1.1 甲方向乙方采购企业资产管理软件系统 V3.0 一套，含 200 个用户授权，具体功能清单见附件一《采购清单》。\n1.2 乙方应于交货时向甲方提供软件安装介质及用户手册；软件源代码由乙方保留。", "char_start": 267, "char_end": 377, "page": 1, "para_index": 14}, {"id": 6, "task_id": 1, "seq": 6, "clause_type": "金额与付款", "title": "第二条 合同金额与付款方式", "content": "第二条 合同金额与付款方式\n2.1 本合同总金额为人民币壹佰贰拾捌万元整（¥1,280,000.00 元），含增值税、实施服务费及一年期免费维护。\n2.2 本合同签订后 10 个工作日内，甲方向乙方支付合同总额 30% 的预付款；货物运抵甲方指定地点后 10 个工作日内，甲方一次性支付剩余全部款项。\n2.3 乙方应于每次收款前向甲方开具等额增值税专用发票。", "char_start": 378, "char_end": 557, "page": 1, "para_index": 17}, {"id": 7, "task_id": 1, "seq": 7, "clause_type": "交付与履行", "title": "第三条 交付与实施", "content": "第三条 交付与实施\n3.1 乙方应于本合同生效之日起 60 日内完成软件交付、部署及上线试运行。\n3.2 交付地点为甲方住所地，运输及相关费用由乙方承担。", "char_start": 558, "char_end": 635, "page": 1, "para_index": 21}, {"id": 8, "task_id": 1, "seq": 8, "clause_type": "验收标准", "title": "第四条 验收", "content": "第四条 验收\n4.1 乙方完成交付后，甲方应在 15 个工作日内依照附件二《技术规格与验收标准》组织验收，验收合格的出具书面验收单。\n4.2 验收不合格的，乙方应在 10 个工作日内免费整改并重新提交验收。", "char_start": 636, "char_end": 739, "page": 1, "para_index": 24}, {"id": 9, "task_id": 1, "seq": 9, "clause_type": "知识产权", "title": "第五条 知识产权", "content": "第五条 知识产权\n5.1 本合同项下软件产品的知识产权归乙方所有，甲方仅获得本合同约定的非独占使用许可。\n5.2 甲方不得对软件进行反向工程、反编译或拆解，不得将软件许可转让给第三方。", "char_start": 740, "char_end": 832, "page": 1, "para_index": 27}, {"id": 10, "task_id": 1, "seq": 10, "clause_type": "主体资质", "title": "第六条 质量保证", "content": "第六条 质量保证\n6.1 乙方对所交付软件提供自验收合格之日起 12 个月的质量保证期。\n6.2 质保期内因软件自身缺陷导致功能异常的，乙方应在接到通知后 48 小时内响应并免费修复。", "char_start": 833, "char_end": 925, "page": 1, "para_index": 30}, {"id": 11, "task_id": 1, "seq": 11, "clause_type": "保密义务", "title": "第七条 保密义务", "content": "第七条 保密义务\n7.1 双方对因签订及履行本合同而知悉的对方商业秘密、技术资料与报价信息负有保密义务，保密期限为本合同终止后 5 年。\n7.2 未经对方书面同意，任何一方不得向第三方披露上述信息或将其用于本合同之外的目的。", "char_start": 926, "char_end": 1038, "page": 1, "para_index": 33}, {"id": 12, "task_id": 1, "seq": 12, "clause_type": "不可抗力", "title": "第八条 不可抗力", "content": "第八条 不可抗力\n8.1 因不可抗力不能履行本合同的，根据不可抗力的影响，部分或全部免除责任。\n8.2 遇不可抗力一方应在事件发生后 5 个工作日内书面通知对方，并在 15 日内提供有权机构出具的证明。", "char_start": 1039, "char_end": 1140, "page": 2, "para_index": 36}, {"id": 13, "task_id": 1, "seq": 13, "clause_type": "违约责任", "title": "第九条 违约责任", "content": "第九条 违约责任\n9.1 甲方逾期付款的，每逾期一日按未付款项的 0.05% 向乙方支付违约金。\n9.2 乙方逾期交付的，每逾期一日按合同总价款的 0.05% 向甲方支付违约金，累计不超过合同总价款的 20%。", "char_start": 1141, "char_end": 1246, "page": 2, "para_index": 39}, {"id": 14, "task_id": 1, "seq": 14, "clause_type": "争议解决", "title": "第十条 争议解决", "content": "第十条 争议解决\n10.1 因本合同引起的或与本合同有关的任何争议，双方应友好协商解决；协商不成的，任何一方均可向甲方所在地有管辖权的人民法院提起诉讼。", "char_start": 1247, "char_end": 1323, "page": 2, "para_index": 42}, {"id": 15, "task_id": 1, "seq": 15, "clause_type": "生效条件", "title": "第十一条 合同生效与其他", "content": "第十一条 合同生效与其他\n11.1 本合同自双方法定代表人或授权代表签字并加盖公章之日起生效。\n11.2 本合同履行期限自 2026 年 10 月 1 日起至 2027 年 9 月 30 日止。\n11.3 本合同一式肆份，双方各执贰份，具有同等法律效力。\n甲方（盖章）：____________________ 乙方（盖章）：____________________\n签署日期：2026 年 9 月 20 日", "char_start": 1324, "char_end": 1528, "page": 2, "para_index": 44}], "risks": [{"id": 2, "task_id": 1, "rule_id": "R-PUR-PAY-001", "level": "high", "name": "到货即付全款且未设验收前置条件", "dimension": "金额与支付", "clause_id": 6, "clause_title": "第二条 合同金额与付款方式", "evidence": "货物运抵甲方指定地点后 10 个工作日内，甲方一次性支付剩余全部款项。", "evidence_start": 493, "evidence_end": 528, "page": 1, "para_index": 19, "cause": "约定到货即支付全款且未将验收合格作为付款前置条件，我方在货物或成果存在质量瑕疵时将丧失付款抗辩权与质保金约束力。", "basis": "《民法典》第六百二十一条、第六百二十六条；参照《企业内部控制应用指引第 7 号——采购业务》", "suggestion": "合同价款按里程碑分期支付：合同生效后 10 个工作日内支付 30% 作为预付款；全部交付物经甲方书面验收合格后支付 60%；剩余 10% 作为质量保证金，质保期满且无质量异议后 15 个工作日内无息付清。", "suggest_source": "rule_engine", "adopted": false, "lawyer_edit": "", "conflict_note": "", "level_label": "高风险"}, {"id": 1, "task_id": 1, "rule_id": "R-PUR-IP-001", "level": "high", "name": "知识产权归属供应商", "dimension": "知识产权", "clause_id": 9, "clause_title": "第五条 知识产权", "evidence": "5.1 本合同项下软件产品的知识产权归乙方所有，甲方仅获得本合同约定的非独占使用许可。", "evidence_start": 749, "evidence_end": 792, "page": 1, "para_index": 28, "cause": "我方出资采购定制软件或技术成果，若约定知识产权全部归属供应商，我方将无法自主使用、二次开发或更换供应商，形成实质性技术锁定。", "basis": "《民法典》第八百四十三条、第八百四十七条；《著作权法》第十九条", "suggestion": "因履行本合同所产生的全部成果（含软件源代码、设计文档、技术资料）的知识产权归甲方所有；乙方应在交付时一并移交完整源代码及技术文档，并保证交付成果不侵犯任何第三方权利。", "suggest_source": "rule_engine", "adopted": false, "lawyer_edit": "", "conflict_note": "", "level_label": "高风险"}, {"id": 3, "task_id": 1, "rule_id": "R-PUR-IP-002", "level": "medium", "name": "涉及源代码但未约定交付或托管", "dimension": "知识产权", "clause_id": 5, "clause_title": "第一条 标的物与数量", "evidence": "软件源代码由乙方保留。", "evidence_start": 366, "evidence_end": 377, "page": 1, "para_index": 16, "cause": "条款提及源代码却未约定交付或第三方托管安排，一旦供应商停止维护，我方将无法自行维护系统，业务连续性受影响。", "basis": "《民法典》第八百四十七条；软件采购实务惯例", "suggestion": "乙方应于验收合格后 10 个工作日内向甲方交付本次采购软件的完整源代码及编译说明；或在双方认可的第三方机构进行源代码托管，触发条件为乙方停止维护、破产或被收购。", "suggest_source": "rule_engine", "adopted": false, "lawyer_edit": "", "conflict_note": "", "level_label": "中风险"}]}</script>
+
+
+</main>
+
+<div id="toast" class="toast"></div>
+<script type="module">
+/* 公共工具：请求封装、提示、格式化 */
+
+async function api(path, options = {}) {
+  const opts = { headers: {}, ...options };
+  if (opts.body && !(opts.body instanceof FormData)) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(opts.body);
+  }
+  const resp = await fetch(path, opts);
+  const text = await resp.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
+  if (!resp.ok) {
+    const msg = (data && (data.detail || data.message)) || ('请求失败 HTTP ' + resp.status);
+    throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+  }
+  return data;
+}
+
+let toastTimer = null;
+function toast(message, kind = '') {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = message;
+  el.className = 'toast on ' + kind;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = 'toast ' + kind; }, 3200);
+}
+
+function escapeHtml(text) {
+  return String(text == null ? '' : text)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function scrollAndFlash(el) {
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.remove('flash');
+  void el.offsetWidth;
+  el.classList.add('flash');
+}
+
+function qs(name) {
+  return new URLSearchParams(location.search).get(name) || '';
+}
+
+
+
+const node = document.getElementById('payload');
+if (node) {
+  const DATA = JSON.parse(node.textContent);
+  boot(DATA);
+}
+
+function boot(DATA) {
+  const { task, document: doc, clauses = [], risks = [], meta = {} } = DATA;
+  const LEVEL_LABEL = { high: '高风险', medium: '中风险', low: '低风险' };
+  const SRC_LABEL = { llm: '大模型改写', clause_lib: '标准条款库', rule_engine: '规则引擎' };
+
+  /* ---------- 元数据 chips ---------- */
+  const metaEntries = Object.values(meta).filter((m) => m && m.value);
+  document.getElementById('doc-meta').innerHTML = metaEntries.map((m) => `
+    <span class="chip ${m.confidence === 'low' ? 'flagged' : ''}" data-meta-chip="${m.key}"
+          title="${escapeHtml(m.evidence || '')}">${escapeHtml(m.label)}：<b>${escapeHtml(String(m.value).slice(0, 26))}</b>${m.page ? ` <span class="muted">P${m.page}</span>` : ''}</span>
+  `).join('') || '<span class="chip">未提取到结构化元数据</span>';
+
+  /* ---------- 正文渲染（风险 + 元数据双层高亮） ---------- */
+  const body = document.getElementById('doc-body');
+  let lastPage = 0;
+  const htmlParts = [];
+
+  for (const c of clauses) {
+    if (c.page !== lastPage) {
+      htmlParts.push(`<div class="doc-page-label" id="page-${c.page}">第 ${c.page} 页</div>`);
+      lastPage = c.page;
+    }
+    htmlParts.push(renderClause(c));
+  }
+  body.innerHTML = htmlParts.join('') || '<div class="empty">正文为空</div>';
+
+  function renderClause(c) {
+    const start = c.char_start;
+    const end = c.char_end;
+    const text = c.content || '';
+    const spans = [];
+
+    for (const r of risks) {
+      if (r.evidence_end > start && r.evidence_start < end) {
+        spans.push({
+          s: Math.max(r.evidence_start, start) - start,
+          e: Math.min(r.evidence_end, end) - start,
+          cls: `risk ${r.level}`, attr: `data-risk="${r.id}"`, prio: 2
+        });
+      }
+    }
+    for (const m of Object.values(meta)) {
+      if (m && m.char_start >= 0 && m.char_end > m.char_start &&
+          m.char_end > start && m.char_start < end) {
+        spans.push({
+          s: Math.max(m.char_start, start) - start,
+          e: Math.min(m.char_end, end) - start,
+          cls: 'field', attr: `data-metafield="${m.key}"`, prio: 1
+        });
+      }
+    }
+    spans.sort((a, b) => a.s - b.s || b.prio - a.prio);
+
+    let html = '';
+    let cursor = 0;
+    for (const sp of spans) {
+      if (sp.s < cursor || sp.e <= sp.s) continue;
+      html += escapeHtml(text.slice(cursor, sp.s));
+      html += `<mark class="${sp.cls}" ${sp.attr}>${escapeHtml(text.slice(sp.s, sp.e))}</mark>`;
+      cursor = sp.e;
+    }
+    html += escapeHtml(text.slice(cursor));
+
+    const isHeading = /^第[一二三四五六七八九十百零〇\d]+[条章]|^[一二三四五六七八九十]+、|^合同双方$/.test(text.trim());
+    return `<div class="doc-line${isHeading ? ' heading' : ''}" id="clause-${c.seq}">${html}</div>`;
+  }
+
+  /* ---------- 摘要 ---------- */
+  const riskCounts = risks.reduce((acc, r) => { acc[r.level] = (acc[r.level] || 0) + 1; return acc; }, {});
+  document.getElementById('summary').innerHTML = `
+    <h3>综合风险评估</h3>
+    <div class="metrics">
+      <div>总风险等级<b class="${task.risk_level}">${LEVEL_LABEL[task.risk_level] || '—'}</b></div>
+      <div>高风险<b>${riskCounts.high || 0}</b></div>
+      <div>中风险<b>${riskCounts.medium || 0}</b></div>
+      <div>低风险<b>${riskCounts.low || 0}</b></div>
+      <div>审查结论<b>${escapeHtml(task.conclusion || '—')}</b></div>
+    </div>
+    <p style="margin-top:10px">${escapeHtml(task.summary || '')}</p>
+  `;
+
+  /* ---------- 风险卡片 ---------- */
+  const list = document.getElementById('risk-list');
+  document.getElementById('risk-count').textContent =
+    `共 ${risks.length} 项 · 解析方式 ${task.parse_mode}`;
+
+  if (!risks.length) {
+    list.innerHTML = '<div class="empty"><div class="big">未发现风险项</div>本合同权利义务设置基本对等。</div>';
+  } else {
+    list.innerHTML = risks.map((r) => `
+      <div class="risk-card ${r.level}${r.adopted ? ' adopted' : ''}" data-card="${r.id}" id="risk-${r.id}">
+        <div class="risk-head">
+          <span class="tag ${r.level}">${LEVEL_LABEL[r.level]}</span>
+          <span class="title">${escapeHtml(r.name)}</span>
+          ${r.adopted ? '<span class="tag ok">已采纳</span>' : ''}
+        </div>
+        <div class="risk-cols">
+          <div class="row"><span class="k">条款类型</span><span class="v">${escapeHtml(r.dimension || '—')} · 第 ${r.page} 页 第 ${r.para_index} 段</span></div>
+          <div class="row"><span class="k">原文</span><span class="v">${escapeHtml((r.evidence || '').slice(0, 150))}</span></div>
+          ${r.cause ? `<div class="row"><span class="k">风险成因</span><span class="v">${escapeHtml(r.cause)}</span></div>` : ''}
+          ${r.basis ? `<div class="row"><span class="k">合规依据</span><span class="v basis">${escapeHtml(r.basis)}</span></div>` : ''}
+        </div>
+        ${r.suggestion ? `<div class="suggest-box"><span class="lb">推荐修改示范条款（${SRC_LABEL[r.suggest_source] || '规则引擎'}）</span>${escapeHtml(r.lawyer_edit || r.suggestion)}</div>` : ''}
+        <div class="risk-actions">
+          <button class="btn sm" data-adopt="${r.id}">${r.adopted ? '取消采纳' : '采纳建议'}</button>
+          <button class="btn sm ghost" data-copy="${r.id}">复制条款</button>
+          <span class="spacer"></span>
+          <span class="src">${escapeHtml(r.rule_id)}</span>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ---------- 双向联动 ---------- */
+  function focusRisk(id) {
+    document.querySelectorAll('.risk-card.active').forEach((el) => el.classList.remove('active'));
+    const card = document.getElementById('risk-' + id);
+    if (card) { card.classList.add('active'); scrollAndFlash(card); }
+
+    document.querySelectorAll('mark.risk.active').forEach((el) => el.classList.remove('active'));
+    const mark = document.querySelector(`mark.risk[data-risk="${id}"]`);
+    if (mark) {
+      const same = document.querySelectorAll(`mark.risk[data-risk="${id}"]`);
+      same.forEach((m) => m.classList.add('active'));
+      scrollAndFlash(mark.closest('.doc-line'));
+    }
+  }
+
+  list.addEventListener('click', async (ev) => {
+    const adoptBtn = ev.target.closest('[data-adopt]');
+    if (adoptBtn) {
+      ev.stopPropagation();
+      const id = Number(adoptBtn.dataset.adopt);
+      const risk = risks.find((r) => r.id === id);
+      try {
+        await api(`/api/risks/${id}/adopt`, {
+          method: 'POST',
+          body: { adopted: !risk.adopted, lawyer_edit: risk.lawyer_edit || '' }
+        });
+        toast(risk.adopted ? '已取消采纳' : '已采纳该修改建议', 'ok');
+        setTimeout(() => location.reload(), 400);
+      } catch (e) { toast(e.message, 'err'); }
+      return;
+    }
+
+    const copyBtn = ev.target.closest('[data-copy]');
+    if (copyBtn) {
+      ev.stopPropagation();
+      const risk = risks.find((r) => r.id === Number(copyBtn.dataset.copy));
+      const text = risk.lawyer_edit || risk.suggestion || '';
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('示范条款已复制到剪贴板', 'ok');
+      } catch (e) {
+        toast('复制失败，请手动选择文本', 'err');
+      }
+      return;
+    }
+
+    const card = ev.target.closest('[data-card]');
+    if (card) focusRisk(Number(card.dataset.card));
+  });
+
+  body.addEventListener('click', (ev) => {
+    const mark = ev.target.closest('mark.risk');
+    if (mark) { focusRisk(Number(mark.dataset.risk)); return; }
+    const chip = ev.target.closest('[data-meta-chip]');
+    if (chip) {
+      const key = chip.dataset.metaChip;
+      const el = document.querySelector(`mark.field[data-metafield="${key}"]`);
+      if (el) scrollAndFlash(el.closest('.doc-line'));
+      else toast('该字段位置未在正文中定位到', 'err');
+    }
+  });
+
+  document.getElementById('doc-meta').addEventListener('click', (ev) => {
+    const chip = ev.target.closest('[data-meta-chip]');
+    if (!chip) return;
+    const el = document.querySelector(`mark.field[data-metafield="${chip.dataset.metaChip}"]`);
+    if (el) scrollAndFlash(el.closest('.doc-line'));
+  });
+
+  /* ---------- 批注与回写 ---------- */
+  const noteEl = document.getElementById('lawyer-note');
+  const post = (path, body) => api(path, { method: 'POST', body });
+
+  async function doWriteback(forceFail = false) {
+    try {
+      const data = await post(`/api/tasks/${task.id}/writeback`, {
+        lawyer_note: noteEl.value, force_fail: forceFail
+      });
+      if (data.status === 'success') toast('审查意见已成功写回审批单评论区', 'ok');
+      else toast(data.message || '回写失败', 'err');
+      renderWriteback();
+    } catch (e) { toast(e.message, 'err'); }
+  }
+
+  document.getElementById('btn-writeback2').addEventListener('click', () => doWriteback(false));
+  const topBtn = document.getElementById('btn-writeback');
+  if (topBtn) topBtn.addEventListener('click', () => doWriteback(false));
+
+  document.getElementById('btn-save-note').addEventListener('click', async () => {
+    try {
+      await post(`/api/tasks/${task.id}/note`, { lawyer_note: noteEl.value });
+      toast('批注已保存', 'ok');
+    } catch (e) { toast(e.message, 'err'); }
+  });
+
+  document.getElementById('btn-export-pdf').addEventListener('click', () => {
+    window.open(`/api/tasks/${task.id}/report/pdf`, '_blank');
+    toast('正在生成 PDF 报告…');
+  });
+  document.getElementById('btn-export-md').addEventListener('click', () => {
+    window.open(`/api/tasks/${task.id}/report/markdown`, '_blank');
+    toast('正在导出 Markdown 报告…');
+  });
+
+  async function renderWriteback() {
+    const box = document.getElementById('writeback-info');
+    try {
+      const data = await api(`/api/tasks/${task.id}/writeback-logs`);
+      const items = data.items || [];
+      if (!items.length) {
+        box.innerHTML = '<div class="row"><span class="k">回写状态</span><span class="v">尚未回写</span></div>';
+        return;
+      }
+      const latest = items[0];
+      box.innerHTML = `
+        <div class="row"><span class="k">回写状态</span><span class="v">
+          ${latest.status === 'success' ? '<span class="tag ok">成功</span>' : '<span class="tag high">失败</span>'}
+          第 ${latest.attempt} 次尝试 · ${escapeHtml(latest.created_at)}</span></div>
+        <div class="row"><span class="k">接口响应</span><span class="v mono">${escapeHtml((latest.response || '').slice(0, 160))}</span></div>
+        <div class="row"><span class="k">回写日志</span><span class="v">共 ${items.length} 条记录</span></div>
+      `;
+    } catch (e) { /* 忽略 */ }
+  }
+  renderWriteback();
+
+  const retryBtn = document.getElementById('btn-retry');
+  if (retryBtn) {
+    retryBtn.addEventListener('click', async () => {
+      retryBtn.disabled = true;
+      retryBtn.textContent = '重试中…';
+      try {
+        const data = await post(`/api/tasks/${task.id}/retry`, {});
+        if (data.blocked) toast('仍然受阻：' + (data.block_reason || ''), 'err');
+        else { toast('重新审查完成', 'ok'); setTimeout(() => location.reload(), 700); }
+      } catch (e) { toast(e.message, 'err'); }
+      retryBtn.disabled = false;
+      retryBtn.textContent = '重新审查';
+    });
+  }
+}
+
+</script>
+
+<script type="module">
+/* 公共工具：请求封装、提示、格式化 */
+
+async function api(path, options = {}) {
+  const opts = { headers: {}, ...options };
+  if (opts.body && !(opts.body instanceof FormData)) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(opts.body);
+  }
+  const resp = await fetch(path, opts);
+  const text = await resp.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch (e) { data = { message: text }; }
+  if (!resp.ok) {
+    const msg = (data && (data.detail || data.message)) || ('请求失败 HTTP ' + resp.status);
+    throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+  }
+  return data;
+}
+
+let toastTimer = null;
+function toast(message, kind = '') {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = message;
+  el.className = 'toast on ' + kind;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = 'toast ' + kind; }, 3200);
+}
+
+function escapeHtml(text) {
+  return String(text == null ? '' : text)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function scrollAndFlash(el) {
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.remove('flash');
+  void el.offsetWidth;
+  el.classList.add('flash');
+}
+
+function qs(name) {
+  return new URLSearchParams(location.search).get(name) || '';
+}
+
+
+
+const node = document.getElementById('payload');
+if (node) {
+  const DATA = JSON.parse(node.textContent);
+  boot(DATA);
+}
+
+function boot(DATA) {
+  const { task, document: doc, clauses = [], risks = [], meta = {} } = DATA;
+  const LEVEL_LABEL = { high: '高风险', medium: '中风险', low: '低风险' };
+  const SRC_LABEL = { llm: '大模型改写', clause_lib: '标准条款库', rule_engine: '规则引擎' };
+
+  /* ---------- 元数据 chips ---------- */
+  const metaEntries = Object.values(meta).filter((m) => m && m.value);
+  document.getElementById('doc-meta').innerHTML = metaEntries.map((m) => `
+    <span class="chip ${m.confidence === 'low' ? 'flagged' : ''}" data-meta-chip="${m.key}"
+          title="${escapeHtml(m.evidence || '')}">${escapeHtml(m.label)}：<b>${escapeHtml(String(m.value).slice(0, 26))}</b>${m.page ? ` <span class="muted">P${m.page}</span>` : ''}</span>
+  `).join('') || '<span class="chip">未提取到结构化元数据</span>';
+
+  /* ---------- 正文渲染（风险 + 元数据双层高亮） ---------- */
+  const body = document.getElementById('doc-body');
+  let lastPage = 0;
+  const htmlParts = [];
+
+  for (const c of clauses) {
+    if (c.page !== lastPage) {
+      htmlParts.push(`<div class="doc-page-label" id="page-${c.page}">第 ${c.page} 页</div>`);
+      lastPage = c.page;
+    }
+    htmlParts.push(renderClause(c));
+  }
+  body.innerHTML = htmlParts.join('') || '<div class="empty">正文为空</div>';
+
+  function renderClause(c) {
+    const start = c.char_start;
+    const end = c.char_end;
+    const text = c.content || '';
+    const spans = [];
+
+    for (const r of risks) {
+      if (r.evidence_end > start && r.evidence_start < end) {
+        spans.push({
+          s: Math.max(r.evidence_start, start) - start,
+          e: Math.min(r.evidence_end, end) - start,
+          cls: `risk ${r.level}`, attr: `data-risk="${r.id}"`, prio: 2
+        });
+      }
+    }
+    for (const m of Object.values(meta)) {
+      if (m && m.char_start >= 0 && m.char_end > m.char_start &&
+          m.char_end > start && m.char_start < end) {
+        spans.push({
+          s: Math.max(m.char_start, start) - start,
+          e: Math.min(m.char_end, end) - start,
+          cls: 'field', attr: `data-metafield="${m.key}"`, prio: 1
+        });
+      }
+    }
+    spans.sort((a, b) => a.s - b.s || b.prio - a.prio);
+
+    let html = '';
+    let cursor = 0;
+    for (const sp of spans) {
+      if (sp.s < cursor || sp.e <= sp.s) continue;
+      html += escapeHtml(text.slice(cursor, sp.s));
+      html += `<mark class="${sp.cls}" ${sp.attr}>${escapeHtml(text.slice(sp.s, sp.e))}</mark>`;
+      cursor = sp.e;
+    }
+    html += escapeHtml(text.slice(cursor));
+
+    const isHeading = /^第[一二三四五六七八九十百零〇\d]+[条章]|^[一二三四五六七八九十]+、|^合同双方$/.test(text.trim());
+    return `<div class="doc-line${isHeading ? ' heading' : ''}" id="clause-${c.seq}">${html}</div>`;
+  }
+
+  /* ---------- 摘要 ---------- */
+  const riskCounts = risks.reduce((acc, r) => { acc[r.level] = (acc[r.level] || 0) + 1; return acc; }, {});
+  document.getElementById('summary').innerHTML = `
+    <h3>综合风险评估</h3>
+    <div class="metrics">
+      <div>总风险等级<b class="${task.risk_level}">${LEVEL_LABEL[task.risk_level] || '—'}</b></div>
+      <div>高风险<b>${riskCounts.high || 0}</b></div>
+      <div>中风险<b>${riskCounts.medium || 0}</b></div>
+      <div>低风险<b>${riskCounts.low || 0}</b></div>
+      <div>审查结论<b>${escapeHtml(task.conclusion || '—')}</b></div>
+    </div>
+    <p style="margin-top:10px">${escapeHtml(task.summary || '')}</p>
+  `;
+
+  /* ---------- 风险卡片 ---------- */
+  const list = document.getElementById('risk-list');
+  document.getElementById('risk-count').textContent =
+    `共 ${risks.length} 项 · 解析方式 ${task.parse_mode}`;
+
+  if (!risks.length) {
+    list.innerHTML = '<div class="empty"><div class="big">未发现风险项</div>本合同权利义务设置基本对等。</div>';
+  } else {
+    list.innerHTML = risks.map((r) => `
+      <div class="risk-card ${r.level}${r.adopted ? ' adopted' : ''}" data-card="${r.id}" id="risk-${r.id}">
+        <div class="risk-head">
+          <span class="tag ${r.level}">${LEVEL_LABEL[r.level]}</span>
+          <span class="title">${escapeHtml(r.name)}</span>
+          ${r.adopted ? '<span class="tag ok">已采纳</span>' : ''}
+        </div>
+        <div class="risk-cols">
+          <div class="row"><span class="k">条款类型</span><span class="v">${escapeHtml(r.dimension || '—')} · 第 ${r.page} 页 第 ${r.para_index} 段</span></div>
+          <div class="row"><span class="k">原文</span><span class="v">${escapeHtml((r.evidence || '').slice(0, 150))}</span></div>
+          ${r.cause ? `<div class="row"><span class="k">风险成因</span><span class="v">${escapeHtml(r.cause)}</span></div>` : ''}
+          ${r.basis ? `<div class="row"><span class="k">合规依据</span><span class="v basis">${escapeHtml(r.basis)}</span></div>` : ''}
+        </div>
+        ${r.suggestion ? `<div class="suggest-box"><span class="lb">推荐修改示范条款（${SRC_LABEL[r.suggest_source] || '规则引擎'}）</span>${escapeHtml(r.lawyer_edit || r.suggestion)}</div>` : ''}
+        <div class="risk-actions">
+          <button class="btn sm" data-adopt="${r.id}">${r.adopted ? '取消采纳' : '采纳建议'}</button>
+          <button class="btn sm ghost" data-copy="${r.id}">复制条款</button>
+          <span class="spacer"></span>
+          <span class="src">${escapeHtml(r.rule_id)}</span>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ---------- 双向联动 ---------- */
+  function focusRisk(id) {
+    document.querySelectorAll('.risk-card.active').forEach((el) => el.classList.remove('active'));
+    const card = document.getElementById('risk-' + id);
+    if (card) { card.classList.add('active'); scrollAndFlash(card); }
+
+    document.querySelectorAll('mark.risk.active').forEach((el) => el.classList.remove('active'));
+    const mark = document.querySelector(`mark.risk[data-risk="${id}"]`);
+    if (mark) {
+      const same = document.querySelectorAll(`mark.risk[data-risk="${id}"]`);
+      same.forEach((m) => m.classList.add('active'));
+      scrollAndFlash(mark.closest('.doc-line'));
+    }
+  }
+
+  list.addEventListener('click', async (ev) => {
+    const adoptBtn = ev.target.closest('[data-adopt]');
+    if (adoptBtn) {
+      ev.stopPropagation();
+      const id = Number(adoptBtn.dataset.adopt);
+      const risk = risks.find((r) => r.id === id);
+      try {
+        await api(`/api/risks/${id}/adopt`, {
+          method: 'POST',
+          body: { adopted: !risk.adopted, lawyer_edit: risk.lawyer_edit || '' }
+        });
+        toast(risk.adopted ? '已取消采纳' : '已采纳该修改建议', 'ok');
+        setTimeout(() => location.reload(), 400);
+      } catch (e) { toast(e.message, 'err'); }
+      return;
+    }
+
+    const copyBtn = ev.target.closest('[data-copy]');
+    if (copyBtn) {
+      ev.stopPropagation();
+      const risk = risks.find((r) => r.id === Number(copyBtn.dataset.copy));
+      const text = risk.lawyer_edit || risk.suggestion || '';
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('示范条款已复制到剪贴板', 'ok');
+      } catch (e) {
+        toast('复制失败，请手动选择文本', 'err');
+      }
+      return;
+    }
+
+    const card = ev.target.closest('[data-card]');
+    if (card) focusRisk(Number(card.dataset.card));
+  });
+
+  body.addEventListener('click', (ev) => {
+    const mark = ev.target.closest('mark.risk');
+    if (mark) { focusRisk(Number(mark.dataset.risk)); return; }
+    const chip = ev.target.closest('[data-meta-chip]');
+    if (chip) {
+      const key = chip.dataset.metaChip;
+      const el = document.querySelector(`mark.field[data-metafield="${key}"]`);
+      if (el) scrollAndFlash(el.closest('.doc-line'));
+      else toast('该字段位置未在正文中定位到', 'err');
+    }
+  });
+
+  document.getElementById('doc-meta').addEventListener('click', (ev) => {
+    const chip = ev.target.closest('[data-meta-chip]');
+    if (!chip) return;
+    const el = document.querySelector(`mark.field[data-metafield="${chip.dataset.metaChip}"]`);
+    if (el) scrollAndFlash(el.closest('.doc-line'));
+  });
+
+  /* ---------- 批注与回写 ---------- */
+  const noteEl = document.getElementById('lawyer-note');
+  const post = (path, body) => api(path, { method: 'POST', body });
+
+  async function doWriteback(forceFail = false) {
+    try {
+      const data = await post(`/api/tasks/${task.id}/writeback`, {
+        lawyer_note: noteEl.value, force_fail: forceFail
+      });
+      if (data.status === 'success') toast('审查意见已成功写回审批单评论区', 'ok');
+      else toast(data.message || '回写失败', 'err');
+      renderWriteback();
+    } catch (e) { toast(e.message, 'err'); }
+  }
+
+  document.getElementById('btn-writeback2').addEventListener('click', () => doWriteback(false));
+  const topBtn = document.getElementById('btn-writeback');
+  if (topBtn) topBtn.addEventListener('click', () => doWriteback(false));
+
+  document.getElementById('btn-save-note').addEventListener('click', async () => {
+    try {
+      await post(`/api/tasks/${task.id}/note`, { lawyer_note: noteEl.value });
+      toast('批注已保存', 'ok');
+    } catch (e) { toast(e.message, 'err'); }
+  });
+
+  document.getElementById('btn-export-pdf').addEventListener('click', () => {
+    window.open(`/api/tasks/${task.id}/report/pdf`, '_blank');
+    toast('正在生成 PDF 报告…');
+  });
+  document.getElementById('btn-export-md').addEventListener('click', () => {
+    window.open(`/api/tasks/${task.id}/report/markdown`, '_blank');
+    toast('正在导出 Markdown 报告…');
+  });
+
+  async function renderWriteback() {
+    const box = document.getElementById('writeback-info');
+    try {
+      const data = await api(`/api/tasks/${task.id}/writeback-logs`);
+      const items = data.items || [];
+      if (!items.length) {
+        box.innerHTML = '<div class="row"><span class="k">回写状态</span><span class="v">尚未回写</span></div>';
+        return;
+      }
+      const latest = items[0];
+      box.innerHTML = `
+        <div class="row"><span class="k">回写状态</span><span class="v">
+          ${latest.status === 'success' ? '<span class="tag ok">成功</span>' : '<span class="tag high">失败</span>'}
+          第 ${latest.attempt} 次尝试 · ${escapeHtml(latest.created_at)}</span></div>
+        <div class="row"><span class="k">接口响应</span><span class="v mono">${escapeHtml((latest.response || '').slice(0, 160))}</span></div>
+        <div class="row"><span class="k">回写日志</span><span class="v">共 ${items.length} 条记录</span></div>
+      `;
+    } catch (e) { /* 忽略 */ }
+  }
+  renderWriteback();
+
+  const retryBtn = document.getElementById('btn-retry');
+  if (retryBtn) {
+    retryBtn.addEventListener('click', async () => {
+      retryBtn.disabled = true;
+      retryBtn.textContent = '重试中…';
+      try {
+        const data = await post(`/api/tasks/${task.id}/retry`, {});
+        if (data.blocked) toast('仍然受阻：' + (data.block_reason || ''), 'err');
+        else { toast('重新审查完成', 'ok'); setTimeout(() => location.reload(), 700); }
+      } catch (e) { toast(e.message, 'err'); }
+      retryBtn.disabled = false;
+      retryBtn.textContent = '重新审查';
+    });
+  }
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+{
+  "src": "D:\\workbuddy work\\2026-09-18-20-32-30\\contract-review-1.0",
+  "dst": "D:\\workbuddy work\\2026-09-18-22-26-26\\03-版本归档\\contract-review-v1.0",
+  "copied": [
+    {
+      "path": "PRD.md",
+      "size": 16486,
+      "sha256": "151aa5dc6ad0592717b6137ea97136f6c383381dbdaa15d26a1e4f680ef098dd"
+    },
+    {
+      "path": "README.md",
+      "size": 15615,
+      "sha256": "a1cd869b024541dcc3c6a3f8bd7ab2f9831e034d04e4c8e932bbd3063905fdd8"
+    },
+    {
+      "path": "SPEC.md",
+      "size": 20429,
+      "sha256": "47fd8bdbcb2317a6e85ebcfef20a043444e07bfa3cdf8f9bca493fb8b093d4cd"
+    },
+    {
+      "path": "run.py",
+      "size": 3685,
+      "sha256": "6587e72d7cb630b7a1f1b8e82915b7a0ab21f78f69c23adcbc3467c75ecc9de1"
+    },
+    {
+      "path": "selftest.py",
+      "size": 27184,
+      "sha256": "aa02fc8850fb1bf6d7c6b78f1ea16df65b19726ac5acdf89d4afc4dbfdface1b"
+    },
+    {
+      "path": "app/__init__.py",
+      "size": 100,
+      "sha256": "90c1913764171649df35ec30cbcc679ab3a9d3d65efbf7820b7ea75b063c1b32"
+    },
+    {
+      "path": "app/config.py",
+      "size": 8296,
+      "sha256": "387317d6e7d7a6fb64221eaf751b698620639a6517ebe6afd76411f57b014236"
+    },
+    {
+      "path": "app/llm.py",
+      "size": 3391,
+      "sha256": "5958892a58bdb069a6145c7b5fe6293f8189f32aaeeac8f74f9332d3e4c2a794"
+    },
+    {
+      "path": "app/notify.py",
+      "size": 15467,
+      "sha256": "df92032e754b53e03f80a086745674d5ebbeec3ca4a868211da0d77107b177c0"
+    },
+    {
+      "path": "app/ocr_win.py",
+      "size": 12909,
+      "sha256": "f36e9d126a7dd8c78e8ded6330ca106f1e7cc9963cb64506eeb02f15101f3a11"
+    },
+    {
+      "path": "app/output.py",
+      "size": 24926,
+      "sha256": "2c7182074aa913ee4eb860f3e0f656a019cc55a1f39c16fe7d76b917763f7259"
+    },
+    {
+      "path": "app/parsers.py",
+      "size": 22201,
+      "sha256": "a6473bd01a0dfe8c051be4ec1183b02191ecca77b04e488f0f263d60fb28d166"
+    },
+    {
+      "path": "app/pipeline.py",
+      "size": 28893,
+      "sha256": "6226b20f73cee9c4849500862e91a652c5b46c15131b0be631c6968d58db7e76"
+    },
+    {
+      "path": "app/review.py",
+      "size": 18001,
+      "sha256": "255ffec6778af4c758f76560f4f1e357403d80a78f656e1cd7e7f927b0c3dc5b"
+    },
+    {
+      "path": "app/server.py",
+      "size": 28284,
+      "sha256": "82555ae2db08c930bfda8db040657b562760c984157f0ff7dadd8f3b1e8257a4"
+    },
+    {
+      "path": "app/store.py",
+      "size": 16916,
+      "sha256": "0eed45d16083f3f693fb55ef3a36138d420a13b2ee10fc73aaf8e881932b1f90"
+    },
+    {
+      "path": "app/writeback.py",
+      "size": 8590,
+      "sha256": "f50468d164f35b967a5df89a805306aa34202629da8571212c16727bc0e3c950"
+    },
+    {
+      "path": "config/app.json",
+      "size": 1744,
+      "sha256": "18dcb1ade7df32c4703c2f4dc84394945a0b4a24341d7a4ccc57489e64659f4f"
+    },
+    {
+      "path": "config/clause_types.json",
+      "size": 3024,
+      "sha256": "b83c08c932dc577d36a447e03efbf00e94f999d19b441f7163cda61ff0f87e54"
+    },
+    {
+      "path": "config/samples.json",
+      "size": 6126,
+      "sha256": "ef6ad8d594104b7922c85697ba3bf08fc44ea0ad3da3a8e076a70b584802d6fe"
+    },
+    {
+      "path": "config/clauses/clauses.json",
+      "size": 4650,
+      "sha256": "a554b11a811f50ef5005b6b4dafc5b45d4eca787b33752c0e47e0f839600c3ec"
+    },
+    {
+      "path": "config/rules/labor.json",
+      "size": 8608,
+      "sha256": "1c35e0e619fd8b87cd392ca896c51b3f848b9e72f48705d220c3b1c158a40f27"
+    },
+    {
+      "path": "config/rules/purchase.json",
+      "size": 13403,
+      "sha256": "cde663f5527a4295d2cff8b6232e6f1243530ae0230e57be00102110fac1b92d"
+    },
+    {
+      "path": "config/rules/sales.json",
+      "size": 10423,
+      "sha256": "720553f42f46cf7f9134abce1c6726a4eb477ea63a3a55cffa8dae72ca0a4bd5"
+    },
+    {
+      "path": "config/rules/sales.json.bak",
+      "size": 10765,
+      "sha256": "3cc2205e3de045a30603800f92eca16c71335e601ff0f0e0da2c9d20ebfb49e5"
+    },
+    {
+      "path": "config/rules/service.json",
+      "size": 6747,
+      "sha256": "fbd288ac16e656e9656eeea8e80eab09f3edf1900a5f01b7daad88aaf6868602"
+    },
+    {
+      "path": "deploy/deploy_to_server.py",
+      "size": 5412,
+      "sha256": "a4495a1a21c9240d2850afd1b7289a006668b6c83dd62cc272663d34e7eae766"
+    },
+    {
+      "path": "deploy/verify_remote.py",
+      "size": 6602,
+      "sha256": "a8d6c66aefc5f208326c0c04141dec9e109d075ea131514aad761eb8e69b1961"
+    },
+    {
+      "path": "docs/交付物总览.md",
+      "size": 27654,
+      "sha256": "a0933e5bba579830ff4af26a1fc99b959f30ede0ad50030831480127245a3dbd"
+    },
+    {
+      "path": "docs/演示脚本.md",
+      "size": 11359,
+      "sha256": "51c8c386a739d0208dee70e67df6f4b84391a478f7f6d02eb98aab111809d6b5"
+    },
+    {
+      "path": "docs/验收对照表.md",
+      "size": 9369,
+      "sha256": "7f724adcc3a186a90d4541ebc9881e748d84651a1fdc8945a914e3dcdd2fb473"
+    },
+    {
+      "path": "docs/reference/OCR_老师标注截图识别文本.txt",
+      "size": 464,
+      "sha256": "5b6bfe3c4bc18aa2408ea435d0bb4d8a2c2f2e94ebea3a582468dc69c7686623"
+    },
+    {
+      "path": "docs/reference/OCR_项目导航截图识别文本.txt",
+      "size": 452,
+      "sha256": "f22e8ec4e222b22fadc9b8acc4df565a61e4328f00cca64d740f629a9527ade1"
+    },
+    {
+      "path": "docs/reference/OCR_验收标准截图识别文本.txt",
+      "size": 1609,
+      "sha256": "7afccdb26129c3ad1386d6339ed15ee01625419baf70534b313ed4c6ac51bdf7"
+    },
+    {
+      "path": "docs/reference/企业合同审批项目_项目串讲稿.docx",
+      "size": 2417834,
+      "sha256": "394c952185253a988f86174b0cbb628069ec112c8182f6c2f8cc233ca9e748d8"
+    },
+    {
+      "path": "docs/reference/合同审批助手项目_架构图.drawio",
+      "size": 29322,
+      "sha256": "d0848fec341ab4c9a3a51253e19fa031a026909398a4e0aedb10d7c138875b81"
+    },
+    {
+      "path": "docs/reference/老师标注_交付物要求.png",
+      "size": 133918,
+      "sha256": "75732d72cb33d22a8a3d50db78e5c48532ebc61fd8d8ebd6b603eb7f5bec286b"
+    },
+    {
+      "path": "docs/reference/项目实战_需求基线.md",
+      "size": 132619,
+      "sha256": "3e61bfc91f81bf31d241231c22174c3e0a4830df6ce1ecca7bd1835893ea8b0d"
+    },
+    {
+      "path": "docs/reference/项目导航_2.4目录.png",
+      "size": 67773,
+      "sha256": "04407c9680b53d68abfe5934ed0caf2771ac5c05671b385afd3dc5918ac13909"
+    },
+    {
+      "path": "docs/reference/验收标准截图_实际内容为2.11问询笔录平台.png",
+      "size": 261127,
+      "sha256": "7a859b650ef2873d091e3a37aad64216004d5323454b84bc432ed74bb8d4f08b"
+    },
+    {
+      "path": "docs/screenshots/01_审查大盘.png",
+      "size": 190441,
+      "sha256": "cc8847ef2a71363f0c23f74bdbe24f96a0d2b237121b1b1b16b0f503cb35d349"
+    },
+    {
+      "path": "docs/screenshots/02_智能审查工作台_风险用例.png",
+      "size": 301005,
+      "sha256": "48d70e2ea319a62033146b9bc905a4d3a2287f0a240ccc0a858356bf3069385f"
+    },
+    {
+      "path": "docs/screenshots/03_权责不对等审查_销售合同.png",
+      "size": 302453,
+      "sha256": "c7005b4e189504e521ac9739c5d4161677ca34e0ce25cd2008867b1238ba10a0"
+    },
+    {
+      "path": "docs/screenshots/04_合规规则与模板.png",
+      "size": 193011,
+      "sha256": "9cd84a49495aed3169a7aa5e5ba98b54ca5215f47a0840a046a5d4422f5d4595"
+    },
+    {
+      "path": "docs/screenshots/05_解析受阻与重试.png",
+      "size": 94632,
+      "sha256": "dc876040091edc4b196f680dae05dcc19744573a4fcccbe88dd7dca50e863ca3"
+    },
+    {
+      "path": "mock/__init__.py",
+      "size": 73,
+      "sha256": "08dc14a7b185ea74e80ffb9bb3397df8dd749e4db84a786ac98e772729dd0476"
+    },
+    {
+      "path": "mock/feishu.py",
+      "size": 8536,
+      "sha256": "47bc09a31e330516022e24aaa03958664dfd6a55410bd320d1ddf4f6d51082da"
+    },
+    {
+      "path": "samples/01_软件采购合同_风险用例.docx",
+      "size": 38532,
+      "sha256": "3287d90b8ba3381f828afa0f920eb2d266c9d8040afdb99a685b0d696081dbb5"
+    },
+    {
+      "path": "samples/02_服务器设备采购合同_标准用例.pdf",
+      "size": 188764,
+      "sha256": "eacd8342a8c4847aba99f38633006409819f75811a0c86ca54d4e681641e0eb3"
+    },
+    {
+      "path": "samples/03_大额销售合同_违约责任不对等.docx",
+      "size": 38614,
+      "sha256": "ec93209df97e54de62b8aa52d910f30dcd3cbfff1122db3a00f353b24806819c"
+    },
+    {
+      "path": "samples/04_技术服务合同_标准用例.pdf",
+      "size": 182749,
+      "sha256": "60126b01f1a94b38c96f8468f6a15228d1ab8e1ce1aec606c32907fd26a23527"
+    },
+    {
+      "path": "samples/05_劳动合同_风险用例.docx",
+      "size": 38177,
+      "sha256": "2ceb10a7a97eb2d87b5d4745f988d60c7b11ab3e02c3cec84054f00a0f5b411f"
+    },
+    {
+      "path": "samples/06_软件采购合同_扫描件.png",
+      "size": 248699,
+      "sha256": "78b180cf9c583480b9d3d236aaeb9a94e68f3af06de5296c92d50f1f699457f3"
+    },
+    {
+      "path": "samples/07_设备采购合同_无文本层.pdf",
+      "size": 119279,
+      "sha256": "d9d4272091eb808170d84c2278902f5a36bb78e4058ad69d523c6ef462ab7001"
+    },
+    {
+      "path": "samples/08_保密协议_加密用例.pdf",
+      "size": 73261,
+      "sha256": "751e6c498e06d81f72bf8a22984670c57339c02a4edde5997f869c97dcda5b77"
+    },
+    {
+      "path": "tools/build_samples.py",
+      "size": 10555,
+      "sha256": "61a794a4362f6f0f76d8612f9d70eda7f73798f9db164a681cf13ea41a1fc067"
+    },
+    {
+      "path": "tools/capture_screens.py",
+      "size": 4544,
+      "sha256": "02521bfce4702f8f5f289861f2c6802d7016eee193a57d03f1549c60f08898a4"
+    },
+    {
+      "path": "tools/contracts.py",
+      "size": 20274,
+      "sha256": "8c2d028fa69fd8f33bebf935585de089bb9c74a9dc8279bb6b5cd68181b45b9b"
+    },
+    {
+      "path": "tools/debug_pdf.py",
+      "size": 3615,
+      "sha256": "a1425507442497781657226297ba941e1ce056690a95f31d1177e1582ed31012"
+    },
+    {
+      "path": "tools/reset_data.py",
+      "size": 1727,
+      "sha256": "eba60800c41f1246f6a5455a31773e1a99935a64e8c41a7c9d2d74535936a543"
+    },
+    {
+      "path": "tools/stats.py",
+      "size": 4472,
+      "sha256": "4575ab74ce707b04692e30e86f9d9dd4b631eed74f04806116ea6d036fbdc562"
+    },
+    {
+      "path": "tools/verify_acceptance.py",
+      "size": 1168,
+      "sha256": "8f05df013c5baaf8f4073871d4166f4ca604b71d932f167a4ae37b5c2835a0f2"
+    },
+    {
+      "path": "tools/verify_http.py",
+      "size": 19222,
+      "sha256": "96b8e925197f73f37b890c61a2ac73d37f8e2116bbf201e647793074697bb40c"
+    },
+    {
+      "path": "tools/verify_startup.py",
+      "size": 2658,
+      "sha256": "ebcb42ac42cabe7bb1fe080768740ccbe4f41593a99ab68f359197b5f3eb7ea1"
+    },
+    {
+      "path": "ui/index.html",
+      "size": 26672,
+      "sha256": "9aac8e2a80a9e1ebc684b3bfc35779f82a184eb9f3b95b4382d85ad1f4b4927b"
+    },
+    {
+      "path": "ui/rules.html",
+      "size": 15678,
+      "sha256": "5b85f1ec56bda33b041ba74b725891dced2ef5de41c80b82bcddf408d4b17db7"
+    },
+    {
+      "path": "ui/workbench.html",
+      "size": 36951,
+      "sha256": "172900c0b085021760894bd530b973cc31fde70316b3c16118af93ec133d0b9c"
+    },
+    {
+      "path": "ui/assets/app.css",
+      "size": 23339,
+      "sha256": "66dfbd10de86471033c827abd5a8ce1787c6bec98747d1681e9dd603036a2cd8"
+    },
+    {
+      "path": "ui/assets/app.js",
+      "size": 11141,
+      "sha256": "cb8b55052064575ddb6d9d70a22f68aa912046286eb816f81e6c3b426583b0db"
+    },
+    {
+      "path": "verify/cleanup.txt",
+      "size": 445,
+      "sha256": "8bc29cfbe925b8323694c8d83b5ce684a469ed9e13d17cfd804e8abdabe683fe"
+    },
+    {
+      "path": "verify/remote_inspect.txt",
+      "size": 1764,
+      "sha256": "484b708b8a3dc7d3cb7a025c7fa55cb47e31ddde6c8ffd82ecf4fdb298f27320"
+    },
+    {
+      "path": "verify/reset.txt",
+      "size": 223,
+      "sha256": "eaf2923d22bb08fc6a0662f7aff519f9ed211f755056537499a3b99bfc0b423e"
+    },
+    {
+      "path": "verify/screenshots.txt",
+      "size": 1056,
+      "sha256": "b4e42c431319f5f51b4736505eb63c7365aa0c6e4d1c69fc66a34ce91f032276"
+    },
+    {
+      "path": "verify/selftest.json",
+      "size": 7768,
+      "sha256": "3fc0ac6995ea5f9b0f71bca038bd64bd8167fcfbd66f96bc00af3abbdb4c11cc"
+    },
+    {
+      "path": "verify/selftest.txt",
+      "size": 5924,
+      "sha256": "0e822835116b27b26ad97ae053daeb275b40598c00df1aeae30dcd76a0f5b895"
+    },
+    {
+      "path": "verify/smoke_http.txt",
+      "size": 5411,
+      "sha256": "f39dcfe97a7b0249c5c1e95e0d3fc6b8bf5c33baa135fe3f981fc52662d4ee89"
+    },
+    {
+      "path": "verify/startup.txt",
+      "size": 252,
+      "sha256": "e39082d85cdd39ccdd103b5e38b0bad797676a933fef988b0e40145f30bf94d7"
+    },
+    {
+      "path": "verify/stats.txt",
+      "size": 1077,
+      "sha256": "834b9d14cadf5766206949f8d542394ae1fb4d1194310da5bc27c0f020b1896c"
+    }
+  ],
+  "skipped": [
+    {
+      "path": "verify\\remote_deploy.log",
+      "reason": "excluded-ext"
+    }
+  ],
+  "errors": [],
+  "file_count": 78,
+  "total_bytes": 5666539,
+  "total_mb": 5.4
+}

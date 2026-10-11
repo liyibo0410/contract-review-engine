@@ -1,0 +1,7 @@
+  ok   ui/workbench.html :: '<button class="btn sm primary" onclick="event.stopPropa
+  ok   ui/workbench.html :: (r.adopted ? '<button class="btn sm" onclick="event.stop
+  ok   ui/workbench.html :: '<button class="btn sm" style="margin-top:5px" onclick="
+  MISS ui/workbench.html :: <button class="btn sm danger" style="margin-top:8px" onc
+  ok   ui/workbench.html ::   renderSide();   renderWriteback();   loadNotifyStatus(
+  ok   ui/rules.html :: renderTopbar -> initAuth
+  ok   ui/twin.html :: renderTopbar -> initAuth

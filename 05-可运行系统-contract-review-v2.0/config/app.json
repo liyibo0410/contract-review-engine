@@ -1,0 +1,106 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8770,
+    "access_log": false,
+    "gzip": true,
+    "note": "反代或对外提供服务时改 host；access_log=true 会写 data/access.log"
+  },
+  "paths": {
+    "data": "data",
+    "uploads": "data/uploads",
+    "parsed": "data/parsed",
+    "reports": "data/reports",
+    "samples": "samples"
+  },
+  "review": {
+    "reject_high_count": 2,
+    "rectify_total": 1,
+    "block_on_parse_fail": true,
+    "min_text_chars": 30,
+    "ocr_min_confidence": 0.5,
+    "max_upload_mb": 30,
+    "max_paragraphs_expose": 2000,
+    "strip_repeat_lines": true,
+    "strip_min_pages": 2,
+    "strip_max_chars": 46,
+    "strip_edge_lines": 2,
+    "note": "strip_* 为页眉页脚剔除参数：同一短行出现在 >= strip_min_pages 页的页面首尾 strip_edge_lines 行内，或命中页码/密级/编号典型形态，才剔除；条款标题与含甲方乙方金额实体的行受保护名单保护，永不剔除"
+  },
+  "approval": {
+    "mode": "mock",
+    "base_url": "",
+    "app_id": "contract-review",
+    "write_mode": "live",
+    "timeout": 15,
+    "note": "mode=mock 时使用内置模拟审批系统，base_url 留空即由服务端按实际监听端口自动填充；对接真实平台时改为 http 并填写 base_url"
+  },
+  "mock": {
+    "fault_rate": 0.0,
+    "seed": true
+  },
+  "auth": {
+    "enabled": true,
+    "demo_switch": true,
+    "session_ttl_sec": 28800,
+    "cookie_secure": false,
+    "pbkdf2_iterations": 120000,
+    "accounts": [],
+    "note": "需求 2.4.2 三角色 RBAC。accounts 留空则使用内置演示账号（legal/Legal@2026、applicant/Apply@2026、admin/Admin@2026），首次启动写入库并做 pbkdf2 哈希，之后重启不覆盖已改口令；demo_switch 为演示用一键切换身份，生产化部署应置 false；HTTPS 部署时把 cookie_secure 置 true"
+  },
+  "scheduler": {
+    "enabled": false,
+    "interval_sec": 120,
+    "max_interval_sec": 900,
+    "backoff_factor": 2.0,
+    "jitter_sec": 5,
+    "auto_review": true,
+    "note": "定时拉取审批待办。默认关闭，避免演示数据在无人操作时自行变化；连续失败按 backoff_factor 指数退避并封顶 max_interval_sec，成功一次即复位。可在大盘自动流转面板即时开关"
+  },
+  "queue": {
+    "enabled": true,
+    "workers": 2,
+    "maxsize": 50,
+    "max_pending": 40,
+    "max_total_mb": 2048,
+    "note": "审查队列与配额。所有触发审查的入口统一经队列，并发度由 workers 钉死；四道配额分别是单文件(review.max_upload_mb)、队列长度、待处理堆积、附件存储总量，超限一律拒绝并写审计"
+  },
+  "notify": {
+    "enabled": false,
+    "channel": "dingtalk",
+    "webhook": "",
+    "secret": "",
+    "webhook_env": "DINGTALK_WEBHOOK",
+    "secret_env": "DINGTALK_SECRET",
+    "keyword": "合同审查",
+    "at_mobiles": [],
+    "at_all": false,
+    "timeout": 10,
+    "events": {
+      "review_completed": false,
+      "high_risk": true,
+      "blocked": true,
+      "writeback_failed": true,
+      "batch_summary": false
+    },
+    "min_interval_sec": 0,
+    "mask": {
+      "party": true,
+      "amount": true,
+      "credit_code": true,
+      "case_no": false,
+      "applicant": true,
+      "contract_title": true,
+      "max_evidence_chars": 0
+    },
+    "note": "钉钉自定义机器人：webhook 填机器人 Webhook 地址，secret 填加签的 SEC 密钥。推荐留空 webhook/secret，改用环境变量 webhook_env/secret_env 传值，避免密钥进交付文件。events 里未登记的事件默认不发送；review_completed/batch_summary 默认关闭（决议 D-31 收敛外发面）。mask 为外发脱敏规则：相对方名称、合同金额、统一社会信用代码、申请人、合同标题、附件名一律掩码，且不携带合同正文片段；除字段级掩码外还有一道整段正则兜底扫描"
+  },
+  "llm": {
+    "enabled": false,
+    "base_url": "",
+    "api_key_env": "OPENAI_API_KEY",
+    "model": "gpt-4o-mini",
+    "timeout": 30,
+    "note": "未配置时使用确定性规则模板生成审查摘要；配置后仅用于润色中文摘要与评论表达，不参与风险判定。工作台提供规则引擎模式 / 规则+模型润色模式对照视图，未配 Key 时明示回退模式"
+  }
+}

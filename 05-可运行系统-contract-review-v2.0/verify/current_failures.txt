@@ -1,0 +1,16 @@
+=== A) 静态页面 / ===
+index.html 大小 54366 字节
+needle='衡鉴 V2.0.2' 在文件里？True
+  首次出现位置 169，上下文 'ial-scale=1">\n<title>合同审查大盘 · 衡鉴 V2.0.2 · 企业衡鉴 V2.0.2</title'
+
+  服务端返回 /  ：HTTP 200，54366 字节，Content-Encoding=无
+  响应体里含 needle？True
+  响应体头 120 字节：b'<!DOCTYPE html>\n<html lang="zh-CN" data-theme="dark">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width'
+
+=== B) /api/selftest ===
+  57 / 58 项通过，15813 ms
+  [未通过] 版本口径一致：交付版本 = 运行版本 = 文档版本（禁止版本失真）
+           运行版本 2.1.4 ｜ CHANGELOG 缺失 ｜ 硬编码 1.0.0 残留=False
+
+=== C) /api/pdf/check ===
+  HTTP 200 → {"code": 0, "data": {"browser": true, "browser_path": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "stdlib": true, "size": 3751, "error": "", "file": "_pdf_channel_probe.pdf", "effective": "browser"}, "msg": ""}

@@ -1,0 +1,47 @@
+HTTP 冒烟测试：45 / 45 项通过（端口 8791）
+====================================================================================================
+[OK ] 静态页面 /                                       HTTP 200  text/html  26672 bytes
+[OK ] 静态页面 /assets/app.css                         HTTP 200  text/css  23339 bytes
+[OK ] 静态页面 /assets/app.js                          HTTP 200  text/javascript  11141 bytes
+[OK ] 静态页面 /workbench                              HTTP 200  text/html  36951 bytes
+[OK ] 静态页面 /rules                                  HTTP 200  text/html  15678 bytes
+[OK ] /api/health                                  版本 1.0.0，PDF 浏览器通道=True，规则类型 labor,purchase,sales,service
+[OK ] POST /api/pull 拉取并自动审查                       新建 8，跳过 0
+[OK ] POST /api/pull 幂等（二次拉取全部跳过）                  新建 0，跳过 8
+[OK ] GET /api/cases 列表                            8 个任务，风险分布 {"none": 4, "high": 4}
+[OK ] GET /api/stats 大盘统计                          总数 8，高/中/低=4/0/0，受阻 2，高风险金额 14206000
+[OK ] GET /api/cases?risk=high 风险筛选                高风险任务 4 个
+[OK ] GET /api/cases/{id} 工作台详情                    风险 3 项（可定位 3）、段落 36、条款 27、覆盖度 69%、摘要方式 rule-template
+[OK ] PATCH /api/results/{id} 法务复核                 已采纳并保存编辑后的示范条款
+[OK ] POST /api/cases/{id}/opinion 法务批注            批注已保存
+[OK ] POST writeback 预览模式（不写入）                     mode=dry_run status=not_written 内容 1357 字
+[OK ] POST writeback 正式写入（HTTP 调模拟审批接口）            comment_id=CMT-01-001  审查意见已成功写回审批单评论区
+[OK ] GET 审批评论区（模拟飞书，独立 HTTP 接口）                   评论区 1 条，首条 1357 字，作者 合同智能审查系统
+[OK ] GET 审批待办（模拟飞书）                               剩余待办 7 个（已回写的审批单自动置为已处理）
+[OK ] GET report?format=md 下载                      HTTP 200  text/markdown  8858 bytes
+[OK ] GET report?format=pdf 服务端生成 PDF              HTTP 200  application/pdf  457601 bytes  真实 PDF
+[OK ] GET report?format=html 打印预览                  13673 bytes
+[OK ] POST /api/upload 本地上传并自动审查（全新文件）             新建任务 #9：状态=审查完成 风险=高风险 命中 PU-H-002、PU-H-005、PU-M-002、PU-M-003、PU-M-004、PU-M-005
+[OK ] POST /api/upload 文件指纹去重                      复用既有任务 #9（SHA256 一致）
+[OK ] 阻塞任务详情返回受阻原因                                 #8 08_保密协议_加密用例.pdf → 文档已加密，无法抽取文本，需人工解密后重新上传
+[OK ] POST retry 对仍损坏文件保持受阻（防护正确）                  重试结果 blocked=True reason=文档已加密，无法抽取文本，需人工解密后重新上传
+[OK ] GET /api/rules 规则库读取                         销售合同 11 条规则，统计 {"count": 11, "high": 5, "medium": 4, "low": 2, "types": ["不可抗力", "主体资质", "争议解决", "付款进度", 
+[OK ] POST /api/rules/{type} 规则写回（含 .bak 备份）       已保存 12 条；原文件已备份
+[OK ] POST /api/rules/{type} 恢复规则库                 已恢复为 11 条
+[OK ] GET /api/audit 审计日志                          返回 50 条审计记录
+[OK ] GET /api/export 全量导出                         导出 audit_export_20260918_223323.json（9 个任务）
+[OK ] GET /api/samples 示例合同集清单                     8 个示例用例
+[OK ] GET /api/selftest 页面一键自检                     33 / 33 项通过，8107 ms
+[OK ] GET /api/config 前端可见配置（不含密钥）                 最大上传 30 MB，回写模式 live，通知 未启用
+[OK ] GET /api/metrics 运行指标                        请求 41 次 ｜ 错误 0 ｜ 平均 332.0ms ｜ 热点 top1 GET /api/selftest
+[OK ] GET /api/notify/status 通知状态                  启用=False 已配置=False 渠道=dingtalk 事件 5 项
+[OK ] POST /api/notify/test 未配置时给出明确 400           通知未启用或未配置 Webhook —— 请在 config/app.json 的 notify 中填写 enabled 与 webhook
+[OK ] 大响应启用 gzip 压缩                                详情响应 8309 字节，Content-Encoding=gzip
+[OK ] POST /api/upload 超限文件被服务端拒绝                  文件大小 31.0 MB 超过 30 MB 上限
+[OK ] POST /api/upload 文件名路径穿越被拦下                  上传名 sanitized 后仅落在 uploads/ 内（任务 #10）
+[OK ] POST opinion 对不存在案件返回 404                    HTTP 404
+[OK ] GET report 对不存在案件返回 404                      HTTP 404
+[OK ] 详情接口暴露规则诊断与段落上限字段                            rule_diag=0 条，paragraphs_total=36，截断=False
+[OK ] 未声明 gzip 的客户端仍正常返回（压缩协商正确）                   Content-Encoding=无，263 字节
+[OK ] 未知接口返回结构化 404                                HTTP 404
+[OK ] 不存在案件返回 404                                  HTTP 404

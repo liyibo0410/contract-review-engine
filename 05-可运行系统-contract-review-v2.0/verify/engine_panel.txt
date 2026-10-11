@@ -1,0 +1,59 @@
+「引擎负载与资源占用」面板专项探针
+====================================================================================================
+
+① 接口侧字段（/api/twin）
+   queue     = {"submitted": 8, "completed": 6, "failed": 2, "rejected_queue_full": 0, "rejected_pending": 0, "inline": 0, "enabled": true, "workers": 2, "maxsize": 50, "queued": 0, "inflight": [], "pending_cases": 0, "max_pending": 40, "uploads_mb": 0.89, "max_total_mb": 2048}
+   storage   = {"uploads_mb": 0.89, "data_files": 14, "db_kb": 4.0, "reports": 0}
+   engines   = {"ocr": {"docs": 1, "avg_confidence": 1.0}, "pdf": {"effective": "browser", "browser": true}, "rules": {"types": [{"type": "labor", "label": "劳动合同", "rules": 9}, {"type": "purchase", "label": "采购合同", "rules": 12}, {"type": "sales", "label": "销售合同", "rules": 11}, {"type": "service", "label": "服务合同", "rules": 9}], "total": 41}, "clause_types": 16, "clause_variants": 9, "clause_type_list": ["主体资质", "标的物", "金额与币种", "付款进度
+   rollup    = {"cases": 8, "amount_total": 16230000.0, "docs": 6, "pages": 8, "paras": 252, "chars": 6920, "ocr_avg": 1.0, "hits": 14, "adopted": 0, "hits_by_risk": {"high": 7, "medium": 7}, "writeback_success": 0, "writeback_total": 0, "audit": 84}
+   http      = {"requests": 2, "errors": 0, "error_rate": 0.0, "avg_ms": 16.9, "bytes_out": 5045, "uptime_sec": 1, "started_at": "2026-09-19 11:54:20", "slow_requests": []}
+   notify    = {"enabled": false, "configured": false, "mask": {"party": true, "amount": true, "credit_code": true, "case_no": false, "applicant": true, "contract_title": true, "max_evidence_chars": 0}, "events": {"review_completed": false, "high_risk": true, "blocked": true, "writeback_failed": true, "batch_summary": false}, "stats": {"queued": 0, "sent": 0, "failed": 0, "skipped": 13}}
+   counts    = {"total": 8, "completed": 6, "blocked": 2, "pending": 0, "writeback_success": 0}
+   scheduler = {"runs": 0, "failures": 0, "consecutive_failures": 0, "created_total": 0, "skipped_total": 0, "reviewed_total": 0, "last_run_at": "", "last_result": "", "last_error": "", "current_interval": 0, "manua
+
+② 四个仪表的实际数值与占比
+   队列水位                  0 个   / 50       个    → 占比   0.00%  进度条 ·························
+   待处理堆积                 0 个   / 40       个    → 占比   0.00%  进度条 ·························
+   附件存储               0.89 MB  / 2048     MB   → 占比   0.04%  进度条 ·························
+   OCR 平均置信度           100 %   / 100      %    → 占比 100.00%  进度条 █████████████████████████
+
+③ 各面板渲染实况（KPI 行高 113）
+
+   [中排1] 引擎运行指标  （511x667）
+        表头：引擎运行指标 ｜ 真实读数
+        内容块：{'指标行': 6} ｜ 小标题 0 个 ｜ 分隔线 0 条 ｜ 视觉形态 1 种
+          指标行 解析吞吐 | — | 运行不足 2 分钟，暂不计算（避免刚重启的假峰值）
+          指标行 接口平均耗时 | 19 ms | 峰值 62 ms · 累计 8 次请求
+          指标行 规则命中密度 | 2.3 项/份 | 累计 14 项（高 7 · 中 7）
+          指标行 OCR 置信度 | 100% | 样本 1 份，偏少仅供参考 · 阈值 50%
+          指标行 错误率 | 0.00% | 无错误记录
+          指标行 运行时长 | 2 秒 | 自 2026-09-19 11:54:20 起
+
+   [中排2] 资源水位与配额  （511x667）
+        表头：资源水位与配额 ｜ 并发 2 · 队列上限 50
+        内容块：{'仪表': 4} ｜ 小标题 0 个 ｜ 分隔线 0 条 ｜ 视觉形态 1 种
+          仪表 队列水位=0 个[gauge idle] box=68x68 w=68px h=68px flex=0 0 auto ovf=visible 条宽2/40
+          仪表 待处理堆积=0 个[gauge idle] box=68x68 w=68px h=68px flex=0 0 auto ovf=visible 条宽2/40
+          仪表 附件存储=0.89 MB[gauge ok] box=68x68 w=68px h=68px flex=0 0 auto ovf=visible 条宽2/40
+          仪表 数据库=4 KB[gauge ok] box=68x68 w=68px h=68px flex=0 0 auto ovf=visible 条宽2/40
+
+   [中排3] 接口响应  （511x667）
+        表头：接口响应 ｜ 自 2026-09-19 11:54:20 起
+        内容块：{'kv卡片': 4} ｜ 小标题 1 个 ｜ 分隔线 1 条 ｜ 视觉形态 1 种
+
+   [底排1] 实时审查日志  （638x503）
+        表头：实时审查日志 ｜ 审计表共 84 条 · 显示最近 60
+        内容块：无 ｜ 小标题 0 个 ｜ 分隔线 0 条 ｜ 视觉形态 0 种
+
+   [底排2] 流转与调度  （434x503）
+        表头：流转与调度 ｜ 队列水位见左侧面板
+        内容块：{'指标行': 5, '受阻项': 2} ｜ 小标题 1 个 ｜ 分隔线 1 条 ｜ 视觉形态 2 种
+          指标行 定时拉取 | 已关闭 | 默认关闭（避免演示数据自行变化）
+          指标行 累计提交 | 8 个 | 完成 6 · 失败 2
+          指标行 解析快照 | 6 份 | 8 页 / 252 段 / 6920 字符
+          指标行 通知渠道 | 未配置 | 脱敏 已开启 · 已发 0 / 失败 0
+          指标行 越权拦截 | 0 次 | 未登录拦截 0 次
+
+   [底排3] 合规机制与规则库  （460x503）
+        表头：合规机制与规则库 ｜ 配置实测值
+        内容块：{'kv卡片': 4, '规则条': 4} ｜ 小标题 0 个 ｜ 分隔线 1 条 ｜ 视觉形态 2 种

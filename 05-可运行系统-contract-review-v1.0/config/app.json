@@ -1,0 +1,63 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8770,
+    "access_log": false,
+    "gzip": true
+  },
+  "paths": {
+    "data": "data",
+    "uploads": "data/uploads",
+    "parsed": "data/parsed",
+    "reports": "data/reports",
+    "samples": "samples"
+  },
+  "review": {
+    "reject_high_count": 2,
+    "rectify_total": 1,
+    "block_on_parse_fail": true,
+    "min_text_chars": 30,
+    "ocr_min_confidence": 0.5,
+    "max_upload_mb": 30,
+    "max_paragraphs_expose": 2000
+  },
+  "approval": {
+    "mode": "mock",
+    "base_url": "",
+    "app_id": "contract-review",
+    "write_mode": "live",
+    "timeout": 15,
+    "note": "mode=mock 时使用内置模拟审批系统，base_url 留空即由服务端按实际监听端口自动填充；对接真实平台时改为 http 并填写 base_url"
+  },
+  "mock": {
+    "fault_rate": 0.0,
+    "seed": true
+  },
+  "notify": {
+    "enabled": false,
+    "channel": "dingtalk",
+    "webhook": "",
+    "secret": "",
+    "keyword": "合同审查",
+    "at_mobiles": [],
+    "at_all": false,
+    "timeout": 10,
+    "min_interval_sec": 0,
+    "events": {
+      "review_completed": true,
+      "high_risk": true,
+      "blocked": true,
+      "writeback_failed": true,
+      "batch_summary": true
+    },
+    "note": "钉钉自定义机器人：把 Webhook 地址填到 webhook，若安全设置选了「加签」则把 SEC 开头的密钥填到 secret；通知发送失败只记审计，不影响审查主流程"
+  },
+  "llm": {
+    "enabled": false,
+    "base_url": "",
+    "api_key_env": "OPENAI_API_KEY",
+    "model": "gpt-4o-mini",
+    "timeout": 30,
+    "note": "未配置时使用确定性规则模板生成审查摘要；配置后仅用于润色中文摘要与评论表达，不参与风险判定"
+  }
+}

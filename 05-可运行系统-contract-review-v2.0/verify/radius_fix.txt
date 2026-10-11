@@ -1,0 +1,34 @@
+圆角收敛改动清单
+====================================================================================================
+文件：ui/assets/app.css、ui/assets/fx.css
+
+app.css              L196   .brand .mark               6px                          → var(--radius-s)
+app.css              L203   .nav a                     8px                          → var(--radius-s)
+app.css              L372   .modal                     14px                         → var(--radius)
+app.css              L387   .file-drop                 10px                         → var(--radius)
+app.css              L403   .toast                     10px                         → var(--radius)
+app.css              L443   .overlay .box              14px                         → var(--radius)
+app.css              L471   .notice                    8px                          → var(--radius-s)
+app.css              L654   .risk-card                 10px                         → var(--radius)
+app.css              L698   .quote                     0 7px 7px 0                  → 0 var(--radius-s) var(--radius-s) 0
+app.css              L709   .sugg                      7px                          → var(--radius-s)
+app.css              L848   .role-switch               8px                          → var(--radius-s)
+app.css              L882   .kv-cell                   11px                         → var(--radius)
+app.css              L894   .mode-col                  13px                         → var(--radius)
+fx.css               L130   .donut-legend .lg          6px                          → var(--radius-s)
+fx.css               L195   .req-indicator             10px                         → var(--radius)
+fx.css               L231   .dash-head .dh-logo        10px                         → var(--radius-s)
+fx.css               L272   .kpi .ic                   9px                          → var(--radius-s)
+fx.css               L300   .panel-head .t .ic         7px                          → var(--radius-s)
+fx.css               L312   .model-card                10px                         → var(--radius)
+fx.css               L331   .store-card                10px                         → var(--radius)
+fx.css               L339   .store-card .sc-name .si   6px                          → var(--radius-s)
+fx.css               L355   .sec-item .si-ic           8px                          → var(--radius-s)
+fx.css               L373   .log-item                  8px                          → var(--radius-s)
+
+共改动 23 处。
+已写入。
+
+复核（重新解析后的实际取值）：
+   app.css              命中 13 个选择器 ｜ 与预期不符 0 个
+   fx.css               命中 10 个选择器 ｜ 与预期不符 0 个

@@ -1,0 +1,60 @@
+线上实例核查（只读） ｜ 39.96.200.45 ｜ 2026-09-19 09:24:36
+================================================================================================
+
+$ 磁盘余量
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda3        40G  5.8G   32G  16% /
+
+$ 备份文件
+-rw-r--r-- 1 root root 165M Sep 19 09:10 /root/contract-review-backup-20260919-091005.tar.gz
+-rw-r--r-- 1 root root 167M Sep 19 09:11 /root/contract-review-backup-20260919-091124.tar.gz
+-rw-r--r-- 1 root root 167M Sep 19 09:13 /root/contract-review-backup-20260919-091303.tar.gz
+-rw-r--r-- 1 root root 8.0M Sep 19 09:17 /root/contract-review-backup-20260919-091729.tar.gz
+-rw-r--r-- 1 root root 8.0M Sep 19 09:19 /root/contract-review-backup-20260919-091914.tar.gz
+-rw-r--r-- 1 root root  697 Sep 19 09:10 /root/contract-review.service.bak-20260919-091005
+-rw-r--r-- 1 root root  697 Sep 19 09:11 /root/contract-review.service.bak-20260919-091124
+-rw-r--r-- 1 root root  697 Sep 19 09:13 /root/contract-review.service.bak-20260919-091303
+-rw-r--r-- 1 root root  697 Sep 19 09:17 /root/contract-review.service.bak-20260919-091729
+-rw-r--r-- 1 root root  697 Sep 19 09:19 /root/contract-review.service.bak-20260919-091914
+
+$ 备份总占用
+513M	total
+
+$ 应用目录占用
+15M	/opt/contract-review
+
+$ 服务状态
+active
+enabled
+
+$ 端口监听
+LISTEN 0      5            0.0.0.0:8160       0.0.0.0:*    users:(("python3.11",pid=639064,fd=6))
+
+$ 运行版本
+version= 2.0.0 accounts= 3 pdf= stdlib notify= True
+
+$ 日志尾部（应无 ConnectionReset 噪音）
+File "/usr/lib64/python3.11/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.11/socket.py", line 718, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+--- 噪音计数 ---
+11
+
+$ 数据保留情况
+total 4260
+drwxr-xr-x  5 root root    4096 Sep 19 09:19 .
+drwxr-xr-x 13 root root    4096 Sep 19 09:10 ..
+-rw-r--r--  1 root root   14878 Sep 19 09:19 mock_approval.json
+drwxr-xr-x  2 root root    4096 Sep 19 09:22 parsed
+drwxr-xr-x  2 root root    4096 Sep 19 09:23 reports
+-rw-r--r--  1 root root  159744 Sep 19 09:18 review.db
+-rw-r--r--  1 root root   32768 Sep 19 09:23 review.db-shm
+--- parsed ---
+6
+--- reports ---
+7

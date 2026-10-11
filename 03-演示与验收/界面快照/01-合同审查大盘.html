@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>合同审查大盘 · 合同审批审查系统</title>
+  <style>
+/* ==========================================================================
+   合同审批审查系统 · 设计系统
+   深色专业风：低饱和背景 + 高对比正文 + 克制的动效（仅 150ms 过渡）
+   ========================================================================== */
+
+:root {
+  --bg:        #0E1116;
+  --bg-soft:   #121821;
+  --panel:     #161D27;
+  --panel-2:   #1B2330;
+  --line:      #242D3A;
+  --line-soft: #1D252F;
+
+  --text:      #E7ECF3;
+  --text-2:    #9BA6B6;
+  --text-3:    #6B7787;
+
+  --brand:     #4C8DFF;
+  --brand-2:   #2F6FE4;
+  --brand-dim: rgba(76, 141, 255, .12);
+
+  --high:      #E5484D;
+  --high-bg:   rgba(229, 72, 77, .12);
+  --high-line: rgba(229, 72, 77, .34);
+  --medium:    #F5A524;
+  --medium-bg: rgba(245, 165, 36, .12);
+  --medium-line: rgba(245, 165, 36, .34);
+  --low:       #30A46C;
+  --low-bg:    rgba(48, 164, 108, .12);
+  --low-line:  rgba(48, 164, 108, .32);
+
+  --radius:    10px;
+  --radius-sm: 7px;
+  --shadow:    0 8px 28px rgba(0, 0, 0, .34);
+  --mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+
+/* --- 顶栏 ---------------------------------------------------------------- */
+.topbar {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(14, 17, 22, .86);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1560px; margin: 0 auto; padding: 0 22px;
+  height: 58px; display: flex; align-items: center; gap: 26px;
+}
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: linear-gradient(140deg, var(--brand), var(--brand-2));
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 12px; letter-spacing: .4px; color: #fff;
+}
+.brand-text { display: flex; flex-direction: column; line-height: 1.25; }
+.brand-text strong { font-size: 14px; font-weight: 600; }
+.brand-text em { font-style: normal; font-size: 10px; color: var(--text-3); letter-spacing: .6px; text-transform: uppercase; }
+
+.nav { display: flex; gap: 4px; margin-left: 6px; }
+.nav a {
+  padding: 7px 13px; border-radius: var(--radius-sm);
+  color: var(--text-2); font-size: 13px;
+  transition: background .15s ease, color .15s ease;
+}
+.nav a:hover { background: var(--panel); color: var(--text); }
+.nav a.on { background: var(--brand-dim); color: #9CC2FF; }
+
+.engine-chip {
+  margin-left: auto; display: flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--text-3);
+  border: 1px solid var(--line); border-radius: 20px; padding: 5px 12px;
+  max-width: 380px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.engine-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-3); flex: none; }
+.engine-chip .dot.live { background: var(--low); box-shadow: 0 0 8px var(--low); }
+
+/* --- 页面骨架 ------------------------------------------------------------ */
+.page { max-width: 1560px; margin: 0 auto; padding: 22px; }
+
+.page-head { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+.page-head h1 { font-size: 20px; margin: 0; font-weight: 600; letter-spacing: .2px; }
+.page-head .sub { color: var(--text-3); font-size: 12.5px; padding-bottom: 2px; }
+.page-head .spacer { flex: 1; }
+
+.grid { display: grid; gap: 14px; }
+
+/* --- 卡片 / 面板 --------------------------------------------------------- */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.panel-head {
+  padding: 13px 16px; border-bottom: 1px solid var(--line-soft);
+  display: flex; align-items: center; gap: 10px;
+}
+.panel-head h2 { font-size: 13.5px; margin: 0; font-weight: 600; }
+.panel-head .spacer { flex: 1; }
+.panel-body { padding: 16px; }
+.panel-body.tight { padding: 0; }
+
+/* --- 统计卡 -------------------------------------------------------------- */
+.stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 13px 15px;
+}
+.stat .k { font-size: 11.5px; color: var(--text-3); }
+.stat .v { font-size: 24px; font-weight: 600; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.stat.high .v { color: var(--high); }
+.stat.medium .v { color: var(--medium); }
+.stat.low .v { color: var(--low); }
+
+/* --- 表格 ---------------------------------------------------------------- */
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th {
+  text-align: left; font-weight: 500; color: var(--text-3); font-size: 11.5px;
+  padding: 10px 14px; border-bottom: 1px solid var(--line);
+  background: var(--bg-soft); position: sticky; top: 0; white-space: nowrap;
+}
+table.data td { padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; }
+table.data tbody tr { transition: background .15s ease; }
+table.data tbody tr:hover { background: var(--panel-2); }
+table.data .name { font-weight: 500; }
+table.data .muted { color: var(--text-3); font-size: 12px; }
+table.data .num { font-variant-numeric: tabular-nums; text-align: right; }
+
+/* --- 标签 ---------------------------------------------------------------- */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; padding: 2px 9px; border-radius: 20px;
+  border: 1px solid var(--line); color: var(--text-2); white-space: nowrap;
+}
+.tag.high   { color: #FF9EA1; background: var(--high-bg);   border-color: var(--high-line); }
+.tag.medium { color: #F7C878; background: var(--medium-bg); border-color: var(--medium-line); }
+.tag.low    { color: #7BD8A8; background: var(--low-bg);    border-color: var(--low-line); }
+.tag.info   { color: #9CC2FF; background: var(--brand-dim); border-color: rgba(76,141,255,.3); }
+.tag.warn   { color: #F7C878; background: var(--medium-bg); border-color: var(--medium-line); }
+.tag.ok     { color: #7BD8A8; background: var(--low-bg); border-color: var(--low-line); }
+
+/* --- 按钮 ---------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius-sm); cursor: pointer;
+  background: var(--panel-2); color: var(--text);
+  border: 1px solid var(--line); font-size: 12.5px;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+.btn:hover { background: #222C3A; border-color: #303B4A; }
+.btn:active { transform: translateY(1px); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 500; }
+.btn.primary:hover { background: var(--brand-2); border-color: var(--brand-2); }
+.btn.ghost { background: transparent; }
+.btn.sm { padding: 5px 10px; font-size: 12px; }
+.btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+.route-btn { font-weight: 500; }
+
+/* --- 表单 ---------------------------------------------------------------- */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 11.5px; color: var(--text-3); }
+input[type=text], input[type=search], select, textarea {
+  width: 100%; padding: 8px 11px; font-size: 13px; font-family: inherit;
+  background: var(--bg-soft); color: var(--text);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  outline: none; transition: border-color .15s ease;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--brand); }
+textarea { resize: vertical; line-height: 1.6; }
+select { cursor: pointer; }
+.toolbar { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.toolbar .field { min-width: 140px; }
+
+/* --- 工作台 -------------------------------------------------------------- */
+.workspace { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+
+.doc-view {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  max-height: calc(100vh - 168px); overflow-y: auto;
+}
+.doc-meta {
+  display: flex; flex-wrap: wrap; gap: 7px; padding: 12px 16px;
+  border-bottom: 1px solid var(--line-soft); position: sticky; top: 0;
+  background: var(--panel); z-index: 5;
+}
+.chip {
+  font-size: 11.5px; padding: 3px 9px; border-radius: 6px;
+  background: var(--bg-soft); border: 1px solid var(--line); color: var(--text-2);
+}
+.chip b { color: var(--text); font-weight: 500; }
+.chip.flagged { border-color: var(--brand); color: #9CC2FF; background: var(--brand-dim); }
+
+.doc-body { padding: 8px 0 40px; }
+.doc-page-label {
+  font-size: 11px; color: var(--text-3); letter-spacing: 1px;
+  padding: 10px 18px 4px; border-bottom: 1px dashed var(--line-soft); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.doc-page-label::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
+
+.doc-line {
+  padding: 4px 18px; font-size: 13.5px; line-height: 1.85; white-space: pre-wrap; word-break: break-word;
+  border-left: 2px solid transparent; transition: background .15s ease;
+}
+.doc-line.heading { font-weight: 600; color: #C9D6E8; margin-top: 6px; }
+.doc-line.meta-hl { background: var(--brand-dim); border-left-color: var(--brand); }
+.doc-line mark.risk {
+  background: var(--high-bg); color: #FFB4B6; border-radius: 3px; padding: 1px 2px;
+  box-shadow: inset 0 -1px 0 var(--high-line); cursor: pointer;
+}
+.doc-line mark.risk.medium { background: var(--medium-bg); color: #F7C878; box-shadow: inset 0 -1px 0 var(--medium-line); }
+.doc-line mark.risk.low    { background: var(--low-bg);    color: #7BD8A8; box-shadow: inset 0 -1px 0 var(--low-line); }
+.doc-line mark.risk.active { outline: 2px solid var(--brand); background: rgba(76,141,255,.28); color: #fff; }
+.doc-line mark.field { background: rgba(76,141,255,.16); color: #AFCBFF; border-radius: 3px; padding: 1px 2px; }
+
+/* 风险面板 */
+.risk-panel { display: flex; flex-direction: column; gap: 12px; }
+.risk-list { display: flex; flex-direction: column; gap: 10px; max-height: calc(100vh - 300px); overflow-y: auto; padding-right: 3px; }
+
+.risk-card {
+  background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--line);
+  border-radius: var(--radius); padding: 13px 15px; cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.risk-card:hover { background: var(--panel-2); }
+.risk-card.high   { border-left-color: var(--high); }
+.risk-card.medium { border-left-color: var(--medium); }
+.risk-card.low    { border-left-color: var(--low); }
+.risk-card.active { border-color: var(--brand); background: var(--panel-2); }
+.risk-card.adopted { opacity: .72; }
+
+.risk-head { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.risk-head .title { font-weight: 600; font-size: 13.5px; flex: 1; }
+.risk-cols { display: flex; flex-direction: column; gap: 7px; font-size: 12.5px; color: var(--text-2); }
+.risk-cols .row { display: flex; gap: 8px; }
+.risk-cols .row .k { color: var(--text-3); flex: none; width: 62px; font-size: 11.5px; padding-top: 1px; }
+.risk-cols .row .v { flex: 1; color: var(--text-2); word-break: break-word; }
+.risk-cols .v.basis { color: #A9B8CC; }
+.suggest-box {
+  margin-top: 8px; padding: 10px 12px; border-radius: var(--radius-sm);
+  background: rgba(48, 164, 108, .08); border: 1px solid rgba(48, 164, 108, .22);
+  font-size: 12.5px; color: #C6E9D6; white-space: pre-wrap;
+}
+.suggest-box .lb { font-size: 11px; color: #7BD8A8; display: block; margin-bottom: 4px; }
+.risk-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.risk-actions .spacer { flex: 1; }
+.risk-actions .src { font-size: 11px; color: var(--text-3); }
+
+.summary-box {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px;
+}
+.summary-box h3 { margin: 0 0 8px; font-size: 13px; font-weight: 600; }
+.summary-box p { margin: 0 0 8px; font-size: 12.5px; color: var(--text-2); }
+.summary-box .metrics { display: flex; gap: 16px; font-size: 12px; color: var(--text-3); }
+.summary-box .metrics b { font-size: 15px; font-weight: 600; color: var(--text); display: block; }
+
+.blocked-box {
+  background: var(--high-bg); border: 1px solid var(--high-line); border-radius: var(--radius);
+  padding: 15px 17px;
+}
+.blocked-box h3 { margin: 0 0 6px; font-size: 13.5px; color: #FFB4B6; }
+.blocked-box p { margin: 0 0 12px; font-size: 12.5px; color: #E9B9BB; }
+
+/* --- 规则页 -------------------------------------------------------------- */
+.rules-layout { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 14px; align-items: start; }
+.rule-item {
+  padding: 11px 15px; border-bottom: 1px solid var(--line-soft); cursor: pointer;
+  display: flex; flex-direction: column; gap: 5px; transition: background .15s ease;
+}
+.rule-item:hover { background: var(--panel-2); }
+.rule-item.active { background: var(--brand-dim); }
+.rule-item .n { font-size: 13px; font-weight: 500; }
+.rule-item .m { display: flex; gap: 7px; align-items: center; font-size: 11px; color: var(--text-3); }
+.rule-item .id { font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
+
+.code {
+  font-family: var(--mono); font-size: 12px; line-height: 1.75;
+  background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 11px 13px; white-space: pre-wrap; word-break: break-all; color: #B8C9E0;
+}
+
+.kv-list { display: flex; flex-direction: column; gap: 9px; }
+.kv-list .row { display: flex; gap: 10px; font-size: 12.5px; }
+.kv-list .k { width: 74px; flex: none; color: var(--text-3); font-size: 11.5px; padding-top: 1px; }
+.kv-list .v { flex: 1; color: var(--text-2); word-break: break-word; }
+.kv-list .v.mono { font-family: var(--mono); font-size: 12px; color: #B8C9E0; }
+
+/* --- 审批系统 ------------------------------------------------------------ */
+.approval-layout { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 14px; align-items: start; }
+.comment {
+  padding: 13px 16px; border-bottom: 1px solid var(--line-soft);
+}
+.comment .who { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.comment .who .name { font-size: 12.5px; font-weight: 500; }
+.comment .who .time { font-size: 11px; color: var(--text-3); margin-left: auto; }
+.comment .avatar {
+  width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; background: var(--panel-2); border: 1px solid var(--line); color: var(--text-2); flex: none;
+}
+.comment .avatar.sys { background: var(--brand-dim); border-color: rgba(76,141,255,.34); color: #9CC2FF; }
+.comment .body { font-size: 12.5px; color: var(--text-2); white-space: pre-wrap; line-height: 1.75; }
+.comment .body strong { color: var(--text); }
+
+/* --- 报告 ---------------------------------------------------------------- */
+.report-preview {
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 30px 36px; max-width: 900px;
+}
+.report-preview h1 { font-size: 20px; margin: 0 0 18px; text-align: center; font-weight: 600; }
+.report-preview h2 { font-size: 14.5px; margin: 22px 0 10px; color: #C9D6E8; border-left: 3px solid var(--brand); padding-left: 10px; }
+.report-preview h3 { font-size: 13px; margin: 16px 0 7px; color: #AFCBFF; }
+.report-preview table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 10px 0; }
+.report-preview th, .report-preview td { border: 1px solid var(--line); padding: 7px 11px; text-align: left; }
+.report-preview th { background: var(--bg-soft); color: var(--text-3); font-weight: 500; width: 150px; }
+.report-preview ul { margin: 6px 0 6px 18px; padding: 0; }
+.report-preview li { margin-bottom: 4px; font-size: 12.5px; color: var(--text-2); }
+.report-preview p { font-size: 12.5px; color: var(--text-2); }
+
+/* --- 空态 / 提示 --------------------------------------------------------- */
+.empty { padding: 44px 20px; text-align: center; color: var(--text-3); font-size: 13px; }
+.empty .big { font-size: 15px; color: var(--text-2); margin-bottom: 6px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 30px; transform: translate(-50%, 20px);
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+  padding: 11px 18px; border-radius: var(--radius); box-shadow: var(--shadow);
+  font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  z-index: 90; max-width: 70vw;
+}
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.toast.err { border-color: var(--high-line); color: #FFB4B6; }
+.toast.ok { border-color: var(--low-line); color: #7BD8A8; }
+
+.loading { padding: 26px; text-align: center; color: var(--text-3); font-size: 13px; }
+.flash { animation: flash 1.15s ease; }
+@keyframes flash {
+  0%   { background: rgba(76, 141, 255, .30); }
+  100% { background: transparent; }
+}
+
+@media (max-width: 1280px) {
+  .stats { grid-template-columns: repeat(3, 1fr); }
+  .workspace, .rules-layout, .approval-layout { grid-template-columns: 1fr; }
+  .doc-view, .risk-list { max-height: none; }
+}
+
+</style>
+</head>
+<body><div style="background:#1B2330;border-bottom:1px solid #242D3A;color:#9BA6B6;font-size:12px;padding:8px 22px;font-family:Microsoft YaHei UI,sans-serif">界面快照 · 合同审查大盘（已拉取 7 份待审合同，含高风险与解析受阻任务）</div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark">CR</span>
+      <span class="brand-text">
+        <strong>合同审批审查系统</strong>
+        <em>Contract Review Platform</em>
+      </span>
+    </a>
+    <nav class="nav">
+      <a href="/" class="on">合同审查大盘</a>
+      <a href="/rules" class="">合规规则与模板</a>
+      <a href="/approval" class="">模拟审批系统</a>
+    </nav>
+    <div class="engine-chip" title="规则引擎模式（大模型未启用，使用内置示范条款库）">
+      <span class="dot "></span>
+      规则引擎模式（大模型未启用，使用内置示范条款库）
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  
+<div class="page-head">
+  <h1>合同审查大盘</h1>
+  <span class="sub">待审合同总览 · 支持按风险等级与审查状态筛选</span>
+  <span class="spacer"></span>
+  <button class="btn route-btn" id="btn-pull">从审批系统拉取待办</button>
+  <button class="btn primary" id="btn-upload">上传合同</button>
+  <input type="file" id="file-input" hidden accept=".docx,.pdf,.png,.jpg,.jpeg,.tif,.tiff">
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="k">待审合同总数</div><div class="v">7</div></div>
+  <div class="stat high"><div class="k">高风险</div><div class="v">3</div></div>
+  <div class="stat medium"><div class="k">中风险</div><div class="v">1</div></div>
+  <div class="stat low"><div class="k">低风险</div><div class="v">1</div></div>
+  <div class="stat high"><div class="k">解析受阻</div><div class="v">2</div></div>
+  <div class="stat low"><div class="k">已回写审批</div><div class="v">2</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h2>待审合同列表</h2>
+    <span class="spacer"></span>
+    <div class="toolbar">
+      <select id="f-risk">
+        <option value="">全部风险</option>
+        <option value="high">高风险</option>
+        <option value="medium">中风险</option>
+        <option value="low">低风险</option>
+      </select>
+      <select id="f-status">
+        <option value="">全部状态</option>
+        <option value="pending">待处理</option>
+        <option value="parsing">解析中</option>
+        <option value="reviewing">审查中</option>
+        <option value="blocked">解析受阻</option>
+        <option value="completed">审查完成</option>
+      </select>
+      <input type="search" id="f-kw" placeholder="搜索合同名称 / 申请人" style="width:190px">
+      <button class="btn sm" id="btn-filter">筛选</button>
+    </div>
+  </div>
+  <div class="panel-body tight">
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>合同名称</th>
+            <th>申请人 / 部门</th>
+            <th>业务类型</th>
+            <th class="num">合同金额</th>
+            <th>审查状态</th>
+            <th>综合风险</th>
+            <th>回写状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          
+          <tr data-id="5">
+            <td class="name">
+              <a href="/workspace/5">框架采购协议</a>
+              <div class="muted">CR-20260918-0005 · C-2026-005-框架采购协议（扫描件）.pdf</div>
+            </td>
+            <td>李奕波<div class="muted">战略采购部</div></td>
+            <td><span class="tag">采购</span></td>
+            <td class="num">人民币 —</td>
+            <td>
+              <span class="tag ok">审查完成</span>
+              
+            </td>
+            <td>
+              <span class="tag high">高风险 2</span>
+              
+            </td>
+            <td>
+              <span class="tag ok">已回写</span>
+              
+            </td>
+            <td class="muted">2026-09-18 21:08:07</td>
+            <td>
+              
+                <a class="btn sm" href="/workspace/5">进入工作台</a>
+              
+            </td>
+          </tr>
+          
+          <tr data-id="2">
+            <td class="name">
+              <a href="/workspace/2">设备销售合同</a>
+              <div class="muted">CR-20260918-0002 · C-2026-002-设备销售合同.docx</div>
+            </td>
+            <td>李奕波<div class="muted">战略采购部</div></td>
+            <td><span class="tag">销售</span></td>
+            <td class="num">人民币 4,600,000.00元</td>
+            <td>
+              <span class="tag ok">审查完成</span>
+              
+            </td>
+            <td>
+              <span class="tag high">高风险 1</span>
+              
+            </td>
+            <td>
+              <span class="muted">未回写</span>
+            </td>
+            <td class="muted">2026-09-18 21:08:04</td>
+            <td>
+              
+                <a class="btn sm" href="/workspace/2">进入工作台</a>
+              
+            </td>
+          </tr>
+          
+          <tr data-id="1">
+            <td class="name">
+              <a href="/workspace/1">企业软件采购合同</a>
+              <div class="muted">CR-20260918-0001 · C-2026-001-企业软件采购合同.docx</div>
+            </td>
+            <td>李奕波<div class="muted">战略采购部</div></td>
+            <td><span class="tag">采购</span></td>
+            <td class="num">人民币 1,280,000.00元</td>
+            <td>
+              <span class="tag ok">审查完成</span>
+              
+            </td>
+            <td>
+              <span class="tag high">高风险 2</span>
+              
+            </td>
+            <td>
+              <span class="tag ok">已回写</span>
+              
+            </td>
+            <td class="muted">2026-09-18 21:08:04</td>
+            <td>
+              
+                <a class="btn sm" href="/workspace/1">进入工作台</a>
+              
+            </td>
+          </tr>
+          
+          <tr data-id="3">
+            <td class="name">
+              <a href="/workspace/3">信息技术服务合同</a>
+              <div class="muted">CR-20260918-0003 · C-2026-003-信息技术服务合同.docx</div>
+            </td>
+            <td>李奕波<div class="muted">战略采购部</div></td>
+            <td><span class="tag">服务</span></td>
+            <td class="num">人民币 960,000.00元</td>
+            <td>
+              <span class="tag ok">审查完成</span>
+              
+            </td>
+            <td>
+              <span class="tag medium">中风险 3</span>
+              
+            </td>
+            <td>
+              <span class="muted">未回写</span>
+            </td>
+            <td class="muted">2026-09-18 21:08:05</td>
+            <td>
+              
+                <a class="btn sm" href="/workspace/3">进入工作台</a>
+              
+            </td>
+          </tr>
+          
+          <tr data-id="4">
+            <td class="name">
+              <a href="/workspace/4">劳动合同</a>
+              <div class="muted">CR-20260918-0004 · C-2026-004-劳动合同.docx</div>
+            </td>
+            <td>李奕波<div class="muted">战略采购部</div></td>
+            <td><span class="tag">劳动</span></td>
+            <td class="num">人民币 9,600.00元</td>
+            <td>
+              <span class="tag ok">审查完成</span>
+              
+            </td>
+            <td>
+              <span class="tag low">低风险</span>
+              
+            </td>
+            <td>
+              <span class="muted">未回写</span>
+            </td>
+            <td class="muted">2026-09-18 21:08:05</td>
+            <td>
+              
+                <a class="btn sm" href="/workspace/4">进入工作台</a>
+              
+            </td>
+          </tr>
+          
+          <tr data-id="7">
+            <td class="name">
+              <a href="/workspace/7">C-2026-007-合同模板（空白）</a>
+              <div class="muted">CR-20260918-0007 · C-2026-007-合同模板（空白）.docx</div>
+            </td>
+            <td>李奕波<div class="muted">战略采购部</div></td>
+            <td><span class="tag">采购</span></td>
+            <td class="num">人民币 —</td>
+            <td>
+              <span class="tag high">解析受阻</span>
+              
+            </td>
+            <td>
+              <span class="muted">—</span>
+            </td>
+            <td>
+              <span class="muted">未回写</span>
+            </td>
+            <td class="muted">2026-09-18 21:08:21</td>
+            <td>
+              
+                <button class="btn sm" data-retry="7">重新审查</button>
+              
+            </td>
+          </tr>
+          
+          <tr data-id="6">
+            <td class="name">
+              <a href="/workspace/6">C-2026-006-保密协议（加密）</a>
+              <div class="muted">CR-20260918-0006 · C-2026-006-保密协议（加密）.pdf</div>
+            </td>
+            <td>李奕波<div class="muted">战略采购部</div></td>
+            <td><span class="tag">服务</span></td>
+            <td class="num">人民币 —</td>
+            <td>
+              <span class="tag high">解析受阻</span>
+              
+            </td>
+            <td>
+              <span class="muted">—</span>
+            </td>
+            <td>
+              <span class="muted">未回写</span>
+            </td>
+            <td class="muted">2026-09-18 21:08:21</td>
+            <td>
+              
+                <button class="btn sm" data-retry="6">重新审查</button>
+              
+            </td>
+          </tr>
+          
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div id="toast" class="toast"></div>
+
+
+
+
+</body>
+</html>

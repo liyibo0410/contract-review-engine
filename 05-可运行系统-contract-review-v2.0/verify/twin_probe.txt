@@ -1,0 +1,21 @@
+登录 HTTP 200，Cookie 已取
+/api/twin HTTP 200，17290 字节，Content-Encoding=无
+Content-Type=application/json; charset=utf-8
+顶层 JSON 键：['code', 'data', 'msg']
+data 键：['generated_at', 'version', 'pipeline', 'stats', 'rollup', 'amount_by_risk', 'counts', 'blocked_detail', 'engines', 'queue', 'scheduler', 'notify', 'storage', 'auth', 'activity']
+
+关键字段存在性：
+   generated_at 有 '2026-09-19 10:17:56'
+   version      有 '2.0.0'
+   pipeline     有（7 项）
+   stats        有（4 项）
+   rollup       有（13 项）
+   counts       有（5 项）
+   engines      有（6 项）
+   queue        有（15 项）
+   scheduler    有（20 项）
+   notify       有（5 项）
+   storage      有（4 项）
+   auth         有（3 项）
+   activity     有（60 项）
+   http         **缺失**

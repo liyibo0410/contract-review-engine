@@ -1,0 +1,115 @@
+border-radius 取值归属清单
+====================================================================================================
+目的：把「同类元素用了不同圆角」的地方找出来，收敛到设计令牌。
+
+999px                              11 处
+      .env-tag
+      .chip
+      .role-chip
+      .sw
+      .qbar
+      .mode-badge
+      .live-dot
+      .meter .bar
+      …（另 3 处）
+50%                                 9 处
+      .loading
+      .overlay .spin
+      .sw::after
+      .live-dot i
+      .pipe-node::before
+      .glow
+      .dash-live .dot
+      .model-card .mc-status .d
+      …（另 1 处）
+6px                                 9 处
+      .brand .mark
+      .tag
+      ::-webkit-scrollbar-thumb
+      .doc-para
+      .pager .pg
+      .risk-card .rh .ico
+      .donut-legend .lg
+      .store-card .sc-name .si
+      …（另 1 处）
+3px                                 8 处
+      .as-link
+      mark.hl
+      .dist-legend b
+      .bar
+      .bar > i
+      .donut-legend .dot
+      .req-indicator .ri-bar
+      .req-indicator .ri-bar::after
+var(--radius-s)                     8 处
+      .btn
+      input[type=text], input[type=search], input[type=number], input[type=password], select, textarea
+      .pipe-node
+      .meter
+      .data-note
+      .mock-item
+      .mock-kv .cell
+      .raw-json
+10px                                7 处
+      .file-drop
+      .toast
+      .risk-card
+      .req-indicator
+      .dash-head .dh-logo
+      .model-card
+      .store-card
+var(--radius)                       7 处
+      .card
+      .panel
+      .stat
+      .toolbar
+      .tk
+      .dash-head
+      .kpi
+4px                                 5 处
+      .skeleton .r
+      .kbd
+      .risk-card .rh .mark
+      .hbar .hb-track
+      .hbar .hb-fill
+8px                                 5 处
+      .nav a
+      .notice
+      .role-switch
+      .sec-item .si-ic
+      .log-item
+5px                                 4 处
+      :focus-visible
+      .dist
+      .striplist code
+      .log-item .ls
+14px                                2 处
+      .modal
+      .overlay .box
+2px                                 2 处
+      .nav a.active::after
+      .tabs button.on::after
+7px                                 2 处
+      .sugg
+      .panel-head .t .ic
+0 7px 7px 0                         1 处
+      .quote
+0 var(--radius-s) var(--radius-s) 0  1 处
+      .mock-comment
+11px                                1 处
+      .kv-cell
+13px                                1 处
+      .mode-col
+2px 2px 0 0                         1 处
+      .spark .bar
+4px 4px 0 0                         1 处
+      .perf-bars .pb
+9px                                 1 处
+      .kpi .ic
+
+令牌现状（app.css :root）：
+   --radius       12px
+   --radius-s     8px
+   --radius       14px
+   --radius-s     9px
+   （另有一处在移动端媒体查询里覆写，见 app.css 内 '--radius: 14px'）

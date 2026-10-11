@@ -1,0 +1,7 @@
+  ok   tools/verify_http.py :: rec("健康检查版本号与交付版本一致（禁止版本失真）",
+  ok   deploy/verify_remote_v2.py :: rec("版本号与交付版本一致（2.0.0，禁止版本失真）",
+  ok   deploy/verify_remote_v2.py :: log.append("合同智能审查系统 v2.0.0 · 线上实例巡检")
+  ok   tools/run_selftest.py :: lines = ["=" * 92,
+  ok   tools/bench.py :: lines.append("合同智能审查系统 v2.0.0 · 性能基准（bench）")
+  ok   deploy/deploy_v2.py :: L("合同智能审查系统 v2.0.0 上线（目标 %s:%s，目录 %s）" % (HOST, PORT, REMO
+  ok   tools/run_all.py :: log_path = os.path.join(OUT, "run_%s.txt" % key)

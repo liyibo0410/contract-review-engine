@@ -1,0 +1,8 @@
+清空表 contract_cases
+清空表 contract_documents
+清空表 review_results
+清空表 audit_logs
+清空表 writeback_logs
+重置自增序列
+清理解析缓存 7 个文件
+重置模拟审批系统（8 个待办）

@@ -1,0 +1,572 @@
+{
+  "审查大盘": {
+    "base": {
+      "url": "/",
+      "title": "合同审查大盘 · 衡鉴 V2.1.7 · 企业合同智能审查系统",
+      "err": "",
+      "petErr": "",
+      "vw": 758,
+      "vh": 482,
+      "scrollW": 758,
+      "clientW": 758,
+      "tpl": [],
+      "ids": {},
+      "zero": [],
+      "missing": [],
+      "dupeIds": []
+    },
+    "geo": {
+      "#topbar": {
+        "w": 758,
+        "h": 105,
+        "x": 0,
+        "y": 0,
+        "right": 758,
+        "bottom": 105,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      ".brand": {
+        "w": 113,
+        "h": 27,
+        "x": 14,
+        "y": 12,
+        "right": 127,
+        "bottom": 39,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      ".brand-txt b": {
+        "w": 76,
+        "h": 17,
+        "x": 51,
+        "y": 17,
+        "right": 127,
+        "bottom": 34,
+        "disp": "block",
+        "vis": "visible"
+      },
+      ".nav": {
+        "w": 730,
+        "h": 45,
+        "x": 14,
+        "y": 50,
+        "right": 744,
+        "bottom": 95,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#roleChip": {
+        "w": 86,
+        "h": 33,
+        "x": 437,
+        "y": 9,
+        "right": 523,
+        "bottom": 42,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      ".role-bar": {
+        "w": 230,
+        "h": 33,
+        "x": 437,
+        "y": 9,
+        "right": 667,
+        "bottom": 42,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#stats": {
+        "w": 730,
+        "h": 392,
+        "x": 14,
+        "y": 247,
+        "right": 744,
+        "bottom": 638,
+        "disp": "grid",
+        "vis": "visible"
+      },
+      "#stats .stat.clickable": {
+        "w": 175,
+        "h": 143,
+        "x": 14,
+        "y": 247,
+        "right": 189,
+        "bottom": 389,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#swSched": {
+        "w": 46,
+        "h": 25,
+        "x": 31,
+        "y": 743,
+        "right": 77,
+        "bottom": 768,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#queueKv": {
+        "w": 696,
+        "h": 267,
+        "x": 31,
+        "y": 1096,
+        "right": 727,
+        "bottom": 1362,
+        "disp": "grid",
+        "vis": "visible"
+      },
+      "#tbl": {
+        "w": 1080,
+        "h": 1140,
+        "x": 15,
+        "y": 2418,
+        "right": 1095,
+        "bottom": 3558,
+        "disp": "table",
+        "vis": "visible"
+      },
+      "#subTitle": {
+        "w": 440,
+        "h": 23,
+        "x": 14,
+        "y": 160,
+        "right": 454,
+        "bottom": 183,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#btnPull": {
+        "w": 144,
+        "h": 32,
+        "x": 379,
+        "y": 197,
+        "right": 522,
+        "bottom": 229,
+        "disp": "flex",
+        "vis": "visible"
+      }
+    },
+    "errors": []
+  },
+  "智能审查工作台": {
+    "base": {
+      "url": "/workbench?id=6",
+      "title": "智能制造执行系统采购合同（扫描件） · 智能审查工作台 · 亦大",
+      "err": "",
+      "petErr": "",
+      "vw": 758,
+      "vh": 482,
+      "scrollW": 758,
+      "clientW": 758,
+      "tpl": [],
+      "ids": {},
+      "zero": [],
+      "missing": [],
+      "dupeIds": []
+    },
+    "geo": {
+      "#topbar": {
+        "w": 758,
+        "h": 105,
+        "x": 0,
+        "y": 0,
+        "right": 758,
+        "bottom": 105,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#doc": {
+        "w": 728,
+        "h": 289,
+        "x": 15,
+        "y": 364,
+        "right": 743,
+        "bottom": 653,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#tabBody": {
+        "w": 728,
+        "h": 3039,
+        "x": 15,
+        "y": 759,
+        "right": 743,
+        "bottom": 3798,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#summaryBox": {
+        "w": 696,
+        "h": 661,
+        "x": 31,
+        "y": 3880,
+        "right": 727,
+        "bottom": 4541,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#opinion": {
+        "w": 696,
+        "h": 81,
+        "x": 31,
+        "y": 4594,
+        "right": 727,
+        "bottom": 4675,
+        "disp": "inline-block",
+        "vis": "visible"
+      },
+      "#btnWb": {
+        "w": 130,
+        "h": 32,
+        "x": 14,
+        "y": 240,
+        "right": 144,
+        "bottom": 272,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#tabBody .risk-card": {
+        "w": 696,
+        "h": 565,
+        "x": 31,
+        "y": 774,
+        "right": 727,
+        "bottom": 1339,
+        "disp": "block",
+        "vis": "visible"
+      }
+    },
+    "errors": []
+  },
+  "合规规则与模板": {
+    "base": {
+      "url": "/rules",
+      "title": "合规规则与模板 · 衡鉴 V2.1.7 · 企业合同智能审查系统",
+      "err": "",
+      "petErr": "",
+      "vw": 758,
+      "vh": 482,
+      "scrollW": 758,
+      "clientW": 758,
+      "tpl": [],
+      "ids": {},
+      "zero": [],
+      "missing": [],
+      "dupeIds": []
+    },
+    "geo": {
+      "#topbar": {
+        "w": 758,
+        "h": 105,
+        "x": 0,
+        "y": 0,
+        "right": 758,
+        "bottom": 105,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#ruleBody": {
+        "w": 1080,
+        "h": 1210,
+        "x": 15,
+        "y": 1325,
+        "right": 1095,
+        "bottom": 2534,
+        "disp": "table-row-group",
+        "vis": "visible"
+      },
+      ".rule-row": {
+        "w": 1080,
+        "h": 140,
+        "x": 15,
+        "y": 1325,
+        "right": 1095,
+        "bottom": 1465,
+        "disp": "table-row",
+        "vis": "visible"
+      },
+      "#curTypeLabel": {
+        "w": 177,
+        "h": 24,
+        "x": 31,
+        "y": 1247,
+        "right": 208,
+        "bottom": 1271,
+        "disp": "flex",
+        "vis": "visible"
+      }
+    },
+    "errors": []
+  },
+  "动态孪生看板": {
+    "base": {
+      "url": "/twin",
+      "title": "动态孪生平台看板 · 衡鉴 V2.1.7 · 企业合同智能审查系统",
+      "err": "",
+      "petErr": "",
+      "vw": 758,
+      "vh": 482,
+      "scrollW": 758,
+      "clientW": 758,
+      "tpl": [],
+      "ids": {},
+      "zero": [],
+      "missing": [],
+      "dupeIds": []
+    },
+    "geo": {
+      "#topbar": {
+        "w": 758,
+        "h": 105,
+        "x": 0,
+        "y": 0,
+        "right": 758,
+        "bottom": 105,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#kpi": {
+        "w": 718,
+        "h": 236,
+        "x": 20,
+        "y": 322,
+        "right": 738,
+        "bottom": 558,
+        "disp": "grid",
+        "vis": "visible"
+      },
+      "#pipe": {
+        "w": 684,
+        "h": 197,
+        "x": 37,
+        "y": 637,
+        "right": 721,
+        "bottom": 834,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      ".pipe-node": {
+        "w": 152,
+        "h": 181,
+        "x": 39,
+        "y": 643,
+        "right": 191,
+        "bottom": 824,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#logStream": {
+        "w": 684,
+        "h": 340,
+        "x": 37,
+        "y": 2169,
+        "right": 721,
+        "bottom": 2509,
+        "disp": "block",
+        "vis": "visible"
+      },
+      ".log-stream .li": {
+        "w": 684,
+        "h": 60,
+        "x": 37,
+        "y": 2169,
+        "right": 721,
+        "bottom": 2229,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#gauges": {
+        "w": 684,
+        "h": 181,
+        "x": 37,
+        "y": 1284,
+        "right": 721,
+        "bottom": 1465,
+        "disp": "grid",
+        "vis": "visible"
+      },
+      ".meter": {
+        "w": 336,
+        "h": 85,
+        "x": 37,
+        "y": 1284,
+        "right": 373,
+        "bottom": 1368,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#opsKv": {
+        "w": 684,
+        "h": 190,
+        "x": 37,
+        "y": 2661,
+        "right": 721,
+        "bottom": 2851,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#ruleBars": {
+        "w": 684,
+        "h": 151,
+        "x": 37,
+        "y": 3114,
+        "right": 721,
+        "bottom": 3266,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      ".rb": {
+        "w": 684,
+        "h": 31,
+        "x": 37,
+        "y": 3114,
+        "right": 721,
+        "bottom": 3145,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#topPaths": {
+        "w": 684,
+        "h": 295,
+        "x": 37,
+        "y": 1746,
+        "right": 721,
+        "bottom": 2042,
+        "disp": "block",
+        "vis": "visible"
+      }
+    },
+    "errors": []
+  },
+  "模拟审批系统": {
+    "base": {
+      "url": "/mock",
+      "title": "模拟审批系统 · 衡鉴 V2.1.7 · 企业合同智能审查系统",
+      "err": "",
+      "petErr": "",
+      "vw": 758,
+      "vh": 482,
+      "scrollW": 758,
+      "clientW": 758,
+      "tpl": [],
+      "ids": {},
+      "zero": [],
+      "missing": [],
+      "dupeIds": []
+    },
+    "geo": {
+      "#topbar": {
+        "w": 758,
+        "h": 105,
+        "x": 0,
+        "y": 0,
+        "right": 758,
+        "bottom": 105,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#list": {
+        "w": 684,
+        "h": 560,
+        "x": 37,
+        "y": 380,
+        "right": 721,
+        "bottom": 940,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      ".mock-item": {
+        "w": 684,
+        "h": 73,
+        "x": 37,
+        "y": 380,
+        "right": 721,
+        "bottom": 453,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#detail": {
+        "w": 716,
+        "h": 423,
+        "x": 21,
+        "y": 1020,
+        "right": 737,
+        "bottom": 1443,
+        "disp": "block",
+        "vis": "visible"
+      },
+      "#eps": {
+        "w": 684,
+        "h": 235,
+        "x": 37,
+        "y": 1523,
+        "right": 721,
+        "bottom": 1758,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      ".ep": {
+        "w": 684,
+        "h": 34,
+        "x": 37,
+        "y": 1523,
+        "right": 721,
+        "bottom": 1557,
+        "disp": "flex",
+        "vis": "visible"
+      }
+    },
+    "errors": []
+  },
+  "登录页": {
+    "base": {
+      "url": "/login",
+      "title": "登录 · 衡鉴 V2.1.7 · 企业合同智能审查系统",
+      "err": "",
+      "petErr": "",
+      "vw": 758,
+      "vh": 482,
+      "scrollW": 758,
+      "clientW": 758,
+      "tpl": [],
+      "ids": {},
+      "zero": [],
+      "missing": [],
+      "dupeIds": []
+    },
+    "geo": {
+      "#loginForm": {
+        "w": 660,
+        "h": 211,
+        "x": 49,
+        "y": 216,
+        "right": 709,
+        "bottom": 427,
+        "disp": "block",
+        "vis": "visible"
+      },
+      ".role-item": {
+        "w": 660,
+        "h": 73,
+        "x": 49,
+        "y": 612,
+        "right": 709,
+        "bottom": 685,
+        "disp": "flex",
+        "vis": "visible"
+      },
+      "#roleList": {
+        "w": 660,
+        "h": 242,
+        "x": 49,
+        "y": 612,
+        "right": 709,
+        "bottom": 854,
+        "disp": "flex",
+        "vis": "visible"
+      }
+    },
+    "errors": []
+  }
+}

@@ -1,0 +1,27 @@
+warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+==============================================================================
+衡鉴 · 黄金样例集回归评测   规则版本 1.0.0
+==============================================================================
+样例总数        : 13
+解析成功率      : 100.0%  (13/13)
+高风险召回率    : 100.0%  (11/11)
+中风险召回率    : 100.0%  (26/26)
+误报数          : 0
+准确率 precision: 100.0%
+平均解析耗时    : 643 ms
+判定            : PASS
+------------------------------------------------------------------------------
+OK 01_软件采购合同_埋雷版.docx                   clauses=10 chars=1245 hit=6 miss=[] fp=[]
+OK 02_设备采购合同_标准版.docx                   clauses=14 chars=1624 hit=0 miss=[] fp=[]
+OK 03_办公用品采购合同_风险版.docx                 clauses=7 chars=603 hit=1 miss=[] fp=[]
+OK 04_服务外包采购合同_标准版.pdf                  clauses=11 chars=1206 hit=0 miss=[] fp=[]
+OK 05_大额销售合同_埋雷版.docx                   clauses=9 chars=811 hit=3 miss=[] fp=[]
+OK 06_标准销售合同_标准版.pdf                    clauses=12 chars=1190 hit=0 miss=[] fp=[]
+OK 07_经销合同_风险版.docx                     clauses=6 chars=494 hit=0 miss=[] fp=[]
+OK 08_劳动合同_标准版.docx                     clauses=7 chars=924 hit=0 miss=[] fp=[]
+OK 09_劳动合同_风险版.docx                     clauses=6 chars=440 hit=1 miss=[] fp=[]
+OK 10_技术服务合同_标准版.docx                   clauses=12 chars=1157 hit=0 miss=[] fp=[]
+OK 11_运维服务合同_标准版.docx                   clauses=10 chars=1017 hit=0 miss=[] fp=[]
+OK 12_咨询服务合同_扫描件.png                    clauses=8 chars=659 hit=0 miss=[] fp=[]
+OK 13_软件采购合同_加密件.pdf                    blocked/DOC_ENCRYPTED
+==============================================================================

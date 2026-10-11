@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>权限受限 · 衡鉴 V2.1.7 · 企业合同智能审查系统</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/fx.css">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('cr-theme');
+    if (t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { }
+})();
+</script>
+<style>
+  body.deny-body { display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 32px 18px; }
+  .deny-card { width: 100%; max-width: 640px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 18px; padding: 34px 34px 28px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .45); }
+  .deny-kicker { display: inline-flex; align-items: center; gap: 7px; font-size: 11.4px;
+    letter-spacing: .8px; text-transform: uppercase; color: var(--high);
+    background: var(--high-bg);
+    border: 1px solid var(--high-line); border-radius: 999px; padding: 5px 11px; }
+  .deny-card h1 { font-size: 22px; margin: 16px 0 8px; letter-spacing: .2px; }
+  .deny-lead { font-size: 13.4px; color: var(--sub); line-height: 1.9; margin: 0 0 22px; }
+  .deny-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+  @media (max-width: 560px) { .deny-grid { grid-template-columns: 1fr; } }
+  .deny-cell { background: var(--bg); border: 1px solid var(--line);
+    border-radius: 12px; padding: 13px 15px; }
+  .deny-cell .k { font-size: 11.2px; color: var(--faint); margin-bottom: 6px; letter-spacing: .4px; }
+  .deny-cell .v { font-size: 13.6px; font-weight: 600; word-break: break-all; }
+  .deny-cell .v.mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.4px; }
+  .deny-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+  .deny-note { font-size: 11.6px; color: var(--faint); line-height: 1.85;
+    margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--line); }
+  .deny-note code { color: var(--brand); font-size: 11.4px; }
+</style>
+</head>
+<body class="deny-body">
+
+<div class="deny-card cfx" style="">
+  <span class="deny-kicker">
+    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4.5" y="10.5" width="15" height="9.5" rx="2"></rect>
+      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path><path d="M12 14.5v2"></path>
+    </svg>
+    403 · 权限受限
+  </span>
+
+  <h1>当前角色无权访问该功能</h1>
+  <p class="deny-lead">
+    系统按需求 2.4.2 对三类角色做了路由级权限隔离，写操作一律服务端校验，
+    前端无法绕过。本次访问已被拦截并记入审计日志。
+  </p>
+
+  <div class="deny-grid">
+    <div class="deny-cell cfx cfx-lift" style="">
+      <div class="k">当前身份</div>
+      <div class="v">法务审查人 <span class="faint">legal</span></div>
+    </div>
+    <div class="deny-cell cfx cfx-lift" style="">
+      <div class="k">缺少能力</div>
+      <div class="v">维护合规规则与标准条款库</div>
+    </div>
+    <div class="deny-cell cfx cfx-lift" style="">
+      <div class="k">受限页面</div>
+      <div class="v mono">/rules</div>
+    </div>
+    <div class="deny-cell cfx cfx-lift" style="">
+      <div class="k">该能力归属</div>
+      <div class="v">系统管理员</div>
+    </div>
+  </div>
+
+  <div class="deny-actions">
+    <a class="btn primary" href="/">返回审查大盘</a>
+    <a class="btn ghost" href="/logout">退出登录</a>
+    <a class="btn ghost" href="/login?next=%2Frules">切换演示身份</a>
+  <button class="btn ghost">切换为 系统管理员</button></div>
+
+  <div class="deny-note">
+    权限能力标识：<code>edit_rules</code> ｜ 允许角色：<code>admin</code><br>
+    审计记录位置：审查大盘 → 审计日志（tool = <code>auth.guard</code>），
+    可在「运行指标」中查看未登录/越权计数。
+  </div>
+</div>
+
+<script src="/assets/app.js"></script><div class="glow g1"></div><div class="glow g2"></div><div class="scanline"></div>
+<script>
+// 演示辅助：受限页上也给一键切换到有权限的角色，避免现场退回登录页重新输口令
+(function () {
+  var allow = 'admin'.split(',').filter(Boolean);
+  if (!allow.length) return;
+  if (!(new URLSearchParams(location.search).get('next'))) {
+    var a = document.querySelector('a[href="/login?next=/rules"]');
+    if (a) a.href = '/login?next=' + encodeURIComponent(location.pathname);
+  }
+  addEventListener('load', function () {
+    var box = document.querySelector('.deny-actions');
+    var path = location.pathname + location.search;
+    allow.forEach(function (role) {
+      var b = document.createElement('button');
+      b.className = 'btn ghost';
+      b.textContent = '切换为 ' + ({ legal: '法务审查人', applicant: '业务经办人', admin: '系统管理员' }[role] || role);
+      b.onclick = function () {
+        b.disabled = true;
+        fetch('/api/auth/switch', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role: role })
+        }).then(function (r) { return r.json(); }).then(function (j) {
+          if (j.code === 0) location.href = path;
+          else { b.disabled = false; alert(j.msg || '切换失败'); }
+        });
+      };
+      box.appendChild(b);
+    });
+  });
+})();
+</script>
+
+
+</body></html>

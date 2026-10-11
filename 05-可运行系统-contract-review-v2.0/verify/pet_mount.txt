@@ -1,0 +1,7 @@
+  ok   index.html：已挂载 pet.js
+  ok   workbench.html：已挂载 pet.js
+  ok   rules.html：已挂载 pet.js
+  ok   twin.html：已挂载 pet.js
+  ok   mock.html：已挂载 pet.js
+  ok   login.html：已挂载 pet.js
+  ok   tools/run_all.py：并入 assistant 检查

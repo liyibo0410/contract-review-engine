@@ -1,0 +1,36 @@
+线上日志核查（只读） ｜ 39.96.200.45
+================================================================================================
+
+$ 服务启动时刻
+Sat 2026-09-19 09:19:27 CST
+
+$ 日志总量
+209 /var/log/contract-review.log
+
+$ ConnectionReset 出现次数
+11
+
+$ 最后一次出现的行号
+174:ConnectionResetError: [Errno 104] Connection reset by peer
+191:ConnectionResetError: [Errno 104] Connection reset by peer
+208:ConnectionResetError: [Errno 104] Connection reset by peer
+
+$ 日志最后 12 行
+File "/usr/lib64/python3.11/socketserver.py", line 755, in __init__
+    self.handle()
+  File "/usr/lib64/python3.11/http/server.py", line 438, in handle
+    self.handle_one_request()
+  File "/usr/lib64/python3.11/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.11/socket.py", line 718, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+
+$ 日志里有时间戳的行（最后 5 条）
+
+$ 确认修复代码已上线
+629:        def handle_one_request(self):
+631:                BaseHTTPRequestHandler.handle_one_request(self)

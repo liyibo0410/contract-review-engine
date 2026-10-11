@@ -1,0 +1,13 @@
+  ok   ui/assets/app.js :: /* -------------------------------------------------
+  ok   ui/assets/app.js :: save, load, icon, countUp, spark, initReveal,
+  ok   ui/assets/app.js :: if (document.readyState === 'loading') {
+  ok   ui/index.html :: renderTable();
+  ok   ui/index.html :: // 行点击跳转用事件委托，避免把路径拼进 onclick 字符串（引号易出错）
+  ok   ui/workbench.html :: renderSide();
+  ok   ui/rules.html :: CR.initAuth(
+  ok   ui/twin.html :: FIRST = false;
+  ok   ui/twin.html :: '<div class="v">' + x[1] + '<small>' + x[2] + '</sma
+  ok   ui/twin.html :: '<div class="vl">' + n.value + '<small>' + CR.esc(n.
+  ok   ui/rules.html :: 补一次入场
+  ok   ui/mock.html :: renderList();
+  ok   ui/mock.html :: CR.$('#detail').innerHTML = html;

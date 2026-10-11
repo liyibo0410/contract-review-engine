@@ -1,0 +1,37 @@
+
+== required_clauses 交叉引用 ==
+  PASS 已登记条款类型 30 项
+  PASS 采购：12 项，未登记 name = 无
+  PASS 采购：required_count=12 与实际 12 一致
+  PASS 销售：12 项，未登记 name = 无
+  PASS 销售：required_count=12 与实际 12 一致
+  PASS 服务：11 项，未登记 name = 无
+  PASS 服务：required_count=11 与实际 11 一致
+  PASS 劳动：10 项，未登记 name = 无
+  PASS 劳动：required_count=10 与实际 10 一致
+  PASS clause_types 中无法解析的示范条款 = 无
+  PASS 提示：15 项条款类型暂无示范条款（范本库待扩充）：['合同标的与范围', '合同金额与币种', '交付时间与地点', '产品保证与合规', '服务内容与范围', '服务期限', '服务成果与交付物', '服务质量标准', '合同期限', '工作内容与工作地点', '劳动报酬', '工作时间与休息休假', '社会保险与福利', '劳动保护与职业危害防护', '合同解除与终止']
+
+== 规则 id 唯一性 ==
+  PASS 规则合计 27 条（R=12 / D=10 / E=5），重复 id = 无
+  PASS 缺少 detect.checker 的规则 = 无
+
+== 定级算法 ==
+  PASS 权重和 = 1.0000
+  PASS 02_采购合同_风险版_软件采购.docx（预期）：stated=75.50 recomputed=75.50
+  PASS 02_采购合同_风险版_软件采购.docx（预期）：grade expect=high calc=high
+  PASS 03_销售合同_风险版_违约责任不对等.docx（预期）：stated=83.75 recomputed=83.75
+  PASS 03_销售合同_风险版_违约责任不对等.docx（预期）：grade expect=high calc=high
+  PASS 01_采购合同_标准版.docx（预期）：stated=3.00 recomputed=3.00
+  PASS 01_采购合同_标准版.docx（预期）：grade expect=low calc=low
+
+== mock 数据一致性 ==
+  PASS organizations 7 条
+  PASS 统一社会信用代码长度非 18 位的 = 无
+  PASS 黑名单中无法解析的信用代码 = 无
+  PASS 91410300MA9K2X3Y7Z → 恒远智能科技（洛阳）有限公司
+  PASS 91440300MA5F8G2H4K → 云枢软件技术有限公司
+  PASS 91410100MA47B9C2X8 → 中原重工装备制造有限公司
+  PASS 91410305MA3D6E8F1L → 洛水工程技术服务有限公司
+
+合计 27 项，失败 0 项 → 通过

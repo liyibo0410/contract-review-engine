@@ -1,0 +1,117 @@
+warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+==============================================================================
+衡鉴 · 黄金样例集回归评测   规则版本 1.0.0
+==============================================================================
+样例总数        : 13
+解析成功率      : 100.0%  (13/13)
+高风险召回率    : 100.0%  (11/11)
+中风险召回率    : 100.0%  (26/26)
+误报数          : 0
+准确率 precision: 100.0%
+平均解析耗时    : 553 ms
+判定            : PASS
+------------------------------------------------------------------------------
+OK 01_软件采购合同_埋雷版.docx                   clauses=10 chars=1245 hit=6 miss=[] fp=[]
+OK 02_设备采购合同_标准版.docx                   clauses=14 chars=1624 hit=0 miss=[] fp=[]
+OK 03_办公用品采购合同_风险版.docx                 clauses=7 chars=603 hit=1 miss=[] fp=[]
+OK 04_服务外包采购合同_标准版.pdf                  clauses=11 chars=1206 hit=0 miss=[] fp=[]
+OK 05_大额销售合同_埋雷版.docx                   clauses=9 chars=811 hit=3 miss=[] fp=[]
+OK 06_标准销售合同_标准版.pdf                    clauses=12 chars=1190 hit=0 miss=[] fp=[]
+OK 07_经销合同_风险版.docx                     clauses=6 chars=494 hit=0 miss=[] fp=[]
+OK 08_劳动合同_标准版.docx                     clauses=7 chars=924 hit=0 miss=[] fp=[]
+OK 09_劳动合同_风险版.docx                     clauses=6 chars=440 hit=1 miss=[] fp=[]
+OK 10_技术服务合同_标准版.docx                   clauses=12 chars=1157 hit=0 miss=[] fp=[]
+OK 11_运维服务合同_标准版.docx                   clauses=10 chars=1017 hit=0 miss=[] fp=[]
+OK 12_咨询服务合同_扫描件.png                    clauses=8 chars=659 hit=0 miss=[] fp=[]
+OK 13_软件采购合同_加密件.pdf                    blocked/DOC_ENCRYPTED
+==============================================================================
+
+【系统接口】
+  [PASS] GET /api/system/health
+  [PASS]   健康检查含规则库信息  — 32 条规则 v1.0.0
+  [PASS]   健康检查含 OCR 状态  — OCR=就绪
+  [PASS]   健康检查含 LLM 状态  — LLM=未配置(降级)
+  [PASS] GET /api
+  [PASS] GET /api/docs（OpenAPI 文档页）
+  [PASS] GET /api/openapi.json  — 33 个路径
+
+【静态前端】
+  [PASS] GET /（审查大盘）  — 5378 bytes
+  [PASS] GET /pages/workbench.html（工作台）  — 1850 bytes
+  [PASS] GET /pages/rules.html（规则页）  — 1737 bytes
+  [PASS] GET /pages/eval.html（评测页）  — 2176 bytes
+  [PASS] GET /assets/css/app.css（样式表）  — 16704 bytes
+  [PASS] GET /assets/js/common.js（公共脚本）  — 8937 bytes
+  [PASS] GET /assets/js/workbench.js（工作台脚本）  — 33316 bytes
+
+【观测接口】
+  [PASS] GET /api/stats/overview
+
+【规则与模板】
+  [PASS] GET /api/rules  — 32 条
+  [PASS] GET /api/rules/tree  — 11 个条款分组
+  [PASS] GET /api/templates  — 14 套示范条款
+  [PASS] GET /api/meta/clause-types
+  [PASS] PUT /api/rules/HJ-H-001（规则编辑）
+  [PASS]   PUT 不存在的规则应 400
+
+【合同上传与流水线】
+  [PASS] POST /api/contracts/upload  — {"contract_id":1,"code":"HJ-20260919-141707-2569","reused":false,"sha256":"bdb7c77bbfdabf15851b7119e2a07dec1be48fc0e712c
+  [PASS] POST /api/contracts/1/pipeline（同步跑完整流水线）  — 命中 11 项，等级 high
+  [PASS] GET /api/contracts（大盘列表）
+  [PASS]   GET /api/contracts 支持筛选  — 1 条高风险已完成任务
+  [PASS] GET /api/contracts/1（详情）  — 10 个条款节点，元数据 7 项
+  [PASS] GET /api/contracts/1/document（文档视窗）  — HTTP 200 {"contract_id":1,"file_name":"01_软件采购合同_埋雷版.docx","file_type":"docx","page_count":4,"paragraphs":[{"page":1,"para_index":0,"char_start":0,"char_end":14,"text":"
+  [PASS]   文档视窗返回段落序列  — 42 段，格式 docx
+  [PASS]   段落带完整锚点坐标
+  [PASS] GET /api/contracts/1/findings  — 高 6 / 中 2 / 低 3
+  [PASS]   风险坐标可回显原文片段  — HJ-H-002 → 第二条　合同金额与支付方式…
+  [PASS]   每条风险都有法律依据与示范条款
+  [PASS] POST .../findings/1/adopt（采纳建议）
+  [PASS]   采纳状态已持久化
+  [PASS] POST .../annotations（法务批注）
+  [PASS] POST .../search（自然语言条款检索）  — 已在合同第 1 页定位到与「帮我看下付款条件」最相关的价款与支付条款，共匹配 1 处，以下为前 1 处：
+
+【审查意见与回写】
+  [PASS] GET .../review（审查意见）  — 建议拒绝
+  [PASS] GET .../writeback/preview（DRY_RUN 预览）  — 1729 字
+  [PASS] POST .../writeback（dry_run=true）
+  [PASS]   DRY_RUN 不写入审批系统评论区
+  [PASS] POST .../writeback（真实回写）  — 评论 ID CMT-000001
+  [PASS]   审批系统评论区可见意见
+  [PASS]   重复回写被幂等拦截
+  [PASS]   评论区仍只有 1 条（未重复写入）
+
+【人工审核（HITL）】
+  [PASS] GET /api/contracts/1/hitl（中断点状态）  — 状态 pending_review · 可执行 ['approve', 'edit', 'reject']
+  [PASS] POST .../human-review（action=edit 修改后确认）  — 已应用 1 处人工修改，风险等级与结论已重算
+  [PASS]   人工改级已落库  — medium
+  [PASS]   人工改写建议来源标记为 manual
+  [PASS]   非法审核动作返回 400
+  [PASS] POST .../human-review（action=approve 同意）
+  [PASS]   审核流水已记录  — 2 条动作
+  [PASS] GET .../report（Markdown）  — 6641 字
+  [PASS] GET .../report?download=true（PDF）  — 52 KB
+  [PASS] GET .../audit（审计留痕）  — 10 条日志
+  [PASS] GET .../events（SSE 事件流）
+
+【异常阻塞与重试】
+  [PASS] 加密文档进入 blocked
+  [PASS]   阻塞代码为 DOC_ENCRYPTED  — 文档已加密，无法解析正文，请上传去除密码的版本或提供打开密码
+  [PASS]   未完成审查的任务拒绝回写（409）
+  [PASS] POST .../retry（一键重试）
+  [PASS] DELETE /api/contracts/{id}
+
+【评测看板】
+  [PASS] POST /api/eval/run（黄金样例集跑分）  — 高风险召回 1.0 · 误报 0 · pass
+  [PASS] GET /api/eval/score
+
+【错误处理】
+  [PASS] 不存在的合同返回 404
+  [PASS] 不支持的文件类型返回 400
+
+======================================================================
+  通过 64 项，失败 0 项
+  全部接口冒烟通过 ✅
+======================================================================
+

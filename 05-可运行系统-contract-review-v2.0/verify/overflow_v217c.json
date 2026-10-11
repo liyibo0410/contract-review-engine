@@ -1,0 +1,2733 @@
+{
+ "tag": "v217c",
+ "port": 8799,
+ "viewports": [],
+ "pages": {
+  "大盘": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "-",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     }
+    ],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "-",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     }
+    ],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "-",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "-",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "-",
+      "cardW": 408,
+      "vClient": 374,
+      "vScroll": 374,
+      "vH": 25,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "-",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 11,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "-",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "大盘·金额最大档": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥10000.00亿",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     }
+    ],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥10000.00亿",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 64,
+      "clipped": 0
+     }
+    ],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥10000.00亿",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥10000.00亿",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 64,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥10000.00亿",
+      "cardW": 408,
+      "vClient": 374,
+      "vScroll": 374,
+      "vH": 25,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥10000.00亿",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 11,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥10000.00亿",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "大盘·超长文本兜底": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 160,
+      "clipped": 0
+     }
+    ],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 160,
+      "clipped": 0
+     }
+    ],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 160,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 32,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 160,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 408,
+      "vClient": 374,
+      "vScroll": 374,
+      "vH": 25,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 50,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 11,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 25,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 50,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "工作台": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 11,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "孪生看板": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "d": 167,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     }
+    ],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 19,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 19,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 19,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 19,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "d": 264,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     }
+    ],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 75,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 legal（法务审查人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 75,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 legal（法务审查人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 75,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 legal（法务审查人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 75,
+      "t": "演示身份切换为 applicant（业务经办人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 47,
+      "t": "演示身份切换为 legal（法务审查人）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 44,
+      "t": "账号种子完成：新建 0 个 / 共 3 个"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "d": 320,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     }
+    ],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.7 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "d": 25,
+      "t": "未登录请求 POST /api/auth/switch（来源 127.0.0.1 | Pyt"
+     }
+    ],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 11,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "规则与模板": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [
+     {
+      "sel": "span#envTag",
+      "cw": 174,
+      "d": 31,
+      "t": "规则维护 · 修改前自动备份 .bak"
+     }
+    ],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [],
+    "stats": [],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "ellipsis": [],
+    "escaped": [],
+    "hscroll": [
+     {
+      "sel": "div#topbar>nav.nav>a.active",
+      "d": 11,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 360"
+   }
+  }
+ },
+ "notes": [
+  "登录令牌获取：成功",
+  "注入 brief（大盘·金额最大档）：替换 1 张金额卡",
+  "截图 verify\\shots\\v217c_桌面1600.png",
+  "截图 verify\\shots\\v217c_手机竖屏430.png",
+  "截图 verify\\shots\\v217c_手机竖屏390.png",
+  "注入 extreme（大盘·超长文本兜底）：替换 1 张金额卡",
+  "工作台 页面脚本报错 1 条：Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:8799/api/cases/1"
+ ]
+}

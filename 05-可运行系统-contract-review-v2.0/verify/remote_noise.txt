@@ -1,0 +1,17 @@
+线上日志噪音复验（客户端早断连）
+================================================================================================
+目标 39.96.200.45:8160 ｜ 2026-09-19 13:20:03
+
+① 复验前：Traceback 11 行 ｜ ConnectionResetError 11 行 ｜ 日志共 209 行
+   （部署时 tail 看到的那段 if 是**重启前**写入的旧行 —— 本脚本会证明这一点）
+
+② 已从公网制造早断连 16 次（连上即断 / 半个请求行 / 不读响应）
+   其中 2 次客户端侧异常：['B3:timed out', 'C2:timed out']
+
+③ 复验后：Traceback 11 行 ｜ ConnectionResetError 11 行 ｜ 日志共 209 行
+
+   日志新增 0 行 ｜ 其中新增 Traceback 0 行 ｜ 新增 ConnectionResetError 0 行
+
+结论：PASS —— 服务端已吞掉早断连，日志无新增噪音
+
+参考：修复位置在 app/server.py 的 handle_one_request（捕获 ConnectionResetError / BrokenPipeError / ConnectionAbortedError / TimeoutError）。

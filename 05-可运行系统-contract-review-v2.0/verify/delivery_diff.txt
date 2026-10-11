@@ -1,0 +1,36 @@
+交付目录整洁度核对（只读）
+================================================================================================
+源：D:\workbuddy work\2026-09-19-08-12-06\contract-review-v2.0
+目标：E:\桌面\合同审批系统-李奕波\05-可运行系统-contract-review-v2.0
+
+源文件 280 个 ｜ 目标文件 299 个
+
+① 目标目录里的**旧副本**（源已移入 tools/_onetime/，共 19 个）：
+   tools\capture_screens.py
+   tools\fix_assistant1.py
+   tools\patch_assistant_backend.py
+   tools\patch_assistant_integrate.py
+   tools\patch_assistant_verify.py
+   tools\patch_http.py
+   tools\patch_pet_mount.py
+   tools\patch_render.py
+   tools\patch_render2.py
+   tools\patch_render3.py
+   tools\patch_render4.py
+   tools\patch_ui.py
+   tools\patch_v201_backend.py
+   tools\patch_v201_front1.py
+   tools\patch_version.py
+   tools\probe_http_login.py
+   tools\probe_twin.py
+   tools\verify_acceptance.py
+   tools\verify_startup.py
+
+② 目标目录**尚缺**的文件（0 个）：
+   无
+
+================================================================================================
+说明：这些旧副本是「只增不删」同步策略的副产物（同一文件在源里被移动到
+      tools/_onetime/ 后，目标目录的旧位置仍留着）。内容与 _onetime/ 下的
+      新位置**完全一致**，删除它们不影响任何功能。
+      **本脚本不执行删除** —— 是否清理请人工确认。

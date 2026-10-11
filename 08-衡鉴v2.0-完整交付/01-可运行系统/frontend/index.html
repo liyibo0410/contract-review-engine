@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>衡鉴 · 合同审查大盘</title>
+<link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar"></header>
+  <main>
+    <div class="wrap">
+
+      <div class="grid c4" id="stats"></div>
+
+      <div class="grid c2 mt" style="grid-template-columns: 1fr 380px;">
+        <div class="card">
+          <div class="card-title">
+            <span class="em">待审合同列表</span>
+            <span class="spacer" style="flex:1"></span>
+            <span class="small muted" id="listHint"></span>
+          </div>
+          <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:12px">
+            <input id="kw" placeholder="搜索合同名称 / 编号 / 相对方" style="flex:1;min-width:180px">
+            <select id="fStatus">
+              <option value="">全部状态</option>
+              <option value="pending">待处理</option>
+              <option value="parsing">解析中</option>
+              <option value="reviewing">审查中</option>
+              <option value="blocked">解析受阻</option>
+              <option value="completed">审查完成</option>
+            </select>
+            <select id="fRisk">
+              <option value="">全部风险</option>
+              <option value="high">高风险</option>
+              <option value="medium">中风险</option>
+              <option value="low">低风险</option>
+              <option value="none">无风险</option>
+            </select>
+            <button class="btn" id="btnRefresh">刷新</button>
+          </div>
+          <div style="max-height:calc(100vh - 420px);overflow:auto">
+            <table class="tb">
+              <thead><tr>
+                <th>合同名称</th><th>业务类型</th><th style="text-align:right">金额</th>
+                <th>状态</th><th>风险</th><th>风险分布</th><th>创建时间</th>
+              </tr></thead>
+              <tbody id="tbody"></tbody>
+            </table>
+            <div class="empty" id="empty" style="display:none">暂无审查任务</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-title"><span class="em">接入合同</span></div>
+            <div class="drop" id="drop">
+              <div style="font-size:26px;margin-bottom:4px">＋</div>
+              <div>点击选择或拖拽上传合同</div>
+              <div class="small muted" style="margin-top:4px">支持 DOCX / PDF / 扫描件（PNG·JPG）</div>
+            </div>
+            <input type="file" id="file" style="display:none"
+                   accept=".docx,.pdf,.png,.jpg,.jpeg,.bmp,.tif,.tiff">
+            <div class="grid c2 mt" style="gap:8px">
+              <input id="upName" placeholder="合同名称（留空自动识别）">
+              <input id="upApplicant" placeholder="申请人">
+              <select id="upBiz">
+                <option value="other">自动识别业务类型</option>
+                <option value="采购">采购</option>
+                <option value="销售">销售</option>
+                <option value="服务">服务</option>
+                <option value="劳动">劳动</option>
+              </select>
+              <input id="upDept" placeholder="送审部门">
+            </div>
+            <div class="mt small muted">上传后自动进入「解析 → 规则判定 → 语义增强」流水线，可在工作台查看实时进度。</div>
+            <button class="btn primary block mt" id="btnPull">从审批系统拉取待办任务</button>
+          </div>
+
+          <div class="card mt">
+            <div class="card-title"><span class="em">实时流水线</span>
+              <span class="small muted" id="pipeHint">选择左侧任一任务查看进度</span></div>
+            <div class="pbar"><i id="pipeBar" style="width:0"></i></div>
+            <div class="tl mt" id="pipeTl" style="max-height:260px;overflow:auto"></div>
+          </div>
+
+          <div class="card mt">
+            <div class="card-title"><span class="em">审查状态分布</span></div>
+            <div id="statusDist" class="small"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt">
+        <div class="card-title"><span class="em">系统说明</span></div>
+        <div class="grid c3 small" style="color:var(--text-2)">
+          <div><strong style="color:var(--text)">只写意见，不改结论</strong><br>
+            系统仅生成审查意见与修改建议，回写至审批单评论区，不提供通过 / 拒绝 / 转交等任何改变审批结论的动作。</div>
+          <div><strong style="color:var(--text)">规则判定，模型解释</strong><br>
+            风险等级由 YAML 确定性规则引擎判定（可复现、可审计），大模型只负责解释成因、润色建议与检测条款矛盾。</div>
+          <div><strong style="color:var(--text)">证据可溯源</strong><br>
+            每条风险均带原文页码、段落与字符区间，可点击跳转高亮，从结论一路回溯到规则编号与法条依据。</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/dashboard.js"></script>
+</body>
+</html>

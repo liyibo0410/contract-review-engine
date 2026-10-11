@@ -1,0 +1,4 @@
+$ python tools/audit_frontend_deep.py
+exit=0
+----------------------------------------------------------------------------------------
+frontend deep audit: 0 issues

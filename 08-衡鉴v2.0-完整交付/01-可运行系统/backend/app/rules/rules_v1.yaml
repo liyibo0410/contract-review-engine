@@ -1,0 +1,773 @@
+version: 1.0.0
+updated_at: '2026-09-19'
+owner: 李奕波
+note: 初版规则库：高风险 10 条 / 中风险 13 条 / 低风险 8 条，覆盖 9 类法定与业务条款
+rules:
+- id: HJ-H-001
+  title: 知识产权归属相对方，我方未保留任何权利
+  level: high
+  clause_type: ip
+  scope: clause
+  type: keyword
+  params:
+    any:
+    - 知识产权归{对方}所有
+    - 著作权归{对方}所有
+    - 知识产权归{对方}
+    - 成果所有权归{对方}
+    - 技术成果归{对方}所有
+    - 所有权归{对方}所有
+    none:
+    - 双方共有
+    - 共同所有
+    - '{我方}保留'
+    - '{我方}所有'
+  reason: 知识产权整体归对方独有，我方在履约过程中产生的定制开发成果、源代码与文档均不受保护，后续无法二次开发或迁移。
+  legal_basis: 《民法典》第八百四十三条、第八百四十七条；《计算机软件保护条例》第十一条
+  advice_ref: T-IP-001
+  tags:
+  - 知识产权
+  - 权属
+  - 高风险
+- id: HJ-H-002
+  title: 付款缺少验收前置条件（到货/交付即付全款）
+  level: high
+  clause_type: payment
+  scope: document
+  type: required_combo
+  biz_types:
+  - 采购
+  - 服务
+  params:
+    if_clause_type: payment
+    cooccur_keywords:
+    - 付款
+    - 支付
+    - 价款
+    - 结算
+    - 货款
+    - 服务费
+    require_keywords:
+    - 验收合格
+    - 验收通过
+    - 验收单
+    - 验收报告
+    - 验收标准
+    - 初步验收
+    - 终验
+    - 考核合格
+    - 检验合格
+    hit_note: 付款条款未与验收结果挂钩，存在"先付款后验收"的资金风险，一旦交付质量不达标将失去付款制衡手段。
+  reason: 付款条件与验收结果解耦，资金先出、质量后验，我方丧失拒付与索赔的制衡手段。
+  legal_basis: 《民法典》第六百二十六条、第六百二十八条；企业内控"付款先验收"原则
+  advice_ref: T-PAY-001
+  tags:
+  - 付款
+  - 验收
+  - 高风险
+- id: HJ-H-003
+  title: 违约责任严重不对等
+  level: high
+  clause_type: liability
+  scope: clause
+  type: imbalance_regex
+  params:
+    heavy_patterns:
+    - '{我方}[^。；]{0,24}(承担无限|不设赔偿上限|赔偿一切损失|承担全部损失|承担一切责任|无条件赔偿)'
+    - '{我方}[^。；]{0,24}(无上限|不设上限)'
+    light_patterns:
+    - '{对方}[^。；]{0,24}(仅承担|不承担任何责任|免于承担|以合同总价为限)'
+    - '{对方}[^。；]{0,24}(万分之一|万分之零点五|千分之一)'
+    window: 12
+    hit_note: 同一违约责任章节内，{我方}的责任被表述为无上限/全部承担，而{对方}的责任被限定为极低比例或设有限额，权责明显失衡。
+  reason: 双方违约成本量级不对等，一旦发生争议，我方将承担远超对价的赔偿敞口。
+  legal_basis: 《民法典》第五百八十五条；《民法典》第一百五十一条（显失公平可撤销）
+  advice_ref: T-LIA-001
+  tags:
+  - 违约责任
+  - 权责对等
+  - 高风险
+- id: HJ-H-004
+  title: 争议管辖约定不当或约定在相对方所在地
+  level: high
+  clause_type: dispute
+  scope: clause
+  type: keyword
+  params:
+    any:
+    - 由{对方}所在地人民法院管辖
+    - 由{对方}所在地法院
+    - 向{对方}所在地
+    - 由{对方}所在地
+    - '{对方}所在地人民法院'
+    - 提交{对方}住所地
+    - 由{对方}住所地
+    - '{对方}住所地人民法院'
+    - 在{对方}所在地
+    - 适用外国法律
+    - 境外仲裁
+    none:
+    - 双方所在地
+    - 合同签订地
+    - '{我方}所在地'
+    - 被告住所地
+    - 合同履行地
+  reason: 管辖地约定在相对方所在地或境外，我方一旦需维权将承担高昂的异地诉讼/仲裁成本，实质削弱了救济能力。
+  legal_basis: 《民事诉讼法》第三十五条；《民法典》第五百零七条
+  advice_ref: T-DIS-001
+  tags:
+  - 争议解决
+  - 管辖
+  - 高风险
+- id: HJ-H-005
+  title: 相对方主体信息缺失或存在经营异常
+  level: high
+  clause_type: subject
+  scope: document
+  type: keyword
+  params:
+    any:
+    - 经营异常
+    - 已被列入失信
+    - 被列入经营异常名录
+    - 营业执照尚未取得
+    - 正在办理工商登记
+    - 暂未取得营业执照
+    - 统一社会信用代码待补充
+    - 主体信息后续补充
+    hit_note: 相对方主体资质存在瑕疵或信息未落实，合同效力与可执行性均存在实质风险。
+  reason: 签约主体不清晰或已列入异常名录，可能导致合同效力存疑、履约主体无法追责。
+  legal_basis: 《民法典》第一百四十三条、第五百零二条；《企业信息公示暂行条例》
+  advice_ref: T-SUB-001
+  tags:
+  - 主体资质
+  - 高风险
+- id: HJ-H-006
+  title: 违约金比例超出法定合理范围
+  level: high
+  clause_type: liability
+  scope: clause
+  type: numeric
+  params:
+    patterns:
+    - 违约金[^。；]{0,16}?(?:为|按|等于)[^。；]{0,16}?([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%
+    - ([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%[^。；]{0,12}?(?:的|作为)违约金
+    - 支付[^。；]{0,12}?合同(?:总)?(?:金额|价)[^0-9]{0,8}([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%[^。；]{0,8}?违约金
+    op: '>'
+    threshold: 30
+    exclude_keywords:
+    - 不超过
+    - 上限
+    - 封顶
+    - 以内
+    hit_note: 约定违约金为合同总额的 {value}%，超过 30% 的司法实务合理区间上限，存在被认定过高而调减的风险，也抬高了我方潜在的违约成本。
+  reason: 违约金比例显著超出司法实践中普遍认可的合理区间，条款稳定性不足。
+  legal_basis: 《民法典》第五百八十五条第二款；最高人民法院关于适用《民法典》合同编通则若干问题的解释
+  advice_ref: T-LIA-002
+  tags:
+  - 违约金
+  - 数值阈值
+  - 高风险
+- id: HJ-H-007
+  title: 预付款比例过高且未约定担保或对价保障
+  level: high
+  clause_type: payment
+  scope: clause
+  type: numeric
+  params:
+    pattern: 预付(?:款|金)[^。；]{0,40}?([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%
+    op: '>='
+    threshold: 50
+    hit_note: 预付款比例达 {value}%，且未见担保、保函或对等交割安排，资金占用与坏账风险集中在我方。
+  reason: 高比例预付款脱离交付节点，缺少担保安排，资金风险单向集中。
+  legal_basis: 《民法典》第五百二十六条；企业采购资金内控要求
+  advice_ref: T-PAY-002
+  tags:
+  - 付款
+  - 预付款
+  - 高风险
+- id: HJ-H-008
+  title: 我方单方承担无限责任或无赔偿上限
+  level: high
+  clause_type: liability
+  scope: clause
+  type: regex
+  params:
+    patterns_hint: 正则锚定"我方"，避免把"对方承担无限责任"（对我方有利）误判为风险
+    pattern: '{我方}[^。；]{0,26}(承担无限|赔偿一切损失|承担全部损失|承担一切责任|不设赔偿上限|不设上限|无上限)'
+    exclude_keywords:
+    - 以合同总价为限
+    - 不超过
+    - 上限为
+    - 赔偿上限
+    - 上限不超过
+    hit_note: 我方赔偿义务未设上限，赔偿敞口与合同对价严重不匹配，属于典型的高危条款。
+  reason: 我方赔偿义务未设上限，赔偿敞口与合同对价严重不匹配，属于典型的高危条款。
+  legal_basis: 《民法典》第五百八十四条（可预见性规则）；第五百八十五条
+  advice_ref: T-LIA-003
+  tags:
+  - 违约责任
+  - 赔偿上限
+  - 高风险
+- id: HJ-H-009
+  title: 缺失违约责任条款
+  level: high
+  clause_type: liability
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: liability
+    rescue_keywords:
+    - 违约金
+    - 违约方
+    - 赔偿责任
+    - 违约行为
+    anchor_keyword: 争议解决
+    hit_note: 全篇未设置违约责任条款，一旦对方违约，我方只能依《民法典》主张损失赔偿，举证难度与追偿成本显著上升。
+  reason: 违约责任条款缺失，我方失去事先约定的救济手段，只能事后举证实际损失。
+  legal_basis: 《民法典》第五百七十七条、第五百八十四条
+  advice_ref: T-LIA-001
+  tags:
+  - 违约责任
+  - 必备条款
+  - 高风险
+- id: HJ-H-010
+  title: 缺失争议解决与管辖条款
+  level: high
+  clause_type: dispute
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: dispute
+    rescue_keywords:
+    - 仲裁
+    - 人民法院
+    - 管辖
+    - 诉讼
+    anchor_keyword: 违约责任
+    hit_note: 合同未约定争议解决方式与管辖法院，发生纠纷时需先就管辖问题单独诉讼，维权周期与成本不可控。
+  reason: 争议解决条款缺失，纠纷发生时管辖不确定，维权成本不可预估。
+  legal_basis: 《民事诉讼法》第二十四条、第三十五条
+  advice_ref: T-DIS-001
+  tags:
+  - 争议解决
+  - 必备条款
+  - 高风险
+- id: HJ-H-011
+  title: 竞业限制未约定经济补偿
+  level: high
+  clause_type: confidentiality
+  scope: document
+  type: required_combo
+  biz_types:
+  - 劳动
+  params:
+    if_clause_type: confidentiality
+    if_keywords:
+    - 竞业限制
+    - 同业竞争
+    - 竞业禁止
+    - 同业禁止
+    cooccur_keywords:
+    - 竞业限制
+    - 同业竞争
+    - 竞业禁止
+    - 同业禁止
+    require_keywords:
+    - 经济补偿
+    - 竞业补偿
+    - 补偿金
+    - 按月支付
+    require_exclude:
+    - 无需
+    - 不予
+    - 不再支付
+    - 不支付
+    - 不另行支付
+    - 无须
+    hit_note: 约定了离职后的竞业限制义务，却未约定（或明确排除）经济补偿。竞业限制必须以按月支付经济补偿为前提，否则该条款难以对劳动者产生约束力，用人单位反而面临被主张补偿的风险。
+  reason: 竞业限制条款缺少经济补偿对价，条款效力存在争议且用人单位需承担补偿责任。
+  legal_basis: 《劳动合同法》第二十三条、第二十四条；最高人民法院关于审理劳动争议案件适用法律问题的解释（一）第三十六条
+  advice_ref: T-CON-002
+  tags:
+  - 劳动合规
+  - 竞业限制
+  - 高风险
+- id: HJ-M-001
+  title: 保密义务未约定期限
+  level: medium
+  clause_type: confidentiality
+  scope: document
+  type: absent
+  params:
+    none:
+    - 保密期限
+    - 保密义务期限
+    - 合同终止后
+    - 终止后 3 年
+    - 终止后三年
+    - 长期有效
+    - 永久保密
+    - 不受期限限制
+    label: 保密期限
+    anchor_keyword: 保密
+    hit_note: 保密条款未约定保密期限（如"合同终止后 3 年"），义务边界长期悬空，双方均可主张对方超出合理范围。
+  reason: 保密义务缺少时间边界，义务终期不明，实务中难以主张也易被滥用。
+  legal_basis: 《民法典》第五百零一条；《反不正当竞争法》第九条
+  advice_ref: T-CON-001
+  tags:
+  - 保密
+  - 期限
+  - 中风险
+- id: HJ-M-002
+  title: 不可抗力条款未约定通知时效与证明要求
+  level: medium
+  clause_type: force_majeure
+  scope: document
+  type: absent
+  params:
+    if_any:
+    - 不可抗力
+    none:
+    - 通知
+    - 告知
+    - 证明材料
+    - 证明文件
+    - 书面
+    label: 不可抗力通知时效与证明要求
+    anchor_keyword: 不可抗力
+    hit_note: 不可抗力条款未约定通知时效与证明要求，一方可事后主张免责而无需及时告知，履约稳定性下降。
+  reason: 不可抗力缺少通知时效与证明要求，一方可事后主张免责而无需及时告知，履约稳定性下降。
+  legal_basis: 《民法典》第一百八十条、第五百九十条
+  advice_ref: T-FOR-001
+  tags:
+  - 不可抗力
+  - 通知义务
+  - 中风险
+- id: HJ-M-003
+  title: 缺失知识产权条款
+  level: medium
+  clause_type: ip
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: ip
+    rescue_keywords:
+    - 知识产权
+    - 著作权
+    - 专利
+    - 商标
+    anchor_keyword: 保密
+    hit_note: 合同未就知识产权归属作出约定，定制开发成果的权属将处于默认状态，存在后续争议隐患。
+  reason: 知识产权条款缺失，成果权属无约定，易在交付后产生归属争议。
+  legal_basis: 《民法典》第八百四十三条；《著作权法》第十九条
+  advice_ref: T-IP-001
+  tags:
+  - 知识产权
+  - 必备条款
+  - 中风险
+- id: HJ-M-004
+  title: 缺失数据安全与个人信息保护条款
+  level: medium
+  clause_type: data_security
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: data_security
+    rescue_keywords:
+    - 数据安全
+    - 个人信息
+    - 隐私
+    - 数据保护
+    anchor_keyword: 保密
+    hit_note: 合同未约定数据安全与个人信息保护义务，涉及数据处理时我方需独立承担合规责任。
+  reason: 涉及数据交付或系统接入却无数据安全条款，合规责任暴露。
+  legal_basis: 《个人信息保护法》第二十一条；《数据安全法》第二十七条
+  advice_ref: T-DAT-001
+  tags:
+  - 数据合规
+  - 必备条款
+  - 中风险
+- id: HJ-M-005
+  title: 缺失交付与验收标准条款
+  level: medium
+  clause_type: delivery
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: delivery
+    rescue_keywords:
+    - 验收
+    - 交付
+    - 交货
+    anchor_keyword: 付款
+    hit_note: 合同未明确交付与验收标准，验收环节缺少客观判据，容易在"是否合格"上产生长期扯皮。
+  reason: 交付验收标准缺失，验收无客观尺度，履约争议风险上升。
+  legal_basis: 《民法典》第六百二十条、第六百二十一条
+  advice_ref: T-DLV-001
+  tags:
+  - 交付验收
+  - 必备条款
+  - 中风险
+- id: HJ-M-006
+  title: 违约金比例偏高（15%–30%区间）
+  level: medium
+  clause_type: liability
+  scope: clause
+  type: numeric
+  params:
+    patterns:
+    - 违约金[^。；]{0,16}?(?:为|按|等于)[^。；]{0,16}?([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%
+    - ([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%[^。；]{0,12}?(?:的|作为)违约金
+    - 支付[^。；]{0,12}?合同(?:总)?(?:金额|价)[^0-9]{0,8}([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%[^。；]{0,8}?违约金
+    op: '>'
+    threshold: 15
+    exclude_keywords:
+    - 不超过
+    - 上限
+    - 封顶
+    - 以内
+    hit_note: 约定违约金为合同总额的 {value}%，处于偏高水平（>15%），建议下调至 10%–20% 并向对方争取对等条款。
+  reason: 违约金比例偏高，抬高我方潜在违约成本，建议对齐行业惯例区间。
+  legal_basis: 《民法典》第五百八十五条
+  advice_ref: T-LIA-002
+  tags:
+  - 违约金
+  - 数值阈值
+  - 中风险
+- id: HJ-M-007
+  title: 付款条件表述模糊
+  level: medium
+  clause_type: payment
+  scope: clause
+  type: keyword
+  params:
+    any:
+    - 及时支付
+    - 尽快支付
+    - 另行协商
+    - 另行约定付款
+    - 视情况支付
+    - 适时支付
+    - 按需支付
+  reason: 付款节点使用模糊措辞，无法形成可执行的付款义务，实务中难以主张对方逾期。
+  legal_basis: 《民法典》第五百一十条、第五百一十一条
+  advice_ref: T-PAY-001
+  tags:
+  - 付款
+  - 表述模糊
+  - 中风险
+- id: HJ-M-008
+  title: 交付期限表述模糊
+  level: medium
+  clause_type: delivery
+  scope: clause
+  type: keyword
+  params:
+    any:
+    - 尽快交付
+    - 尽快安排
+    - 尽早交货
+    - 具体时间另行确定
+    - 视生产情况
+    - 不定期交付
+  reason: 交付期限不确定，无法计算逾期起算点，逾期违约责任形同虚设。
+  legal_basis: 《民法典》第五百一十一条第四项
+  advice_ref: T-DLV-001
+  tags:
+  - 交付验收
+  - 表述模糊
+  - 中风险
+- id: HJ-M-009
+  title: 保密义务单向设置
+  level: medium
+  clause_type: confidentiality
+  scope: clause
+  type: keyword
+  params:
+    all:
+    - '{我方}'
+    any:
+    - '{我方}应对'
+    - '{我方}须对'
+    - '{我方}应承担保密义务'
+    - '{我方}不得泄露'
+    - '{我方}应对乙方'
+    - '{我方}对{对方}'
+    none:
+    - 双方均应
+    - '{对方}应对'
+    - '{对方}亦应'
+    - '{对方}应承担保密义务'
+    - 甲乙双方均应
+  reason: 保密义务仅约束我方一方，对方获取我方信息却无对等约束，属于权责失衡。
+  legal_basis: 《民法典》第五百零一条；第五百零九条（诚信与对等义务）
+  advice_ref: T-CON-001
+  tags:
+  - 保密
+  - 权责对等
+  - 中风险
+- id: HJ-M-010
+  title: 合同有效期与期限未明确
+  level: medium
+  clause_type: validity
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: validity
+    rescue_keywords:
+    - 有效期
+    - 合同期限
+    - 本合同自
+    - 生效
+    anchor_keyword: 签署
+    hit_note: 合同未明确生效条件与有效期限，履行区间不清晰，会影响付款节点与违约起算。
+  reason: 生效条件与期限缺失，合同履行区间无法界定。
+  legal_basis: 《民法典》第五百零二条、第五百零七条
+  advice_ref: T-VAL-001
+  tags:
+  - 合同效力
+  - 必备条款
+  - 中风险
+- id: HJ-M-011
+  title: 缺失不可抗力条款
+  level: medium
+  clause_type: force_majeure
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: force_majeure
+    rescue_keywords:
+    - 不可抗力
+    anchor_keyword: 争议
+    hit_note: 合同未设置不可抗力条款，发生政策变动、疫情、自然灾害等情形时缺少免责与顺延依据。
+  reason: 不可抗力条款缺失，意外情形下的免责与工期顺延缺少依据。
+  legal_basis: 《民法典》第一百八十条、第五百九十条
+  advice_ref: T-FOR-001
+  tags:
+  - 不可抗力
+  - 必备条款
+  - 中风险
+- id: HJ-M-012
+  title: 争议解决方式不完整（仅约定协商）
+  level: medium
+  clause_type: dispute
+  scope: document
+  type: absent
+  params:
+    if_any:
+    - 协商
+    none:
+    - 仲裁
+    - 诉讼
+    - 人民法院
+    - 法院
+    label: 仲裁或诉讼的最终救济路径
+    anchor_keyword: 协商
+    hit_note: 争议解决仅约定协商，未设置仲裁或诉讼的最终救济路径，协商不成时无明确程序可依。
+  reason: 争议解决仅约定协商，未设置仲裁或诉讼的最终救济路径，协商不成时无明确程序可依。
+  legal_basis: 《仲裁法》第四条；《民事诉讼法》第三十五条
+  advice_ref: T-DIS-001
+  tags:
+  - 争议解决
+  - 中风险
+- id: HJ-M-013
+  title: 未要求相对方提供资质证明文件
+  level: medium
+  clause_type: subject
+  scope: document
+  type: keyword
+  params:
+    all:
+    - 营业执照
+    none:
+    - 复印件
+    - 扫描件
+    - 作为附件
+    - 提供营业执照副本
+    - 加盖公章
+  reason: 未要求相对方提交营业执照等资质证明作为附件，主体真实性与履约能力缺少书面证据。
+  legal_basis: 《民法典》第一百四十三条；企业供应商准入内控要求
+  advice_ref: T-SUB-001
+  tags:
+  - 主体资质
+  - 中风险
+- id: HJ-L-001
+  title: 未约定发票类型与开具时限
+  level: low
+  clause_type: payment
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: payment
+    rescue_keywords:
+    - 增值税专用发票
+    - 开具发票
+    - 发票类型
+    - 发票
+    anchor_keyword: 付款
+    hit_note: 付款条款未约定发票类型（专票/普票）与开具时限，可能影响进项抵扣与结算流程。
+  reason: 发票安排缺失，影响税务处理与资金结算节奏。
+  legal_basis: 《发票管理办法》第十九条；企业财务内控要求
+  advice_ref: T-PAY-001
+  tags:
+  - 付款
+  - 发票
+  - 低风险
+- id: HJ-L-002
+  title: 缺少合同份数与附件效力条款
+  level: low
+  clause_type: validity
+  scope: document
+  type: missing_clause
+  params:
+    clause_type: validity
+    rescue_keywords:
+    - 一式
+    - 份
+    - 附件为本合同组成部分
+    - 附件与本合同具有同等效力
+    anchor_keyword: 盖章
+    hit_note: 未约定合同份数与附件效力，后续补充协议与附件的法律地位不明确。
+  reason: 合同份数与附件效力未约定，补充文件的效力地位不清。
+  legal_basis: 《民法典》第四百六十六条
+  advice_ref: T-VAL-001
+  tags:
+  - 合同效力
+  - 低风险
+- id: HJ-L-003
+  title: 缺少通知与送达条款
+  level: low
+  clause_type: other
+  scope: document
+  type: absent
+  params:
+    none:
+    - 送达
+    - 通知地址
+    - 通讯地址
+    - 电子邮箱
+    - 联系地址
+    label: 通知与送达方式
+    anchor_keyword: 签署
+    hit_note: 未约定通知送达方式与地址，解除通知、催告函等文件的送达效力易被质疑。
+  reason: 未约定通知送达方式与地址，解除通知、催告函等文件的送达效力易被质疑。
+  legal_basis: 《民法典》第一百三十七条、第五百六十五条
+  advice_ref: T-VAL-001
+  tags:
+  - 通知送达
+  - 低风险
+- id: HJ-L-004
+  title: 合同金额未以大写标注
+  level: low
+  clause_type: payment
+  scope: document
+  type: absent
+  params:
+    none:
+    - 大写
+    - 壹
+    - 贰
+    - 叁
+    - 肆
+    - 伍
+    - 陆
+    - 柒
+    - 捌
+    - 玖
+    label: 金额中文大写
+    anchor_keyword: 金额
+    hit_note: 合同金额仅以小写数字表述，缺少中文大写，存在被涂改的书面风险。
+  reason: 合同金额仅以小写数字表述，缺少中文大写，存在被涂改的书面风险。
+  legal_basis: 《民法典》第四百七十条；企业合同签署规范
+  advice_ref: T-PAY-001
+  tags:
+  - 付款
+  - 金额
+  - 低风险
+- id: HJ-L-005
+  title: 缺少签署日期字段
+  level: low
+  clause_type: validity
+  scope: document
+  type: regex
+  params:
+    pattern: (签署日期|签订日期|签订时间|年\s*月\s*日)
+    min_hits: 1
+    hit_note: 落款处未见签署日期栏位，合同成立时间点缺少书面证据。
+  reason: 签署日期缺失，合同成立与生效的时间点无法固定。
+  legal_basis: 《民法典》第四百九十条
+  advice_ref: T-VAL-001
+  tags:
+  - 合同效力
+  - 低风险
+- id: HJ-L-006
+  title: 缺少法定代表人/授权代表署名栏
+  level: low
+  clause_type: subject
+  scope: document
+  type: absent
+  params:
+    none:
+    - 法定代表人
+    - 授权代表
+    - 委托代理人
+    - 负责人
+    - 法定代表人（签字）
+    label: 签署权限署名栏
+    anchor_keyword: 盖章
+    hit_note: 未设置法定代表人或授权代表署名栏，签署权限的证据链不完整。
+  reason: 未设置法定代表人或授权代表署名栏，签署权限的证据链不完整。
+  legal_basis: 《民法典》第五百零四条
+  advice_ref: T-SUB-001
+  tags:
+  - 主体资质
+  - 签署
+  - 低风险
+- id: HJ-L-007
+  title: 未约定合同变更需书面形式
+  level: low
+  clause_type: validity
+  scope: document
+  type: absent
+  params:
+    none:
+    - 书面形式
+    - 书面协议
+    - 书面变更
+    - 补充协议
+    - 书面确认
+    label: 变更须采书面形式
+    anchor_keyword: 本合同
+    hit_note: 未约定变更须采用书面形式，口头变更难以举证，易产生"到底改没改"的争议。
+  reason: 未约定变更须采用书面形式，口头变更难以举证，易产生"到底改没改"的争议。
+  legal_basis: 《民法典》第五百四十三条
+  advice_ref: T-VAL-001
+  tags:
+  - 合同效力
+  - 变更
+  - 低风险
+- id: HJ-L-008
+  title: 未约定履约进度沟通与报告机制
+  level: low
+  clause_type: delivery
+  scope: document
+  type: absent
+  params:
+    none:
+    - 进度报告
+    - 阶段汇报
+    - 周报
+    - 进度沟通
+    - 例会
+    - 进度计划
+    label: 履约进度沟通机制
+    anchor_keyword: 交付
+    hit_note: 长周期履约缺少进度沟通机制，风险发现滞后，只会在交付节点集中爆发。
+  reason: 长周期履约缺少进度沟通机制，风险发现滞后，只会在交付节点集中爆发。
+  legal_basis: 《民法典》第五百零九条（诚信履行与协助义务）
+  advice_ref: T-DLV-001
+  tags:
+  - 交付验收
+  - 过程管控
+  - 低风险

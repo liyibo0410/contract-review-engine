@@ -1,0 +1,190 @@
+====================================================================================================
+衡鉴 V2.1.7 上线（目标 39.96.200.45:8160，目录 /opt/contract-review）
+执行时间：2026-09-19 18:25:56
+====================================================================================================
+已连接 39.96.200.45
+
+--- 1) 上线前现状 ---
+
+$ Python 版本
+Python 3.11.13
+
+$ 服务状态
+active
+enabled
+
+$ 当前 /api/health（记录旧版本号）
+{"code": 0, "data": {"app": "衡鉴 V2.1.6", "version": "2.1.6", "root": "/opt/contract-review", "db": "review.db", "approval_mode": "mock", "approval_base": "http://127.0.0.1:8160/mock/feishu/api", "approval_channel": "approval_http", "llm_enabled": false, "browser_for_pdf": false, "pdf_channels": {"browser": false, "stdlib": true, "effective": "stdlib"}, "ocr_backend": "ocr-tesseract", "gzip": t
+
+$ 当前占用
+23M	/opt/contract-review
+13M	/opt/contract-review/data
+
+$ 当前文件列表
+total 236
+drwxr-xr-x  13 root root  4096 Sep 19 09:10 .
+drwxr-xr-x. 14 root root  4096 Sep 19 00:02 ..
+drwxr-xr-x   3 root root  4096 Sep 19 11:01 app
+-rw-r--r--   1 root root 56447 Sep 19 14:09 CHANGELOG.md
+drwxr-xr-x   4 root root  4096 Sep 19 18:05 config
+drwxr-xr-x   5 root root  4096 Sep 19 14:09 data
+drwxr-xr-x   2 root root  4096 Sep 19 14:09 deploy
+drwxr-xr-x   4 root root  4096 Sep 19 13:18 docs
+drwxr-xr-x   3 root root  4096 Sep 18 21:32 .idea
+drwxr-xr-x   3 root root  4096 Sep 18 21:32 mock
+-rw-r--r--   1 root root 18510 Sep 19 14:09 PRD.md
+drwxr-xr-x   2 root root  4096 Sep 19 11:12 __pycache__
+-rw-r--r--   1 root root 31403 Sep 19 14:09 README.md
+-rw-r--r--   1 root root  3706 Sep 19 14:09 run.py
+drwxr-xr-x   2 root root  4096 Sep 18 21:32 samples
+-rw-r--r--   1 root root 48328 Sep 19 14:09 selftest.py
+-rw-r--r--   1 root root 20492 Sep 19 14:09 SPEC.md
+drwxr-xr-x   3 root root  4096 Sep 19 14:09 tools
+drwxr-xr-x   3 root root  4096 Sep 19 10:22 ui
+
+--- 当前 systemd unit ---
+[Unit]
+Description=Contract Review System (合同智能审查系统) v2.0
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/contract-review
+Environment=PYTHONIOENCODING=utf-8
+Environment="DINGTALK_WEBHOOK=https://oapi.dingtalk.com/robot/send?access_token=e2deb5bb682ca47361104f1998db84dcdebd9474ce82bc01cc2d0e0b8e21c677"
+Environment="DINGTALK_SECRET=SEC56aa081ad7aafcb0b8eb756e4981f2ac93f6e722b27cddccf2a2f6829021ddc5"
+ExecStart=/usr/bin/python3.11 /opt/contract-review/run.py --host 0.0.0.0 --port 8160
+Restart=always
+RestartSec=3
+User=root
+StandardOutput=append:/var/log/contract-review.log
+StandardError=append:/var/log/contract-review.log
+
+[Install]
+WantedBy=multi-user.target
+
+
+--- 2) 上线前备份（可回滚） ---
+
+$ 打包 /opt/contract-review
+-rw-r--r-- 1 root root 11851958 Sep 19 18:25 /root/contract-review-backup-20260919-182556.tar.gz
+
+$ 备份 unit
+  回滚命令（如需要）：
+    systemctl stop contract-review
+    rm -rf /opt/contract-review && mkdir -p /opt/contract-review && tar xzf /root/contract-review-backup-20260919-182556.tar.gz -C /opt
+    systemctl restart contract-review
+
+--- 3) 生成上线配置（保留服务器运行时设置 + 强制 v2.0 安全口径） ---
+  保留的服务器既有设置：
+    notify  → {"enabled": true, "channel": "dingtalk", "webhook": "", "secret": "", "webhook_env": "DINGTALK_WEBHOOK", "secret_env": "DINGTALK_SECRET", "keyword": "合同审查", "at_mobiles": [], "at_all": false, "timeout": 10, "min_interval_sec": 0}
+    approval→ {"mode": "mock", "base_url": "", "app_id": "contract-review", "write_mode": "live", "timeout": 15}
+  强制生效的 v2.0 口径：
+    notify.events = {"review_completed": false, "high_risk": true, "blocked": true, "writeback_failed": true, "batch_summary": false}
+    notify.mask   = {"party": true, "amount": true, "credit_code": true, "case_no": false, "applicant": true, "contract_title": true, "max_evidence_chars": 0}
+    auth.enabled  = True ｜ scheduler.enabled = False ｜ queue.enabled = True
+
+--- 4) 上传代码（跳过 data/ 与 verify/） ---
+
+$ mkdir -p /opt/contract-review
+  已上传 192 个文件
+  已写入 /opt/contract-review/config/app.json（合并后的上线配置）
+
+--- 5) 刷新 systemd unit（只改版本号，Environment 原样保留） ---
+  原 unit 含 3 行 Environment（通知凭据等），已原样保留
+
+$ 写入 unit
+
+--- 落地的 unit ---
+[Unit]
+Description=Contract Review System (合同智能审查系统) v2.0
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/contract-review
+Environment=PYTHONIOENCODING=utf-8
+Environment="DINGTALK_WEBHOOK=https://oapi.dingtalk.com/robot/send?access_token=e2deb5bb682ca47361104f1998db84dcdebd9474ce82bc01cc2d0e0b8e21c677"
+Environment="DINGTALK_SECRET=SEC56aa081ad7aafcb0b8eb756e4981f2ac93f6e722b27cddccf2a2f6829021ddc5"
+ExecStart=/usr/bin/python3.11 /opt/contract-review/run.py --host 0.0.0.0 --port 8160
+Restart=always
+RestartSec=3
+User=root
+StandardOutput=append:/var/log/contract-review.log
+StandardError=append:/var/log/contract-review.log
+
+[Install]
+WantedBy=multi-user.target
+
+
+--- 6) 重启服务 ---
+
+$ daemon-reload
+
+$ 开机自启
+
+$ 重启并确认状态
+active
+
+$ 服务详情
+● contract-review.service - Contract Review System (合同智能审查系统) v2.0
+   Loaded: loaded (/etc/systemd/system/contract-review.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2026-09-19 18:26:15 CST; 4s ago
+ Main PID: 646666 (python3.11)
+    Tasks: 3 (limit: 11714)
+   Memory: 15.6M
+   CGroup: /system.slice/contract-review.service
+           └─646666 /usr/bin/python3.11 /opt/contract-review/run.py --host 0.0.0.0 --port 8160
+
+Sep 19 18:26:15 iZ2zeb8n1y9wvmi4q6bb6bZ systemd[1]: contract-review.service: Succeeded.
+Sep 19 18:26:15 iZ2zeb8n1y9wvmi4q6bb6bZ systemd[1]: Stopped Contract Review System (合同智能审查系统) v2.0.
+Sep 19 18:26:15 iZ2zeb8n1y9wvmi4q6bb6bZ systemd[1]: Started Contract Review System (合同智能审查系统) v2.0.
+
+$ 端口监听
+LISTEN 0      5            0.0.0.0:8160       0.0.0.0:*    users:(("python3.11",pid=646666,fd=6))
+
+--- 7) 服务器侧自检 ---
+
+$ GET /api/health（应报 2.0.0）
+{"code": 0, "data": {"app": "衡鉴 V2.1.7", "version": "2.1.7", "root": "/opt/contract-review", "db": "review.db", "approval_mode": "mock", "approval_base": "http://127.0.0.1:8160/mock/feishu/api", "approval_channel": "approval_http", "llm_enabled": false, "browser_for_pdf": false, "pdf_channels": {"browser": false, "stdlib": true, "effective": "stdlib"}, "ocr_backend": "ocr-tesseract", "gzip": true, "access_log": false, "auth": {"enabled": true, "demo_switch": true, "roles": {"legal": "法务审查人", "applicant": "业务经办人", "admin": "系统管理员"}, "accounts": 3, "sessions": 94, "denied": {"unauthorized": 0, "forbidden": 0, "recent": []}}, "scheduler": {"enabled": false, "in
+
+$ 服务端验收自检（52 项）
+[通过] 59. 登录页「一键进入」：未登录即可用，且 demo_switch 关闭后失败关闭
+        开启时 admin=200+Cookie、applicant=200+Cookie、legal=200+Cookie ｜ 关闭时 admin=401、applicant=401、legal=401
+──────────────────────────────────────────────────────────────────────────
+  结果：59 / 59 项通过，耗时 32549 ms
+──────────────────────────────────────────────────────────────────────────
+
+$ 服务器本地登录接口
+login=200
+
+$ 未登录访问首页（应 302）
+root_no_cookie=302
+
+$ 最近日志
+^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib64/python3.11/socketserver.py", line 691, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib64/python3.11/socketserver.py", line 361, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/lib64/python3.11/socketserver.py", line 755, in __init__
+    self.handle()
+  File "/usr/lib64/python3.11/http/server.py", line 438, in handle
+    self.handle_one_request()
+  File "/usr/lib64/python3.11/http/server.py", line 404, in handle_one_request
+    self.raw_requestline = self.rfile.readline(65537)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.11/socket.py", line 718, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+ConnectionResetError: [Errno 104] Connection reset by peer
+----------------------------------------
+
+====================================================================================================
+上线完成。访问地址：http://39.96.200.45:8160/（会先跳到登录页）
+演示账号：legal/Legal@2026 ｜ applicant/Apply@2026 ｜ admin/Admin@2026
+回滚备份：/root/contract-review-backup-20260919-182556.tar.gz
+====================================================================================================

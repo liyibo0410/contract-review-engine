@@ -1,0 +1,41 @@
+[project]
+name = "hengjian"
+version = "2.0.0"
+description = "衡鉴 · 企业合同智能审查系统（Agent 多步推理 + 规则引擎双引擎）"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "python-multipart>=0.0.9",
+    "pydantic>=2.7",
+    "PyYAML>=6.0",
+    "python-docx>=1.1",
+    "PyMuPDF>=1.24",
+    "Pillow>=10.3",
+]
+
+[project.optional-dependencies]
+# 扫描件 OCR：纯 pip 安装，无系统级依赖
+ocr = ["rapidocr-onnxruntime>=1.3"]
+dev = ["pytest>=8.0", "httpx>=0.27"]
+
+[project.scripts]
+hengjian = "app.main:run"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/app"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]
+addopts = "-q"

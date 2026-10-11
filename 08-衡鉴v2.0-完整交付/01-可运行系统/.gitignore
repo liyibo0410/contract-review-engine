@@ -1,0 +1,59 @@
+# ============================================================
+#  衡鉴 · Git 忽略规则
+#  交付红线：仓库内不得出现虚拟环境与依赖（老师明确要求）
+# ============================================================
+
+# ---------- 虚拟环境与依赖（交付包必须剔除）----------
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+wheels/
+
+# ---------- 运行时数据 ----------
+backend/data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+backend/samples/*.pdf
+backend/samples/*.docx
+backend/samples/*.png
+!backend/samples/.gitkeep
+
+# ---------- 配置与密钥（绝不入库）----------
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+
+# ---------- 编辑器与系统 ----------
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 日志与临时产物 ----------
+*.log
+logs/
+tmp/
+temp/
+_ocr_tmp.png
+backend/app/eval/reports/
+
+# ---------- 例外：保留占位与文档 ----------
+!backend/data/.gitkeep
+!docs/**

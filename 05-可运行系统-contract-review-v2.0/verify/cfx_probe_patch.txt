@@ -1,0 +1,6 @@
+  ok   tools/audit_frontend.py :: "#gauges", ".gauge"
+  MISS tools/audit_frontend.py :: ".gauge", "#opsKv"
+  ok   tools/verify_render.py :: ("真实仪表", r'class="gauge ')
+  ok   tools/probe_engine_panel.py :: var g=p.querySelectorAll('.gauge')
+  MISS tools/check_consistency.py :: (".gauge.idle .bar i")
+  ok   tools/check_consistency.py :: 补动效断言

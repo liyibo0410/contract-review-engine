@@ -1,0 +1,5 @@
+ok   def run_browser(url, dump_dom=False, shot_path=None, cookie=None):
+ok   def probe(name, path, probes, shot=None, expect_status=200):
+ok   url = "http://127.0.0.1:%d%s" % (port, path)
+ok   with io.open(os.path.join(
+ok   ("日志条目", r'class="li[^"]*"'),

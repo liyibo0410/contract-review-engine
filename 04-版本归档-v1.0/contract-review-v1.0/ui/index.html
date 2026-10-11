@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>合同审查大盘 · 合同智能审查系统 v1.0</title>
+<link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+
+<div class="topbar" id="topbar"></div>
+
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1>合同审查大盘</h1>
+      <p id="subTitle">待审合同任务、综合风险与回写状态总览</p>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn" onclick="openNotify()">机器人通知</button>
+    <button class="btn" onclick="openMetrics()">运行指标</button>
+    <button class="btn" onclick="openUpload()">上传合同</button>
+    <button class="btn" onclick="runSelftest()">一键自检</button>
+    <button class="btn primary" id="btnPull" onclick="pullTodo()">拉取待办并审查</button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="panel-head">
+      <span class="ttl">示例合同集</span>
+      <span class="faint" style="font-size:12px">覆盖 DOCX / PDF / 扫描件 与 标准 / 风险 / 受阻 用例</span>
+      <div class="spacer"></div>
+      <button class="btn sm" onclick="toggleSamples()" id="btnSamples">展开</button>
+    </div>
+    <div class="panel-body" id="sampleBox" style="display:none"></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="search" id="kw" placeholder="搜索合同名称 / 相对方 / 单号" style="width:250px"
+           oninput="debouncedLoad()" aria-label="搜索合同">
+    <select id="fRisk" onchange="load()" aria-label="按风险等级筛选">
+      <option value="">全部风险等级</option>
+      <option value="high">高风险</option>
+      <option value="medium">中风险</option>
+      <option value="low">低风险</option>
+      <option value="none">无风险</option>
+    </select>
+    <select id="fStatus" onchange="load()" aria-label="按审查状态筛选">
+      <option value="">全部审查状态</option>
+      <option value="pending">待处理</option>
+      <option value="parsing">解析中</option>
+      <option value="reviewing">审查中</option>
+      <option value="blocked">解析受阻</option>
+      <option value="completed">审查完成</option>
+    </select>
+    <select id="fType" onchange="load()" aria-label="按合同类型筛选">
+      <option value="">全部合同类型</option>
+      <option value="purchase">采购合同</option>
+      <option value="sales">销售合同</option>
+      <option value="service">服务合同</option>
+      <option value="labor">劳动合同</option>
+    </select>
+    <button class="btn" onclick="load()">刷新</button>
+    <div class="spacer" style="flex:1"></div>
+    <span class="faint" id="selInfo" style="font-size:12px"></span>
+    <button class="btn sm" onclick="batchReview()">批量重新审查</button>
+    <button class="btn sm" onclick="batchReport('md')">批量导出 Markdown</button>
+  </div>
+
+  <div class="card" style="overflow:hidden">
+    <div class="table-wrap">
+      <table class="grid" id="tbl">
+        <thead>
+          <tr>
+            <th style="width:34px"><input type="checkbox" id="ckAll" onclick="toggleAll(this)"
+                  aria-label="全选"></th>
+            <th>合同名称 / 编号</th>
+            <th style="width:96px">申请人</th>
+            <th style="width:104px">业务类型</th>
+            <th style="width:158px" class="right">合同金额</th>
+            <th style="width:104px">审查状态</th>
+            <th style="width:96px">综合风险</th>
+            <th style="width:96px">回写状态</th>
+            <th style="width:146px">创建时间</th>
+            <th style="width:186px" class="right">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="empty" style="display:none">
+      暂无审查任务。点击下方按钮开始。
+      <div style="margin-top:12px">
+        <button class="btn primary" onclick="pullTodo()">拉取待办并审查</button>
+        <button class="btn" onclick="openUpload()">上传合同</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 上传合同 -->
+<div class="mask" id="mUpload">
+  <div class="modal">
+    <div class="mh">上传合同送审</div>
+    <div class="mb">
+      <div class="file-drop" id="drop" onclick="document.getElementById('file').click()">
+        <div style="font-size:15px;margin-bottom:4px">点击选择，或把文件拖到这里</div>
+        <div class="faint" style="font-size:12px" id="upHint">支持 DOCX / PDF / PNG / JPG</div>
+        <div id="fileName" class="mono" style="margin-top:10px;color:var(--accent)"></div>
+      </div>
+      <input type="file" id="file" style="display:none"
+             accept=".docx,.pdf,.png,.jpg,.jpeg,.bmp" onchange="pickFile(this.files[0])">
+      <div class="sep"></div>
+      <div class="row wrap">
+        <label style="font-size:12.5px">合同类别
+          <select id="upType" style="margin-left:6px">
+            <option value="purchase">采购合同</option>
+            <option value="sales">销售合同</option>
+            <option value="service">服务合同</option>
+            <option value="labor">劳动合同</option>
+          </select>
+        </label>
+        <label style="font-size:12.5px;flex:1">合同名称
+          <input type="text" id="upTitle" placeholder="留空则取文件名" style="width:100%;margin-top:4px">
+        </label>
+      </div>
+      <div class="muted" style="font-size:12px;margin-top:10px">
+        上传后系统会立即执行「解析 → 条款切分 → 规则审查 → 摘要生成」，
+        并进入审查工作台等待法务复核。
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn" onclick="CR.closeModal('mUpload')">取消</button>
+      <button class="btn primary" id="btnUp" onclick="doUpload()">上传并审查</button>
+    </div>
+  </div>
+</div>
+
+<!-- 自检 -->
+<div class="mask" id="mSelf">
+  <div class="modal" style="max-width:780px">
+    <div class="mh">系统自检与验收对照</div>
+    <div class="mb" id="selfBody"></div>
+    <div class="mf"><button class="btn primary" onclick="CR.closeModal('mSelf')">关闭</button></div>
+  </div>
+</div>
+
+<!-- 通知 -->
+<div class="mask" id="mNotify">
+  <div class="modal" style="max-width:620px">
+    <div class="mh">机器人通知</div>
+    <div class="mb" id="notifyBody"></div>
+    <div class="mf">
+      <button class="btn" onclick="CR.closeModal('mNotify')">关闭</button>
+      <button class="btn primary" id="btnNotifyTest" onclick="sendNotifyTest()">发送测试通知</button>
+    </div>
+  </div>
+</div>
+
+<!-- 运行指标 -->
+<div class="mask" id="mMetrics">
+  <div class="modal" style="max-width:760px">
+    <div class="mh">运行指标</div>
+    <div class="mb" id="metricsBody"></div>
+    <div class="mf"><button class="btn primary" onclick="CR.closeModal('mMetrics')">关闭</button></div>
+  </div>
+</div>
+
+<script src="/assets/app.js"></script>
+<script>
+let CASES = [];
+let FILE = null;
+let CFG = { max_upload_mb: 30 };
+
+const BTYPE = { purchase: '采购合同', sales: '销售合同', service: '服务合同', labor: '劳动合同' };
+
+CR.renderTopbar('/', '演示环境 · 模拟审批系统');
+
+function debounce(fn, ms) {
+  let t;
+  return function () { clearTimeout(t); t = setTimeout(fn, ms || 320); };
+}
+const debouncedLoad = debounce(load);
+
+/* ------------------------------------------------------------------ 数据 */
+async function load() {
+  const q = new URLSearchParams();
+  const kw = CR.$('#kw').value.trim();
+  if (kw) q.set('kw', kw);
+  const r = CR.$('#fRisk').value; if (r) q.set('risk', r);
+  const s = CR.$('#fStatus').value; if (s) q.set('status', s);
+  const t = CR.$('#fType').value; if (t) q.set('type', t);
+  if (!CASES.length) {
+    CR.$('#tbody').innerHTML = '<tr><td colspan="10">' + CR.skeleton(6) + '</td></tr>';
+  }
+  try {
+    const data = await CR.api('GET', '/api/cases?' + q.toString());
+    CASES = data.items || [];
+  } catch (e) {
+    CR.$('#tbody').innerHTML = '<tr><td colspan="10"><div class="empty">加载失败：' +
+      CR.esc(e.message) +
+      '<br><button class="btn sm" style="margin-top:10px" onclick="load()">重试</button>' +
+      '</div></td></tr>';
+    return;
+  }
+  renderTable();
+  renderStats();
+}
+
+async function renderStats() {
+  let st;
+  try { st = await CR.api('GET', '/api/stats'); } catch (e) { return; }
+  const bs = st.by_status || {}, br = st.by_risk || {}, bw = st.by_writeback || {};
+  CR.$('#stats').innerHTML =
+    card('审查任务总数', st.total || 0, '含审批拉取与本地上传', '') +
+    card('高风险合同', br.high || 0, '需优先处置', br.high ? 'hl' : '') +
+    card('中风险合同', br.medium || 0, '需整改后签署', br.medium ? 'hl' : '') +
+    card('审查完成', bs.completed || 0, '已生成审查意见', 'ok') +
+    card('解析受阻', st.blocked || 0, '待管理员重试', st.blocked ? 'hl' : '') +
+    card('回写成功', bw.success || 0, '已写入审批评论区', 'ok') +
+    card('高风险金额', CR.money(st.high_risk_amount), '高风险合同累计金额', 'hl') +
+    '<div class="stat"><div class="k">风险分布</div>' + CR.distBar(br) +
+      '<div class="dist-legend">' +
+      '<span><b class="h"></b>高 ' + (br.high || 0) + '</span>' +
+      '<span><b class="m"></b>中 ' + (br.medium || 0) + '</span>' +
+      '<span><b class="l"></b>低 ' + (br.low || 0) + '</span>' +
+      '<span><b class="n"></b>无 ' + (br.none || 0) + '</span></div></div>';
+  CR.$('#subTitle').textContent = '共 ' + (st.total || 0) + ' 个审查任务 · 高风险 ' +
+    (br.high || 0) + ' 个 · 解析受阻 ' + (st.blocked || 0) + ' 个';
+}
+
+function card(k, v, x, cls) {
+  return '<div class="stat ' + (cls || '') + '"><div class="k">' + k + '</div>' +
+    '<div class="v num">' + v + '</div><div class="x">' + x + '</div></div>';
+}
+
+function renderTable() {
+  const tb = CR.$('#tbody');
+  if (!CASES.length) {
+    tb.innerHTML = '';
+    CR.$('#empty').style.display = 'block';
+    return;
+  }
+  CR.$('#empty').style.display = 'none';
+  tb.innerHTML = CASES.map(c => {
+    const blocked = c.review_status === 'blocked';
+    return '<tr data-id="' + c.id + '" class="clickable" onclick="rowClick(event,' + c.id + ')">' +
+      '<td><input type="checkbox" class="ck" value="' + c.id +
+        '" onclick="event.stopPropagation();selInfo()" aria-label="选择该合同"></td>' +
+      '<td><div class="t-title">' + CR.esc(c.title) + '</div><div class="t-sub">' +
+        CR.esc(c.case_no) + ' · ' + CR.esc(c.source_label) + '</div></td>' +
+      '<td>' + CR.esc(c.applicant || '-') + '<div class="t-sub">' +
+        CR.esc(c.send_dept || '') + '</div></td>' +
+      '<td>' + CR.esc(c.business_type_label) + '</td>' +
+      '<td class="right num">' + CR.money(c.amount, c.currency) + '</td>' +
+      '<td>' + CR.statusTag(c.review_status, c.review_status_label) + '</td>' +
+      '<td>' + CR.riskTag(c.risk_level, c.risk_level_label) + '</td>' +
+      '<td>' + CR.wbTag(c.writeback_status, c.writeback_status_label) + '</td>' +
+      '<td class="num faint" style="font-size:12px">' + CR.esc(c.created_at) + '</td>' +
+      '<td class="right" onclick="event.stopPropagation()">' +
+        '<a class="btn sm primary" href="/workbench?id=' + c.id + '">审查</a> ' +
+        (blocked
+          ? '<button class="btn sm danger" onclick="retry(' + c.id + ')">重新审查</button>'
+          : '<button class="btn sm" onclick="rerun(' + c.id + ')">重审</button>') +
+      '</td></tr>';
+  }).join('');
+  selInfo();
+}
+
+function rowClick(ev, id) {
+  if (ev.target.tagName === 'INPUT' || ev.target.closest('button')
+      || ev.target.closest('a')) return;
+  location.href = '/workbench?id=' + id;
+}
+
+function selInfo() {
+  const n = CR.$$('.ck:checked').length;
+  CR.$('#selInfo').textContent = n ? ('已选 ' + n + ' 项') : '';
+}
+
+function toggleAll(ck) {
+  CR.$$('.ck').forEach(c => { c.checked = ck.checked; });
+  selInfo();
+}
+
+function selected() { return CR.$$('.ck:checked').map(c => Number(c.value)); }
+
+/* ------------------------------------------------------------------ 操作 */
+async function pullTodo() {
+  const b = CR.$('#btnPull');
+  CR.busy(b, true, '拉取中');
+  CR.overlay(true, '正在拉取待办并执行自动审查…',
+    '解析 → 条款切分 → 规则审查 → 摘要生成，逐个审批单串行处理。');
+  try {
+    const d = await CR.api('POST', '/api/pull', { auto_review: true });
+    if (!d.ok) throw new Error(d.error || '拉取失败');
+    const created = (d.created || []).length, skipped = (d.skipped || []).length;
+    const blocked = (d.reviewed || []).filter(r => r.blocked).length;
+    const highs = (d.reviewed || []).filter(r => r.risk_level === 'high').length;
+    CR.toast('已拉取并自动审查 <b>' + created + '</b> 个待办审批单' +
+      (skipped ? '，跳过 ' + skipped + ' 个（幂等控制）' : '') +
+      (highs ? '<br>其中高风险 <b>' + highs + '</b> 个' : '') +
+      (blocked ? '，解析受阻 ' + blocked + ' 个' : ''), 'ok');
+    await load();
+  } catch (e) {
+    CR.toast('拉取失败：' + CR.esc(e.message), 'err');
+  } finally {
+    CR.busy(b, false);
+    CR.overlay(false);
+  }
+}
+
+async function rerun(id) {
+  CR.overlay(true, '正在重新审查…', '重新执行解析与规则审查。');
+  try {
+    const r = await CR.api('POST', '/api/cases/' + id + '/review');
+    if (r && r.blocked) CR.toast('重新审查后仍受阻：' + CR.esc(r.reason || ''), 'err');
+    else CR.toast('已完成重新审查，命中 ' + ((r && r.hits) || 0) + ' 项', 'ok');
+    await load();
+  } catch (e) { CR.toast('审查失败：' + CR.esc(e.message), 'err'); }
+  finally { CR.overlay(false); }
+}
+
+async function retry(id) {
+  CR.overlay(true, '正在重试解析…', '把任务重新放回流转流水线。');
+  try {
+    const r = await CR.api('POST', '/api/cases/' + id + '/retry');
+    if (r && r.blocked) CR.toast('重试后仍受阻：' + CR.esc(r.reason || ''), 'err');
+    else CR.toast('重试成功，已完成审查', 'ok');
+    await load();
+  } catch (e) { CR.toast('重试失败：' + CR.esc(e.message), 'err'); }
+  finally { CR.overlay(false); }
+}
+
+async function batchReview() {
+  const ids = selected();
+  if (!ids.length) return CR.toast('请先勾选需要重新审查的合同', 'err');
+  const failed = [];
+  try {
+    for (let i = 0; i < ids.length; i++) {
+      CR.overlay(true, '正在批量审查… ' + (i + 1) + ' / ' + ids.length);
+      try {
+        await CR.api('POST', '/api/cases/' + ids[i] + '/review');
+      } catch (e) { failed.push('#' + ids[i] + ' ' + e.message); }
+    }
+  } finally { CR.overlay(false); }
+  if (failed.length) {
+    CR.toast('完成 ' + (ids.length - failed.length) + ' 个，<b>' + failed.length +
+      '</b> 个失败：' + CR.esc(failed.slice(0, 2).join('；')), 'err');
+  } else {
+    CR.toast('已完成 ' + ids.length + ' 个合同的重新审查', 'ok');
+  }
+  await load();
+}
+
+async function batchReport(fmt) {
+  const ids = selected();
+  if (!ids.length) return CR.toast('请先勾选需要导出的合同', 'err');
+  for (const id of ids) {
+    CR.download('/api/cases/' + id + '/report?format=' + fmt + '&download=1');
+    await new Promise(r => setTimeout(r, 260));
+  }
+  CR.toast('已开始下载 ' + ids.length + ' 份报告（' + fmt.toUpperCase() + '）', 'ok');
+}
+
+/* ------------------------------------------------------------------ 示例集 */
+let samplesLoaded = false;
+async function toggleSamples() {
+  const box = CR.$('#sampleBox'), b = CR.$('#btnSamples');
+  const on = box.style.display === 'none';
+  box.style.display = on ? 'block' : 'none';
+  b.textContent = on ? '收起' : '展开';
+  if (on && !samplesLoaded) {
+    box.innerHTML = CR.skeleton(4);
+    const d = await CR.api('GET', '/api/samples');
+    const lvLabel = l => l === 'high' ? '高风险' : (l === 'medium' ? '中风险'
+      : (l === 'low' ? '低风险' : '无风险'));
+    box.innerHTML = '<div class="table-wrap"><table class="grid"><thead><tr>' +
+      '<th style="width:44px">序号</th><th>示例文件</th><th style="width:96px">格式</th>' +
+      '<th style="width:112px">类别</th><th style="width:112px">预期风险</th>' +
+      '<th>用例说明</th></tr></thead><tbody>' +
+      d.samples.map(s => {
+        const e = s.expect || {};
+        const lv = e.blocked ? 'none' : e.risk_level;
+        return '<tr><td class="mono">' + CR.esc(s.code) + '</td>' +
+          '<td class="mono" style="font-size:12px">' + CR.esc(s.file) + '</td>' +
+          '<td>' + CR.esc(s.format) + '</td>' +
+          '<td>' + CR.esc(BTYPE[s.business_type] || s.business_type) + '</td>' +
+          '<td>' + (e.blocked ? '<span class="tag t-high">解析受阻</span>'
+            : CR.riskTag(lv, lvLabel(lv))) + '</td>' +
+          '<td class="muted" style="font-size:12.5px">' + CR.esc(e.note || '') +
+          '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+    samplesLoaded = true;
+  }
+}
+
+/* ------------------------------------------------------------------ 上传 */
+async function openUpload() {
+  FILE = null;
+  CR.$('#fileName').textContent = '';
+  CR.$('#upHint').textContent = '支持 DOCX / PDF / PNG / JPG　单文件不超过 ' +
+    CFG.max_upload_mb + ' MB';
+  CR.openModal('mUpload');
+}
+
+function pickFile(f) {
+  FILE = f;
+  CR.$('#fileName').textContent = f
+    ? (f.name + '  ·  ' + (f.size / 1024).toFixed(1) + ' KB') : '';
+  if (f && !CR.$('#upTitle').value) {
+    CR.$('#upTitle').value = f.name.replace(/\.(docx|pdf|png|jpe?g|bmp)$/i, '');
+  }
+}
+
+(function () {
+  const drop = CR.$('#drop');
+  ['dragover', 'dragenter'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.style.borderColor = 'var(--accent)';
+  }));
+  ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => {
+    e.preventDefault(); drop.style.borderColor = '';
+  }));
+  drop.addEventListener('drop', e => {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) pickFile(e.dataTransfer.files[0]);
+  });
+})();
+
+async function doUpload() {
+  if (!FILE) return CR.toast('请先选择合同文件', 'err');
+  if (FILE.size > CFG.max_upload_mb * 1024 * 1024) {
+    return CR.toast('文件超过 ' + CFG.max_upload_mb + ' MB 限制', 'err');
+  }
+  const b = CR.$('#btnUp');
+  CR.busy(b, true, '上传中');
+  CR.overlay(true, '正在上传并解析…', '解析 → 条款切分 → 规则审查。');
+  try {
+    const buf = await FILE.arrayBuffer();
+    let bin = '';
+    const bytes = new Uint8Array(buf);
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    const content = btoa(bin);
+    const d = await CR.api('POST', '/api/upload', {
+      filename: FILE.name, content: content,
+      meta: { business_type: CR.$('#upType').value, title: CR.$('#upTitle').value },
+      auto_review: true
+    });
+    CR.closeModal('mUpload');
+    if (d.duplicated) {
+      CR.toast('文件指纹重复，已复用既有任务 #' + d.case_id, 'ok');
+      await load();
+    } else {
+      CR.toast('上传并审查完成，任务 #' + d.case_id, 'ok');
+      location.href = '/workbench?id=' + d.case_id;
+    }
+  } catch (e) {
+    CR.toast('上传失败：' + CR.esc(e.message), 'err');
+  } finally {
+    CR.busy(b, false);
+    CR.overlay(false);
+  }
+}
+
+/* ------------------------------------------------------------------ 自检 / 指标 / 通知 */
+async function runSelftest() {
+  CR.openModal('mSelf');
+  CR.$('#selfBody').innerHTML = CR.skeleton(8);
+  try {
+    const d = await CR.api('GET', '/api/selftest');
+    const rows = (d.checks || []).map(c =>
+      '<tr><td style="width:76px">' + (c.passed
+        ? '<span class="tag t-ok">通过</span>' : '<span class="tag t-high">未通过</span>') +
+      '</td><td style="width:220px;font-weight:560">' + CR.esc(c.name) + '</td>' +
+      '<td class="muted" style="font-size:12.5px">' + CR.esc(c.detail || '') + '</td></tr>').join('');
+    CR.$('#selfBody').innerHTML =
+      '<div class="row" style="margin-bottom:12px"><span class="tag ' +
+      (d.passed ? 't-ok' : 't-high') + '">' + (d.passed ? '全部通过' : '存在未通过项') +
+      '</span><span class="muted">共 ' + (d.checks || []).length + ' 项验收对照，通过 ' +
+      (d.passed_count || 0) + ' 项 · 耗时 ' + d.elapsed_ms + ' ms</span></div>' +
+      '<div class="table-wrap"><table class="grid"><tbody>' + rows + '</tbody></table></div>';
+  } catch (e) {
+    CR.$('#selfBody').innerHTML = '<div class="empty">自检失败：' + CR.esc(e.message) + '</div>';
+  }
+}
+
+async function openMetrics() {
+  CR.openModal('mMetrics');
+  CR.$('#metricsBody').innerHTML = CR.skeleton(6);
+  try {
+    const m = await CR.api('GET', '/api/metrics');
+    const top = (m.top_paths || []).slice(0, 8);
+    const maxMs = Math.max.apply(null, top.map(t => t.avg_ms).concat([1]));
+    CR.$('#metricsBody').innerHTML =
+      '<div class="stats" style="margin-bottom:14px">' +
+      card('累计请求', m.requests, '自 ' + m.started_at + ' 起', '') +
+      card('平均响应', CR.fmtMs(m.avg_ms), '全部请求历史均值', '') +
+      card('错误数', m.errors, '错误率 ' + (m.error_rate * 100).toFixed(2) + '%',
+        m.errors ? 'hl' : '') +
+      card('运行时长', Math.round(m.uptime_sec / 60) + ' 分钟', '进程启动至今', '') +
+      card('响应总量', (m.bytes_out / 1048576).toFixed(2) + ' MB', '压缩后实际发送', '') +
+      card('任务总数', m.task_total, '数据库内审查任务', '') +
+      '</div>' +
+      '<div style="font-size:11.5px;color:var(--sub);margin-bottom:6px">' +
+      '热点接口（按累计耗时排序）</div>' +
+      top.map(t => '<div class="metric"><div class="mh"><span class="p">' + CR.esc(t.path) +
+        '</span><span class="v">' + t.count + ' 次 · 均 ' + CR.fmtMs(t.avg_ms) +
+        ' · 峰值 ' + CR.fmtMs(t.max_ms) + (t.errors ? ' · 错误 ' + t.errors : '') +
+        '</span></div><div class="bar"><i style="width:' +
+        Math.max(4, t.avg_ms / maxMs * 100) + '%"></i></div></div>').join('') +
+      ((m.slow_requests || []).length
+        ? '<div style="font-size:11.5px;color:var(--sub);margin:12px 0 6px">' +
+          '慢请求（≥ 1s）</div><div class="log">' + m.slow_requests.map(s =>
+            '<div class="r"><span class="t">' + CR.esc(s.at) + '</span>' +
+            '<span class="s failed">' + s.ms + 'ms</span><span>' + CR.esc(s.path) +
+            '</span></div>').join('') + '</div>'
+        : '<div class="faint" style="font-size:12px;margin-top:10px">' +
+          '暂无慢请求记录。审查与 OCR 属于耗时操作，正常会出现在这里。</div>');
+  } catch (e) {
+    CR.$('#metricsBody').innerHTML = '<div class="empty">读取指标失败：' +
+      CR.esc(e.message) + '</div>';
+  }
+}
+
+async function openNotify() {
+  CR.openModal('mNotify');
+  CR.$('#notifyBody').innerHTML = CR.skeleton(4);
+  try {
+    const s = await CR.api('GET', '/api/notify/status');
+    const recent = s.recent || [];
+    CR.$('#notifyBody').innerHTML =
+      '<div class="kv-list">' +
+      '<div class="r"><div class="k">启用状态</div><div class="v">' +
+        (s.enabled
+          ? (s.configured ? '<span class="tag t-ok">已启用且已配置</span>'
+                          : '<span class="tag t-mid">已启用但未填 Webhook</span>')
+          : '<span class="tag t-none">未启用</span>') + '</div></div>' +
+      '<div class="r"><div class="k">渠道 / 加签</div><div class="v">' + CR.esc(s.channel) +
+        ' ｜ 加签 ' + (s.has_secret ? '已配置' : '未配置') + '</div></div>' +
+      '<div class="r"><div class="k">Webhook</div><div class="v mono" style="font-size:11.5px">' +
+        (CR.esc(s.webhook) || '（未填写）') + '</div></div>' +
+      '<div class="r"><div class="k">发送统计</div><div class="v">入队 ' + s.stats.queued +
+        ' ｜ 成功 ' + s.stats.sent + ' ｜ 失败 ' + s.stats.failed +
+        ' ｜ 跳过 ' + s.stats.skipped + '</div></div>' +
+      '<div class="r"><div class="k">事件开关</div><div class="v">' +
+        Object.keys(s.events || {}).map(k => '<span class="tag ' +
+          (s.events[k] ? 't-ok' : 't-none') + '" style="margin:1px 3px 1px 0">' +
+          CR.esc(k) + '</span>').join('') + '</div></div></div>' +
+      (s.configured ? '' : '<div class="notice warn" style="margin-top:10px">要启用钉钉通知：' +
+        '编辑 <span class="mono">config/app.json</span>，把 ' +
+        '<span class="mono">notify.enabled</span> 设为 true 并填写 ' +
+        '<span class="mono">notify.webhook</span>；若机器人安全设置选了「加签」，再把 ' +
+        '<span class="mono">notify.secret</span> 填上 SEC 开头的密钥。</div>') +
+      (recent.length ? '<div class="field" style="margin-top:10px">' +
+        '<div class="lab">最近发送记录</div><div class="log">' +
+        recent.map(r => '<div class="r"><span class="t">' + CR.esc(r.at) +
+          '</span><span class="s ' + CR.esc(r.status === 'sent' ? 'ok'
+            : (r.status === 'failed' ? 'failed' : 'skipped')) + '">' + CR.esc(r.status) +
+          '</span><span>' + CR.esc(r.event_label) + ' · ' + CR.esc(r.title || '') +
+          (r.detail ? ' — ' + CR.esc(r.detail) : '') + '</span></div>').join('') +
+        '</div></div>' : '');
+  } catch (e) {
+    CR.$('#notifyBody').innerHTML = '<div class="empty">读取通知状态失败：' +
+      CR.esc(e.message) + '</div>';
+  }
+}
+
+async function sendNotifyTest() {
+  const b = CR.$('#btnNotifyTest');
+  CR.busy(b, true, '发送中');
+  try {
+    const r = await CR.api('POST', '/api/notify/test', { message: '测试消息已送达。' });
+    CR.toast(r.status === 'sent' ? '测试通知发送成功，请查看机器人所在群'
+      : ('发送结果：' + CR.esc(r.detail || '')), 'ok');
+  } catch (e) {
+    CR.toast('测试发送失败：' + CR.esc(e.message), 'err');
+  } finally {
+    CR.busy(b, false);
+    openNotify();
+  }
+}
+
+/* ------------------------------------------------------------------ 启动 */
+(async function () {
+  try {
+    const [h, c] = await Promise.all([
+      CR.api('GET', '/api/health'), CR.api('GET', '/api/config')
+    ]);
+    CFG = c || CFG;
+    CR.renderTopbar('/', '演示环境 · ' +
+      (h.approval_channel === 'feishu_mock' ? '内置模拟审批' : String(h.approval_base)) +
+      ' · OCR ' + h.ocr_backend +
+      ' · PDF ' + (h.browser_for_pdf ? '服务端直出' : '浏览器打印'));
+  } catch (e) { }
+  await load();
+})();
+</script>
+</body>
+</html>

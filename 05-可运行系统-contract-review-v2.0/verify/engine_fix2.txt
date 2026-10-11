@@ -1,0 +1,6 @@
+  ok   ui/twin.html :: <!-- ============================ 引擎与接口 ==============
+  ok   ui/twin.html :: <div class="panel-head">
+  ok   ui/twin.html :: /* 资源水位用的是「上限」做分母 —— 健康状态下必然接近 0。
+  ok   ui/twin.html :: CR.$('#qWorkers').textContent = '并发度 ' + q.workers + '
+  ok   ui/twin.html :: function renderOps() {
+  ok   ui/assets/app.css :: 追加 v2.1.3 信息架构重排

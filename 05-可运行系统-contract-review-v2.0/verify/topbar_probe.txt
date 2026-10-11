@@ -1,0 +1,94 @@
+顶栏与统计卡几何体检（CDP）
+====================================================================================================
+目标 http://127.0.0.1:8799 ｜ 2026-09-19 11:14:26
+
+视口 1600px ｜ 顶栏高 62px ｜ 行数 6 ｜ flex-wrap=nowrap ｜ gap=14px
+      a.brand                                                  w=279   h=31   x=18    y=15    合同智能审查系统亦大 · intelligent c
+      nav.nav                                                  w=429   h=37   x=315   y=12    审查大盘智能审查工作台动态孪生看板合规规则与模板
+      div.spacer                                               w=182   h=0    x=758   y=31    
+      span.role-bar                                            w=267   h=33   x=958   y=14    系统管理员admin法务审查人业务经办人系统管理员退
+      span#envTag.env-tag                                      w=131   h=28   x=1239  y=16    演示环境 · v2.1.0
+      a.btn.sm.ghost.hide-md                                   w=117   h=27   x=1384  y=17    模拟审批系统
+      button#themeBtn.btn.sm.ghost.compact-xs                  w=67    h=27   x=1515  y=17    浅色
+      nav 宽 429（内容 429）｜ 链接：审查大盘(78)、智能审查工作台(119)、动态孪生看板(105)、合规规则与模板(119)
+      统计卡 h=171 w=212 padding=13px 16px ｜ ::after content="查看明细 →" right=14px bottom=137.281px
+        k 底 199 ｜ v 底 251 ｜ x 底 273（卡片底需留出 ::after 空间）
+      文档总高 1897 ｜ 头部底 146 ｜ 统计卡底 335
+
+视口 1440px ｜ 顶栏高 62px ｜ 行数 6 ｜ flex-wrap=nowrap ｜ gap=14px
+      a.brand                                                  w=279   h=31   x=18    y=15    合同智能审查系统亦大 · intelligent c
+      nav.nav                                                  w=429   h=37   x=315   y=12    审查大盘智能审查工作台动态孪生看板合规规则与模板
+      div.spacer                                               w=22    h=0    x=758   y=31    
+      span.role-bar                                            w=267   h=33   x=798   y=14    系统管理员admin法务审查人业务经办人系统管理员退
+      span#envTag.env-tag                                      w=131   h=28   x=1079  y=16    演示环境 · v2.1.0
+      a.btn.sm.ghost.hide-md                                   w=117   h=27   x=1224  y=17    模拟审批系统
+      button#themeBtn.btn.sm.ghost.compact-xs                  w=67    h=27   x=1355  y=17    浅色
+      nav 宽 429（内容 429）｜ 链接：审查大盘(78)、智能审查工作台(119)、动态孪生看板(105)、合规规则与模板(119)
+      统计卡 h=171 w=189 padding=13px 16px ｜ ::after content="查看明细 →" right=14px bottom=137.281px
+        k 底 221 ｜ v 底 272 ｜ x 底 295（卡片底需留出 ::after 空间）
+      文档总高 1956 ｜ 头部底 146 ｜ 统计卡底 335
+
+视口 1280px ｜ 顶栏高 62px ｜ 行数 6 ｜ flex-wrap=nowrap ｜ gap=14px
+      a.brand                                                  w=229   h=31   x=18    y=15    合同智能审查系统亦大 · intelligent c
+      nav.nav                                                  w=429   h=37   x=265   y=12    审查大盘智能审查工作台动态孪生看板合规规则与模板
+      div.spacer                                               w=188   h=0    x=708   y=31    
+      span.role-bar                                            w=267   h=33   x=914   y=14    系统管理员admin法务审查人业务经办人系统管理员退
+      span#envTag.env-tag                                      w=0     h=0    x=0     y=0     演示环境 · v2.1.0
+      a.btn.sm.ghost.hide-md                                   w=0     h=0    x=0     y=0     模拟审批系统
+      button#themeBtn.btn.sm.ghost.compact-xs                  w=67    h=27   x=1195  y=17    浅色
+      nav 宽 429（内容 429）｜ 链接：审查大盘(78)、智能审查工作台(119)、动态孪生看板(105)、合规规则与模板(119)
+      统计卡 h=137 w=196 padding=13px 16px ｜ ::after content="查看明细 →" right=14px bottom=103.688px
+        k 底 199 ｜ v 底 251 ｜ x 底 273（卡片底需留出 ::after 空间）
+      文档总高 2367 ｜ 头部底 146 ｜ 统计卡底 484
+
+视口 1100px ｜ 顶栏高 62px ｜ 行数 6 ｜ flex-wrap=wrap ｜ gap=14px
+      a.brand                                                  w=162   h=30   x=18    y=16    合同智能审查系统亦大 · intelligent c
+      nav.nav                                                  w=429   h=37   x=198   y=12    审查大盘智能审查工作台动态孪生看板合规规则与模板
+      div.spacer                                               w=75    h=0    x=641   y=31    
+      span.role-bar                                            w=267   h=33   x=734   y=14    系统管理员admin法务审查人业务经办人系统管理员退
+      span#envTag.env-tag                                      w=0     h=0    x=0     y=0     演示环境 · v2.1.0
+      a.btn.sm.ghost.hide-md                                   w=0     h=0    x=0     y=0     模拟审批系统
+      button#themeBtn.btn.sm.ghost.compact-xs                  w=67    h=27   x=1015  y=17    浅色
+      nav 宽 429（内容 429）｜ 链接：审查大盘(78)、智能审查工作台(119)、动态孪生看板(105)、合规规则与模板(119)
+      统计卡 h=137 w=202 padding=13px 16px ｜ ::after content="查看明细 →" right=14px bottom=103.688px
+        k 底 245 ｜ v 底 297 ｜ x 底 319（卡片底需留出 ::after 空间）
+      文档总高 3221 ｜ 头部底 192 ｜ 统计卡底 530
+
+视口  980px ｜ 顶栏高 99px ｜ 行数 5 ｜ flex-wrap=wrap ｜ gap=10px
+      a.brand                                                  w=150   h=27   x=14    y=12    合同智能审查系统亦大 · intelligent c
+      nav.nav                                                  w=952   h=39   x=14    y=50    审查大盘智能审查工作台动态孪生看板合规规则与模板
+      div.spacer                                               w=471   h=0    x=174   y=25    
+      span.role-bar                                            w=230   h=33   x=659   y=9     系统管理员admin法务审查人业务经办人系统管理员退
+      span#envTag.env-tag                                      w=0     h=0    x=0     y=0     演示环境 · v2.1.0
+      a.btn.sm.ghost.hide-md                                   w=0     h=0    x=0     y=0     模拟审批系统
+      button#themeBtn.btn.sm.ghost.compact-xs                  w=67    h=27   x=899   y=12    浅色
+      nav 宽 952（内容 952）｜ 链接：审查大盘(78)、智能审查工作台(119)、动态孪生看板(105)、合规规则与模板(119)
+      统计卡 h=200 w=150 padding=13px 16px ｜ ::after content="查看明细 →" right=14px bottom=166.578px
+        k 底 319 ｜ v 底 370 ｜ x 底 413（卡片底需留出 ::after 空间）
+      文档总高 3647 ｜ 头部底 223 ｜ 统计卡底 712
+
+视口  760px ｜ 顶栏高 99px ｜ 行数 5 ｜ flex-wrap=wrap ｜ gap=10px
+      a.brand                                                  w=150   h=27   x=14    y=12    合同智能审查系统亦大 · intelligent c
+      nav.nav                                                  w=732   h=39   x=14    y=50    审查大盘智能审查工作台动态孪生看板合规规则与模板
+      div.spacer                                               w=251   h=0    x=174   y=25    
+      span.role-bar                                            w=230   h=33   x=439   y=9     系统管理员admin法务审查人业务经办人系统管理员退
+      span#envTag.env-tag                                      w=0     h=0    x=0     y=0     演示环境 · v2.1.0
+      a.btn.sm.ghost.hide-md                                   w=0     h=0    x=0     y=0     模拟审批系统
+      button#themeBtn.btn.sm.ghost.compact-xs                  w=67    h=27   x=679   y=12    浅色
+      nav 宽 732（内容 732）｜ 链接：审查大盘(78)、智能审查工作台(119)、动态孪生看板(105)、合规规则与模板(119)
+      统计卡 h=158 w=176 padding=13px 16px ｜ ::after content="查看明细 →" right=14px bottom=124.938px
+        k 底 297 ｜ v 底 349 ｜ x 底 371（卡片底需留出 ::after 空间）
+      文档总高 3651 ｜ 头部底 223 ｜ 统计卡底 601
+
+视口  390px ｜ 顶栏高 96px ｜ 行数 5 ｜ flex-wrap=wrap ｜ gap=10px
+      a.brand                                                  w=146   h=27   x=12    y=11    合同智能审查系统亦大 · intelligent c
+      nav.nav                                                  w=366   h=39   x=12    y=48    审查大盘智能审查工作台动态孪生看板合规规则与模板
+      div.spacer                                               w=11    h=0    x=168   y=24    
+      span.role-bar                                            w=134   h=32   x=194   y=8     系统管理员admin法务审查人业务经办人系统管理员退
+      span#envTag.env-tag                                      w=0     h=0    x=0     y=0     演示环境 · v2.1.0
+      a.btn.sm.ghost.hide-md                                   w=0     h=0    x=0     y=0     模拟审批系统
+      button#themeBtn.btn.sm.ghost.compact-xs                  w=40    h=27   x=338   y=11    浅色
+      nav 宽 366（内容 429）｜ 链接：审查大盘(78)、智能审查工作台(119)、动态孪生看板(105)、合规规则与模板(119)
+      统计卡 h=126 w=368 padding=13px 16px ｜ ::after content="查看明细 →" right=14px bottom=92.7969px
+        k 底 376 ｜ v 底 417 ｜ x 底 439（卡片底需留出 ::after 空间）
+      文档总高 5025 ｜ 头部底 323 ｜ 统计卡底 1271

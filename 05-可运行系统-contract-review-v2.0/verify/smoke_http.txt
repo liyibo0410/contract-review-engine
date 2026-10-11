@@ -1,0 +1,97 @@
+HTTP 冒烟测试：95 / 95 项通过（端口 8791）
+====================================================================================================
+[OK ] 未登录访问页面被重定向到登录页                              HTTP 302 → /login?next=/
+[OK ] 未登录访问接口返回 401                                HTTP 401，msg={"code": 401, "data": null, "msg": "未登录或会话已过期，请先登录后再操作"}
+[OK ] 登录页可匿名访问                                     HTTP 200，9744 字节
+[OK ] 健康检查接口保持匿名可用（供外部探活）                          HTTP 200
+[OK ] 管理员账号登录成功并返回角色与能力清单                          角色=系统管理员，能力 17 项，会话到期 2026-09-20 02:25:14
+[OK ] 登录接口不接受 GET（方法与能力匹配）                         HTTP 404
+[OK ] 静态页面 /                                       HTTP 200  text/html  55100 bytes
+[OK ] 静态页面 /assets/app.css                         HTTP 200  text/css  70958 bytes
+[OK ] 静态页面 /assets/app.js                          HTTP 200  text/javascript  34573 bytes
+[OK ] 静态页面 /workbench                              HTTP 200  text/html  48443 bytes
+[OK ] 静态页面 /rules                                  HTTP 200  text/html  19679 bytes
+[OK ] /api/health                                  版本 2.1.7，PDF 浏览器通道=True，规则类型 labor,purchase,sales,service
+[OK ] POST /api/pull 拉取并自动审查                       新建 8，跳过 0
+[OK ] POST /api/pull 幂等（二次拉取全部跳过）                  新建 0，跳过 8
+[OK ] GET /api/cases 列表                            8 个任务，风险分布 {"none": 4, "high": 4}
+[OK ] GET /api/stats 大盘统计                          总数 8，高/中/低=4/0/0，受阻 2，高风险金额 14206000
+[OK ] GET /api/cases?risk=high 风险筛选                高风险任务 4 个
+[OK ] GET /api/cases/{id} 工作台详情                    风险 3 项（可定位 3）、段落 36、条款 27、覆盖度 69%、摘要方式 rule-template
+[OK ] PATCH /api/results/{id} 法务复核                 已采纳并保存编辑后的示范条款
+[OK ] POST /api/cases/{id}/opinion 法务批注            批注已保存
+[OK ] POST writeback 预览模式（不写入）                     mode=dry_run status=not_written 内容 1358 字
+[OK ] POST writeback 正式写入（HTTP 调模拟审批接口）            comment_id=CMT-01-001  审查意见已成功写回审批单评论区
+[OK ] GET 审批评论区（模拟飞书，独立 HTTP 接口）                   评论区 1 条，首条 1358 字，作者 衡鉴 V2.1.7
+[OK ] GET 审批待办（模拟飞书）                               剩余待办 7 个（已回写的审批单自动置为已处理）
+[OK ] GET report?format=md 下载                      HTTP 200  text/markdown  8826 bytes
+[OK ] GET report?format=pdf 服务端生成 PDF              HTTP 200  application/pdf  458446 bytes  真实 PDF
+[OK ] GET report?format=html 打印预览                  13641 bytes
+[OK ] POST /api/upload 本地上传并自动审查（全新文件）             新建任务 #9：状态=审查完成 风险=高风险 命中 PU-H-002、PU-H-005、PU-M-002、PU-M-003、PU-M-004、PU-M-005
+[OK ] POST /api/upload 文件指纹去重                      复用既有任务 #9（SHA256 一致）
+[OK ] 阻塞任务详情返回受阻原因                                 #8 08_保密协议_加密用例.pdf → 文档已加密，无法抽取文本，需人工解密后重新上传
+[OK ] POST retry 对仍损坏文件保持受阻（防护正确）                  重试结果 blocked=True reason=文档已加密，无法抽取文本，需人工解密后重新上传
+[OK ] GET /api/rules 规则库读取                         销售合同 11 条规则，统计 {"count": 11, "high": 5, "medium": 4, "low": 2, "types": ["不可抗力", "主体资质", "争议解决", "付款进度", 
+[OK ] POST /api/rules/{type} 规则写回（含 .bak 备份）       已保存 12 条；原文件已备份
+[OK ] POST /api/rules/{type} 恢复规则库                 已恢复为 11 条
+[OK ] GET /api/audit 审计日志                          返回 50 条审计记录
+[OK ] GET /api/export 全量导出                         导出 audit_export_20260919_182519.json（9 个任务）
+[OK ] GET /api/samples 示例合同集清单                     8 个示例用例
+[OK ] GET /api/selftest 页面一键自检                     59 / 59 项通过，10330 ms
+[OK ] GET /api/config 前端可见配置（不含密钥）                 最大上传 30 MB，回写模式 live，通知 未启用
+[OK ] GET /api/metrics 运行指标                        请求 51 次 ｜ 错误 2 ｜ 平均 282.5ms ｜ 热点 top1 GET /api/selftest
+[OK ] GET /api/notify/status 通知状态                  启用=False 已配置=False 渠道=dingtalk 事件 5 项
+[OK ] POST /api/notify/test 未配置时给出明确 400           通知未启用或未配置 Webhook —— 请把 notify.enabled 设为 true，并在 config/app.json 的 no
+[OK ] 大响应启用 gzip 压缩                                详情响应 8959 字节，Content-Encoding=gzip
+[OK ] POST /api/upload 超限文件被服务端拒绝                  文件大小 31.0 MB 超过 30 MB 上限
+[OK ] POST /api/upload 文件名路径穿越被拦下                  上传名 sanitized 后仅落在 uploads/ 内（任务 #10）
+[OK ] POST opinion 对不存在案件返回 404                    HTTP 404
+[OK ] GET report 对不存在案件返回 404                      HTTP 404
+[OK ] 详情接口暴露规则诊断与段落上限字段                            rule_diag=0 条，paragraphs_total=36，截断=False
+[OK ] 未声明 gzip 的客户端仍正常返回（压缩协商正确）                   Content-Encoding=无，345 字节
+[OK ] 未知接口返回结构化 404                                HTTP 404
+[OK ] 不存在案件返回 404                                  HTTP 404
+[OK ] 法务审查人登录后能力集正确（可回写、不可改规则）                     能力 8 项：add_opinion、edit_suggestion、export_audit、export_report、rerun_review、view_cases
+[OK ] 法务审查人访问规则与模板页被拦截（403 权限受限页）                  HTTP 403，5423 字节（页面级权限隔离生效）
+[OK ] 法务审查人调用规则写接口被服务端拒绝                           HTTP 403，msg=越权拦截：法务审查人（legal）请求 POST /api/rules/purchase，需「维护合规规则与标准条款库」
+[OK ] 法务审查人访问运行指标被拒绝（能力归属系统管理员）                    HTTP 403
+[OK ] 业务经办人越权回写被拦下（403 并写审计）                       HTTP 403，msg=越权拦截：业务经办人（applicant）请求 POST /api/cases/1/writeback，需「回写审批意见」权限，仅 法务审查
+[OK ] 业务经办人可提交审查申请（上传放行）                           HTTP 200（放行到业务逻辑层即为通过）
+[OK ] 业务经办人可查看任务列表与风险点                             HTTP 200
+[OK ] 业务经办人可下载审查报告                                 HTTP 200，9087 字节
+[OK ] 越权与未登录均写入审计（tool=auth.guard）                 审计中 auth.guard 记录 6 条，最近：越权拦截：业务经办人（applicant）请求 POST /api/cases/1/writeback，需「回写审批意见」权限，仅 法务审查
+[OK ] 管理员可查看账号与会话（口令哈希不回传）                         账号 3 个，会话 8 个
+[OK ] 健康检查版本号与交付版本一致（禁止版本失真）                       health.version=2.1.7 ｜ app.__version__=2.1.7
+[OK ] 健康检查暴露鉴权/调度/队列/PDF 四段运行态                     auth.accounts=3 scheduler.enabled=False queue.workers=2 pdf.effective=browser
+[OK ] 调度状态接口可用（默认关闭，避免演示数据自变）                      enabled=False interval=120s runs=0
+[OK ] 调度开关可运行时切换并落盘                                enabled=True persisted=True
+[OK ] 可手动触发一轮拉取（与定时路径同一实现）                         ok=True 新建=0 跳过=6 耗时=32ms
+[OK ] 调度可关闭（演示时数据可控)                               已恢复默认关闭
+[OK ] 队列状态接口可用并暴露四道配额                              workers=2 queued=0/50 pending=2/40 存储=0.92/2048 MB
+[OK ] 审查接口支持异步入队（返回 task_id，可轮询案件状态）               mode=async task_id=11
+[OK ] 入队任务最终完成（并发不丢不串）                             案件 #1 状态=completed
+[OK ] PDF 通道自检：零依赖通道可用                             browser=True stdlib=True effective=browser size=3751
+[OK ] 报告导出 PDF 实际产出 PDF 字节流                        HTTP 200，461899 字节，头=%PDF-1.4
+[OK ] 报告可按附件下载（Content-Disposition 文件名正确）          Content-Disposition=attachment; filename*=UTF-8''%E5%AE%A1%E6%9F%A5%E6%84%8F%E8%A7%81%E6%8A%A5%E5%91%8A_HT-20260919-152BCE.md
+[OK ] 详情返回模式对照数据（规则引擎 / 规则+模型润色）                   current=rule available=False reason=llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置
+[OK ] 详情返回页眉页脚剔除留痕与参数                              剔除 0 行，参数={'enabled': True, 'min_pages': 2, 'max_chars': 46, 'edge_lines': 2}
+[OK ] 通知状态暴露脱敏规则（外发字段默认全掩码）                        mask={'party': True, 'amount': True, 'credit_code': True, 'case_no': False, 'applicant': True, 'contract_title': True, 'max_evidence_chars': 0}
+[OK ] 通知事件开关可运行时切换（演示按需开启）                         events={'review_completed': True, 'high_risk': True, 'blocked': True, 'writeback_failed': True, 'batch_summary': True}
+[OK ] GET /api/twin 返回流水线七段与真实计数                   节点 7 个；每个节点均标注数据来源；耗时聚合 含实时日志 60 条
+[OK ] /api/twin 的计数与 /api/cases 完全一致（不造数）          twin 总任务 11 ｜ cases 列表 11 个
+[OK ] 实时日志直接来自审计表（条数与 /api/audit 对齐）               twin 日志 60 条，首条时间 2026-09-19 18:25:34
+[OK ] GET /api/mock/overview 返回模拟平台真实数据            审批单 8 张（待办 6），接口清单 6 条
+[OK ] /mock 美化页需登录且可渲染（替代裸 JSON）                   HTTP 200，12213 字节
+[OK ] 未登录访问 /mock 被重定向（内部页不外露）                     HTTP 302 → /login?next=/mock
+[OK ] 模拟审批原始 JSON 接口仍对匿名开放（对外契约不变）                 HTTP 200，3697 字节
+[OK ] POST /api/assistant/ask 可回答流程类问题             来源 kb，255 字
+[OK ] 助手回答的实时数据与 /api/stats 一致（不造数）                任务总数 11 出现在回答里
+[OK ] 助手对不知道的问题明确说不知道（不编造）                         来源 kb-miss，未编造内容
+[OK ] GET /api/assistant/tour 返回带真实选择器的引导步骤        首页 7 步，全部带目标选择器与标题
+[OK ] 引导步骤按当前角色标注可用性（管理员全可做）                       规则页 3 步全部 allowed=True
+[OK ] GET /api/assistant/kb 返回知识库规模与常见问题           知识库 25 条，常见问题 6 个
+[OK ] 未登录访问助手接口被拦（401，不泄露业务数据）                     HTTP 401
+[OK ] GET /api/cases 支持 writeback 筛选（统计卡下钻用）       HTTP 200，返回 1 个
+[OK ] GET /api/cases 支持 risk 筛选（统计卡下钻用）            HTTP 200，高风险 5 个
+[OK ] 登录页含三类演示身份的一键进入入口                            HTTP 200，9744 字节
+[OK ] 权限受限页由服务端填充渲染（无未替换占位符）                       HTTP 403，5423 字节，未替换占位符 0 个

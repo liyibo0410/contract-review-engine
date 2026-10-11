@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" class=" js"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>动态孪生平台看板 · 亦大合同智能审查系统</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/fx.css">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('cr-theme');
+    if (t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { }
+  document.documentElement.className += ' js';
+  setTimeout(function () {
+    var v = document.querySelectorAll('.reveal:not(.in)');
+    for (var i = 0; i < v.length; i++) {
+      var r = v[i].getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) v[i].classList.add('in');
+    }
+  }, 2600);
+})();
+</script>
+</head>
+<body>
+
+<div class="topbar" id="topbar"><a class="brand" href="/" title="返回审查大盘"><img class="brand-logo" src="/assets/logo-sm.png" alt="亦大 标识" width="30" height="31"><span class="brand-txt"><b>合同智能审查系统</b><i>亦大 · intelligent contract review</i></span></a><nav class="nav" aria-label="主导航"><a href="/">审查大盘</a><a href="/workbench">智能审查工作台</a><a href="/twin" class="active" aria-current="page">动态孪生看板</a><a href="/rules">合规规则与模板</a></nav><div class="spacer"></div><span class="env-tag" id="envTag">孪生看板 · 演示态实时镜像</span><a class="btn sm ghost" href="/mock/feishu/api/todo" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M14 4h6v6"></path><path d="M20 4l-8.5 8.5"></path><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"></path></svg>模拟审批接口</a><button class="btn sm ghost" id="themeBtn" onclick="CR.toggleTheme()" title="切换到浅色主题"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path></svg><span>浅色</span></button><span class="role-bar"><span class="role-chip" id="roleChip" title="配置审批流对接参数、维护合规审查规则与标准条款库、监控审查任务状态并处理阻塞重试"><span class="rc-role">系统管理员</span><span class="rc-user">admin</span></span><select class="role-switch" id="roleSwitch" onchange="CR.roleSwitch(this.value)" aria-label="切换演示身份"><option value="legal">法务审查人</option><option value="applicant">业务经办人</option><option value="admin" selected="">系统管理员</option></select><a class="btn sm ghost" href="/logout" title="退出登录">退出</a></span></div>
+
+<div class="board">
+
+  <!-- ============================ 看板头部 ============================ -->
+  <div class="dash-head reveal in">
+    <div class="dh-title">
+      <img class="dh-logo" src="/assets/logo-sm.png" alt="亦大 标识" width="40" height="41">
+      <div>
+        <h1>动态孪生平台看板</h1>
+        <div class="sub">CONTRACT REVIEW DIGITAL TWIN · 合同审查全链路实时镜像</div>
+      </div>
+    </div>
+    <div class="dash-clock">
+      <div class="t" id="clock">08:48:42</div>
+      <div class="d" id="date">2026 年 9 月 19 日 · 星期六</div>
+    </div>
+    <div class="dash-live">
+      <span class="dot"></span>
+      <span id="liveText">运行中 · OCR ocr-win · PDF 服务端直出</span>
+    </div>
+  </div>
+
+  <!-- ============================ KPI 行 ============================ -->
+  <div class="kpi-row">
+    <div class="kpi reveal in" style="--kc:var(--brand)">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7.5" ry="3"></ellipse><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"></path><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"></path></svg></div>
+      <div class="val countup" id="kTotal">0</div>
+      <div class="lab">审查任务总数</div>
+    </div>
+    <div class="kpi reveal in" data-d="1" style="--kc:var(--high)">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5l8.5 15h-17z"></path><path d="M12 10v4.5"></path><circle cx="12" cy="17.4" r=".9" fill="currentColor" stroke="none"></circle></svg></div>
+      <div class="val countup" id="kHigh">0</div>
+      <div class="lab">高风险合同</div>
+    </div>
+    <div class="kpi reveal in" data-d="2" style="--kc:var(--cyan)">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></div>
+      <div class="val countup" id="kAvg">4</div>
+      <div class="lab">平均响应耗时</div>
+    </div>
+    <div class="kpi reveal in" data-d="3" style="--kc:var(--teal)">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"></path><path d="M20 4l-8.5 8.5"></path><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"></path></svg></div>
+      <div class="val countup" id="kWb">0</div>
+      <div class="lab">已回写审批单</div>
+    </div>
+    <div class="kpi reveal" data-d="4" style="--kc:var(--brand-2)">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-7 4 15 2.5-8h5"></path></svg></div>
+      <div class="val countup" id="kReq">86</div>
+      <div class="lab">累计接口请求</div>
+      <div class="spark in" id="sparkReq"><i class="bar" style="height:100%;background:var(--brand-2)"></i><i class="bar" style="height:100%;background:var(--brand-2)"></i><i class="bar" style="height:100%;background:var(--brand-2)"></i><i class="bar" style="height:100%;background:var(--brand-2)"></i><i class="bar" style="height:100%;background:var(--brand-2)"></i></div>
+    </div>
+  </div>
+
+  <!-- ============================ 主行 ============================ -->
+  <div class="dash-main">
+
+    <!-- 左：引擎服务 -->
+    <div class="panel reveal">
+      <div class="panel-head">
+        <span class="t"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"></rect><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"></path></svg></span>引擎服务</span>
+        <span class="badge ok" id="engBadge">3 / 3 在线</span>
+      </div>
+      <div class="panel-body">
+
+        <div class="model-card">
+          <div class="mc-head">
+            <div>
+              <div class="mc-name">文档解析引擎</div>
+              <div class="mc-role">DOCX · PDF · 扫描件 OCR</div>
+            </div>
+            <div class="mc-status"><span class="d"></span>在线</div>
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge" id="gw1"><svg viewBox="0 0 68 68" style="width:68px;height:68px"><circle class="track" cx="34" cy="34" r="30" fill="none" stroke-width="6"></circle><circle class="prog" cx="34" cy="34" r="30" fill="none" stroke="var(--cyan)" stroke-width="6" stroke-dasharray="188.5" stroke-dashoffset="81.5" style="filter:drop-shadow(0 0 6px var(--cyan))"></circle></svg></div>
+            <div class="gauge-info">
+              <div class="gi"><span>解析负载</span><b id="g1g">57%</b></div>
+              <div class="gi"><span>页 / 段</span><b id="g1p">10 页 / 41 段</b></div>
+              <div class="gi"><span>OCR 置信度</span><b id="g1c">0.963</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="mc-head">
+            <div>
+              <div class="mc-name">规则审查引擎</div>
+              <div class="mc-role">规则判定 · 大模型不参与判定</div>
+            </div>
+            <div class="mc-status"><span class="d"></span>在线</div>
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge" id="gw2"><svg viewBox="0 0 68 68" style="width:68px;height:68px"><circle class="track" cx="34" cy="34" r="30" fill="none" stroke-width="6"></circle><circle class="prog" cx="34" cy="34" r="30" fill="none" stroke="var(--brand)" stroke-width="6" stroke-dasharray="188.5" stroke-dashoffset="110.8" style="filter:drop-shadow(0 0 6px var(--brand))"></circle></svg></div>
+            <div class="gauge-info">
+              <div class="gi"><span>审查负载</span><b id="g2g">41%</b></div>
+              <div class="gi"><span>已加载规则</span><b id="g2r">12 条</b></div>
+              <div class="gi"><span>本章命中</span><b id="g2h">0 项</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="mc-head">
+            <div>
+              <div class="mc-name">条款推荐引擎</div>
+              <div class="mc-role">标准示范条款库 · 兜底可用</div>
+            </div>
+            <div class="mc-status"><span class="d"></span>在线</div>
+          </div>
+          <div class="gauge-wrap">
+            <div class="gauge" id="gw3"><svg viewBox="0 0 68 68" style="width:68px;height:68px"><circle class="track" cx="34" cy="34" r="30" fill="none" stroke-width="6"></circle><circle class="prog" cx="34" cy="34" r="30" fill="none" stroke="var(--brand-2)" stroke-width="6" stroke-dasharray="188.5" stroke-dashoffset="142.6" style="filter:drop-shadow(0 0 6px var(--brand-2))"></circle></svg></div>
+            <div class="gauge-info">
+              <div class="gi"><span>推荐负载</span><b id="g3g">24%</b></div>
+              <div class="gi"><span>条款覆盖度</span><b id="g3c">—</b></div>
+              <div class="gi"><span>生成耗时</span><b id="g3l">14 ms</b></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 中：审查流水线 -->
+    <div class="panel reveal" data-d="1">
+      <div class="panel-head">
+        <span class="t"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3.5" width="6.5" height="6" rx="1.6"></rect><rect x="14.5" y="14.5" width="6.5" height="6" rx="1.6"></rect><path d="M9.5 6.5h5.5a2 2 0 0 1 2 2v6"></path><circle cx="17" cy="6.5" r="2.6"></circle></svg></span>审查流水线</span>
+        <span class="badge run" id="reqCount">已处理 0 单</span>
+      </div>
+      <div class="panel-body">
+        <div class="pipeline-wrap"><div id="pipeline"><svg class="pipeline-svg" viewBox="0 0 1195 232" preserveAspectRatio="xMidYMid meet" role="img"><defs><marker id="parr" markerWidth="7" markerHeight="7" refX="5.4" refY="3" orient="auto"><path d="M0 0L6 3L0 6z" fill="rgba(79,140,255,.6)"></path></marker><marker id="parrA" markerWidth="7" markerHeight="7" refX="5.4" refY="3" orient="auto"><path d="M0 0L6 3L0 6z" fill="rgba(251,191,36,.7)"></path></marker></defs><text x="30" y="26" font-size="12" font-weight="700" fill="var(--sub)" letter-spacing="1">审查流水线 · PIPELINE</text><text x="1165" y="26" text-anchor="end" font-size="11" fill="var(--faint)">虚线为实时数据流，异常时走下方分支</text><line class="conn" x1="150" y1="100" x2="175" y2="100" marker-end="url(#parr)"></line><line class="conn" x1="295" y1="100" x2="320" y2="100" marker-end="url(#parr)"></line><line class="conn" x1="440" y1="100" x2="465" y2="100" marker-end="url(#parr)"></line><line class="conn" x1="585" y1="100" x2="610" y2="100" marker-end="url(#parr)"></line><line class="conn" x1="730" y1="100" x2="755" y2="100" marker-end="url(#parr)"></line><line class="conn" x1="875" y1="100" x2="900" y2="100" marker-end="url(#parr)"></line><line class="conn" x1="1020" y1="100" x2="1045" y2="100" marker-end="url(#parr)"></line><path class="conn-loop" d="M235 138 V164 H385 V164" marker-end="url(#parrA)"></path><rect x="387" y="152" width="132" height="24" rx="7" fill="var(--mid-bg)" stroke="var(--mid-line)"></rect><text x="453" y="168" text-anchor="middle" font-size="11" fill="var(--mid)">解析受阻 · 阻塞重试</text><g class="node-g" id="node1" style="color:var(--brand)"><rect class="nd-glow" x="27" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--brand)" stroke-width="2"></rect><rect class="nd-rect" x="30" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="30" y="62" width="3" height="76" rx="1.5" fill="var(--brand)"></rect><circle class="nd-no" cx="50" cy="84" r="10" fill="var(--brand)"></circle><text x="50" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">1</text><text x="66" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">附件下载</text><text x="44" y="118" font-size="10.5" fill="var(--faint)">校验完整性 · 去重</text></g><g class="node-g" id="node2" style="color:var(--cyan)"><rect class="nd-glow" x="172" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--cyan)" stroke-width="2"></rect><rect class="nd-rect" x="175" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="175" y="62" width="3" height="76" rx="1.5" fill="var(--cyan)"></rect><circle class="nd-no" cx="195" cy="84" r="10" fill="var(--cyan)"></circle><text x="195" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">2</text><text x="211" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">文档解析</text><text x="189" y="118" font-size="10.5" fill="var(--faint)">DOCX / PDF / OCR</text></g><g class="node-g" id="node3" style="color:var(--brand)"><rect class="nd-glow" x="317" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--brand)" stroke-width="2"></rect><rect class="nd-rect" x="320" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="320" y="62" width="3" height="76" rx="1.5" fill="var(--brand)"></rect><circle class="nd-no" cx="340" cy="84" r="10" fill="var(--brand)"></circle><text x="340" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">3</text><text x="356" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">条款切分</text><text x="334" y="118" font-size="10.5" fill="var(--faint)">法定与业务条款</text></g><g class="node-g" id="node4" style="color:var(--teal)"><rect class="nd-glow" x="462" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--teal)" stroke-width="2"></rect><rect class="nd-rect" x="465" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="465" y="62" width="3" height="76" rx="1.5" fill="var(--teal)"></rect><circle class="nd-no" cx="485" cy="84" r="10" fill="var(--teal)"></circle><text x="485" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">4</text><text x="501" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">元数据抽取</text><text x="479" y="118" font-size="10.5" fill="var(--faint)">主体 · 金额 · 期限</text></g><g class="node-g" id="node5" style="color:var(--brand-2)"><rect class="nd-glow" x="607" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--brand-2)" stroke-width="2"></rect><rect class="nd-rect" x="610" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="610" y="62" width="3" height="76" rx="1.5" fill="var(--brand-2)"></rect><circle class="nd-no" cx="630" cy="84" r="10" fill="var(--brand-2)"></circle><text x="630" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">5</text><text x="646" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">规则匹配</text><text x="624" y="118" font-size="10.5" fill="var(--faint)">正则 / 关键词 / 阈值</text></g><g class="node-g" id="node6" style="color:var(--brand)"><rect class="nd-glow" x="752" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--brand)" stroke-width="2"></rect><rect class="nd-rect" x="755" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="755" y="62" width="3" height="76" rx="1.5" fill="var(--brand)"></rect><circle class="nd-no" cx="775" cy="84" r="10" fill="var(--brand)"></circle><text x="775" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">6</text><text x="791" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">依据生成</text><text x="769" y="118" font-size="10.5" fill="var(--faint)">合规依据与成因</text></g><g class="node-g" id="node7" style="color:var(--cyan)"><rect class="nd-glow" x="897" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--cyan)" stroke-width="2"></rect><rect class="nd-rect" x="900" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="900" y="62" width="3" height="76" rx="1.5" fill="var(--cyan)"></rect><circle class="nd-no" cx="920" cy="84" r="10" fill="var(--cyan)"></circle><text x="920" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">7</text><text x="936" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">摘要汇总</text><text x="914" y="118" font-size="10.5" fill="var(--faint)">总风险等级判定</text></g><g class="node-g active" id="node8" style="color:var(--brand-2)"><rect class="nd-glow" x="1042" y="59" width="126" height="82" rx="14" fill="none" stroke="var(--brand-2)" stroke-width="2"></rect><rect class="nd-rect" x="1045" y="62" width="120" height="76" rx="11" fill="var(--panel-2)" stroke="var(--line)"></rect><rect x="1045" y="62" width="3" height="76" rx="1.5" fill="var(--brand-2)"></rect><circle class="nd-no" cx="1065" cy="84" r="10" fill="var(--brand-2)"></circle><text x="1065" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#04101f">8</text><text x="1081" y="88" font-size="12.5" font-weight="650" fill="var(--ink)">回写审批</text><text x="1059" y="118" font-size="10.5" fill="var(--faint)">写入评论区</text></g><circle class="flow-dot" r="2.6" fill="var(--cyan)" style="color:var(--cyan)"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.00s" path="M150 100 L175 100"></animateMotion></circle><circle class="flow-dot" r="2.6" fill="var(--cyan)" style="color:var(--cyan)"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.30s" path="M295 100 L320 100"></animateMotion></circle><circle class="flow-dot" r="2.6" fill="var(--cyan)" style="color:var(--cyan)"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.60s" path="M440 100 L465 100"></animateMotion></circle><circle class="flow-dot" r="2.6" fill="var(--cyan)" style="color:var(--cyan)"><animateMotion dur="2.4s" repeatCount="indefinite" begin="0.90s" path="M585 100 L610 100"></animateMotion></circle><circle class="flow-dot" r="2.6" fill="var(--cyan)" style="color:var(--cyan)"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.20s" path="M730 100 L755 100"></animateMotion></circle><circle class="flow-dot" r="2.6" fill="var(--cyan)" style="color:var(--cyan)"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.50s" path="M875 100 L900 100"></animateMotion></circle><circle class="flow-dot" r="2.6" fill="var(--cyan)" style="color:var(--cyan)"><animateMotion dur="2.4s" repeatCount="indefinite" begin="1.80s" path="M1020 100 L1045 100"></animateMotion></circle></svg></div></div>
+        <div class="req-indicator">
+          <span class="ri-label">当前环节</span>
+          <div class="ri-bar" id="reqBar" style="--p: 100%;"></div>
+          <span class="ri-step" id="reqStep">回写审批</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右：存储与中间件 -->
+    <div class="panel reveal" data-d="2">
+      <div class="panel-head">
+        <span class="t"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6.5" rx="1.8"></rect><rect x="3" y="13.5" width="18" height="6.5" rx="1.8"></rect><path d="M7 7.2h.01M7 16.8h.01"></path></svg></span>存储与中间件</span>
+        <span class="badge ok">全部就绪</span>
+      </div>
+      <div class="panel-body">
+
+        <div class="store-card">
+          <div class="sc-head">
+            <div class="sc-name"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="7.5" ry="3"></ellipse><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"></path><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"></path></svg></span>审查数据库</div>
+            <div class="sc-status"><span class="d"></span>正常</div>
+          </div>
+          <div class="sc-desc">SQLite · 任务 / 段落 / 命中 / 审计四表</div>
+          <div class="sc-meta">
+            <span class="m">任务 <b id="sTask">0</b></span>
+            <span class="m">审计 <b id="sAudit">—</b></span>
+          </div>
+        </div>
+
+        <div class="store-card">
+          <div class="sc-head">
+            <div class="sc-name"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.4-3 8.3-7.5 9.7C7.5 20.3 4.5 16.4 4.5 12V6z"></path><path d="M9 12l2 2 4-4"></path></svg></span>合规规则库</div>
+            <div class="sc-status"><span class="d"></span>已加载</div>
+          </div>
+          <div class="sc-desc">按合同类型分库 · 支持在线维护与备份</div>
+          <div class="sc-meta">
+            <span class="m">类型 <b id="sType">4 类</b></span>
+            <span class="m">规则版本 <b id="sVer">1.0</b></span>
+          </div>
+        </div>
+
+        <div class="store-card">
+          <div class="sc-head">
+            <div class="sc-name"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16"></path><path d="M6 8h12"></path><path d="M6 8l-3 5.5h6z"></path><path d="M18 8l-3 5.5h6z"></path><path d="M8.5 20h7"></path></svg></span>示范条款库</div>
+            <div class="sc-status"><span class="d"></span>可用</div>
+          </div>
+          <div class="sc-desc">命中规则时优先取用的标准改写条款</div>
+          <div class="sc-meta">
+            <span class="m">条款组 <b id="sLib">6 组</b></span>
+            <span class="m">离线兜底 <b id="sOffline">已启用</b></span>
+          </div>
+        </div>
+
+        <div class="store-card">
+          <div class="sc-head">
+            <div class="sc-name"><span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 13.5a4 4 0 0 0 5.6 0l3-3a4 4 0 0 0-5.6-5.6l-1 1"></path><path d="M13.5 10.5a4 4 0 0 0-5.6 0l-3 3a4 4 0 0 0 5.6 5.6l1-1"></path></svg></span>审批回写通道</div>
+            <div class="sc-status"><span class="d"></span>连通</div>
+          </div>
+          <div class="sc-desc">模拟审批系统评论区写入接口</div>
+          <div class="sc-meta">
+            <span class="m">回写成功 <b id="sWbOk">0</b></span>
+            <span class="m">通道 <b id="sWbCh">—</b></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ 底行 ============================ -->
+  <div class="dash-bottom">
+
+    <!-- 性能 -->
+    <div class="panel reveal">
+      <div class="panel-head">
+        <span class="t"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 15a9 9 0 1 0-17 0"></path><path d="M12 12.5l4-4"></path><circle cx="12" cy="14" r="1.4"></circle></svg></span>接口响应</span>
+        <span class="badge warn" id="perfBadge">热点接口平均耗时</span>
+      </div>
+      <div class="panel-body">
+        <div id="perfBars"><div class="perf-block"><div class="perf-head"><span class="pl">热点接口平均耗时</span><span class="pv">4 ms 均</span></div><div class="perf-bars"><div class="pb" style="height:100%;background:var(--cyan)"><span class="pl">44ms</span><span class="pl-x">/login</span></div><div class="pb" style="height:12.844036697247704%;background:var(--cyan)"><span class="pl">6ms</span><span class="pl-x">/api/auth/me</span></div><div class="pb" style="height:81.65137614678899%;background:var(--cyan)"><span class="pl">36ms</span><span class="pl-x">i/auth/login</span></div><div class="pb" style="height:8.486238532110093%;background:var(--cyan)"><span class="pl">4ms</span><span class="pl-x">ssets/fx.css</span></div><div class="pb" style="height:7.339449541284404%;background:var(--cyan)"><span class="pl">3ms</span><span class="pl-x">sets/app.css</span></div><div class="pb" style="height:23.853211009174313%;background:var(--cyan)"><span class="pl">10ms</span><span class="pl-x">/api/health</span></div></div></div></div>
+        <div class="faint" style="font-size:11.5px">
+          数据来源：服务端运行指标（累计请求 / 平均耗时 / 错误率）
+          <span id="perfMeta">　本次会话：86 次请求 · 错误 2 次（2.33%）· 运行 0 分钟</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 合规校验 -->
+    <div class="panel reveal" data-d="1">
+      <div class="panel-head">
+        <span class="t"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.4-3 8.3-7.5 9.7C7.5 20.3 4.5 16.4 4.5 12V6z"></path><path d="M9 12l2 2 4-4"></path></svg></span>合规与保护机制</span>
+        <span class="badge ok" id="secBadge">全部生效</span>
+      </div>
+      <div class="panel-body" id="secList"><div class="sec-item"><div class="si-ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path><path d="M12 14.5v2"></path></svg></div><div class="si-txt"><div class="t">阻塞保护机制</div><div class="d">解析失败 / 加密 / 模糊时转入 blocked，不硬出结论</div></div><span class="si-tag ok">生效</span></div><div class="sec-item"><div class="si-ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><path d="M12 3l7.5 3v6c0 4.4-3 8.3-7.5 9.7C7.5 20.3 4.5 16.4 4.5 12V6z"></path><path d="M9 12l2 2 4-4"></path></svg></div><div class="si-txt"><div class="t">规则表达式白名单求值</div><div class="d">条件不是裸 eval，仅允许断言函数与字面量</div></div><span class="si-tag ok">生效</span></div><div class="sec-item"><div class="si-ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.2l2.6 2.6 4.6-5"></path></svg></div><div class="si-txt"><div class="t">幂等控制与指纹去重</div><div class="d">同一审批单 / 同一文件不重复审查</div></div><span class="si-tag ok">生效</span></div><div class="sec-item"><div class="si-ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 4v4h-4"></path></svg></div><div class="si-txt"><div class="t">回写失败自动重试</div><div class="d">回写状态三态跟踪，失败可一键重试</div></div><span class="si-tag ok">无待重试</span></div><div class="sec-item"><div class="si-ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><ellipse cx="12" cy="6" rx="7.5" ry="3"></ellipse><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"></path><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"></path></svg></div><div class="si-txt"><div class="t">审查结论可复现</div><div class="d">规则判定与大模型措辞分离，结论可解释</div></div><span class="si-tag ok">生效</span></div><div class="sec-item"><div class="si-ic"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px"><path d="M2.5 12S6 6.5 12 6.5 21.5 12 21.5 12 18 17.5 12 17.5 2.5 12 2.5 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></div><div class="si-txt"><div class="t">全链路审计留痕</div><div class="d">解析 / 审查 / 回写每步写入审计表</div></div><span class="si-tag info">生效</span></div></div>
+    </div>
+
+    <!-- 实时日志 -->
+    <div class="panel reveal log-panel" data-d="2">
+      <div class="panel-head">
+        <span class="t"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"></path><circle cx="18.5" cy="18" r="2.2"></circle></svg></span>实时审查日志</span>
+        <span class="badge run" id="logCount">6 条</span>
+      </div>
+      <div class="panel-body" style="padding-top:10px">
+        <div class="log-list" id="logList"><div class="log-item"><span class="lt">08:48:40</span><span class="lq">规则引擎命中 3 项，最高等级 高风险</span><span class="ls run">running</span></div><div class="log-item"><span class="lt">08:48:36</span><span class="lq">元数据抽取：相对方 洛阳某某科技有限公司 · 金额 ¥353 万</span><span class="ls ok">done</span></div><div class="log-item"><span class="lt">08:48:36</span><span class="lq">AP-2026-950 条款切分：识别 9 类法定与业务条款</span><span class="ls ok">done</span></div><div class="log-item"><span class="lt">08:48:36</span><span class="lq">PDF 解析完成 · 10 页 / 41 段 / 3,621 字符</span><span class="ls ok">done</span></div><div class="log-item"><span class="lt">08:48:36</span><span class="lq">AP-2026-994 附件下载完成 · 903 KB · 指纹 9bdd709d</span><span class="ls ok">done</span></div><div class="log-item"><span class="lt">08:48:36</span><span class="lq">拉取审批单 AP-2026-979 合同附件</span><span class="ls run">running</span></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/assets/app.js"></script><div class="glow g1"></div><div class="glow g2"></div><div class="scanline"></div>
+<script src="/assets/charts.js"></script>
+<script>
+CR.initAuth('/twin', '孪生看板 · 演示态实时镜像');
+
+/* ==========================================================================
+   说明：KPI（任务数 / 高风险 / 回写 / 接口请求 / 平均耗时）与存储卡片、
+   接口响应柱图全部取自服务端真实接口；引擎负载、流水线轮转与日志流
+   为演示态模拟值（在本地演示环境中用于表现实时性），页面内已标注。
+   ========================================================================== */
+
+const STEPS = [
+  { title: '附件下载', sub: '校验完整性 · 去重', color: 'var(--brand)' },
+  { title: '文档解析', sub: 'DOCX / PDF / OCR', color: 'var(--cyan)' },
+  { title: '条款切分', sub: '法定与业务条款', color: 'var(--brand)' },
+  { title: '元数据抽取', sub: '主体 · 金额 · 期限', color: 'var(--teal)' },
+  { title: '规则匹配', sub: '正则 / 关键词 / 阈值', color: 'var(--brand-2)' },
+  { title: '依据生成', sub: '合规依据与成因', color: 'var(--brand)' },
+  { title: '摘要汇总', sub: '总风险等级判定', color: 'var(--cyan)' },
+  { title: '回写审批', sub: '写入评论区', color: 'var(--brand-2)' }
+];
+
+/* 演示态日志模板：字段与环节名均取自本项目真实业务流 */
+const LOG_TMPL = [
+  { t: '拉取审批单 {no} 合同附件', s: 'run' },
+  { t: '{no} 附件下载完成 · {kb} KB · 指纹 {fp}', s: 'ok' },
+  { t: '{fmt} 解析完成 · {page} 页 / {para} 段 / {chars} 字符', s: 'ok' },
+  { t: '{no} 条款切分：识别 {cls} 类法定与业务条款', s: 'ok' },
+  { t: '元数据抽取：相对方 {party} · 金额 {amt}', s: 'ok' },
+  { t: '规则引擎命中 {hit} 项，最高等级 {lvl}', s: 'run' },
+  { t: '生成修改建议：{rule} → 已附示范条款', s: 'ok' },
+  { t: '{no} 摘要汇总：结论 {concl} · 高风险 {h} 项', s: 'run' },
+  { t: '回写审批评论区成功 · 评论 {cid}', s: 'ok' },
+  { t: '{no} 解析受阻（{why}），任务转入阻塞重试', s: 'fail' }
+];
+
+const FMT = ['DOCX', 'PDF', '扫描件 OCR'];
+const PARTY = ['洛阳某某科技有限公司', '河南某某供应链有限公司', '某某信息技术服务有限公司'];
+const RULES = ['RK-PUR-004 知识产权归属', 'RK-SAL-002 违约责任不对等',
+               'RK-PUR-007 付款前置验收', 'RK-LAB-003 保密义务期限'];
+const WHY = ['文档加密', '扫描件置信度偏低', '正文为空'];
+
+let reqTotal = 0;
+let stat = { total: 0, high: 0, wb: 0 };
+let clockSeed = { ratio: 0 };
+const reqSamples = [];
+
+const rnd = n => Math.floor(Math.random() * n);
+const pick = a => a[rnd(a.length)];
+const fmtNo = () => 'AP-2026-' + String(900 + rnd(99));
+const fmtFp = () => Math.random().toString(16).slice(2, 10);
+
+/* ------------------------------------------------------------ 时钟 */
+CH.clock(CR.$('#clock'), CR.$('#date'));
+
+/* ------------------------------------------------------------ 引擎仪表 */
+[['#gw1', 62, 'var(--cyan)'], ['#gw2', 38, 'var(--brand)'], ['#gw3', 24, 'var(--brand-2)']]
+  .forEach(([sel, v, c]) => { CR.$(sel).innerHTML = CH.gauge(v, { color: c }); });
+
+let load1 = 62, load2 = 38, load3 = 24;
+function paintGauges() {
+  CH.setGauge(CR.$('#gw1 .prog'), CR.$('#g1g'), load1);
+  CH.setGauge(CR.$('#gw2 .prog'), CR.$('#g2g'), load2);
+  CH.setGauge(CR.$('#gw3 .prog'), CR.$('#g3g'), load3);
+}
+function driftGauges() {
+  load1 = CH.walk(load1, 34, 93, 7);
+  load2 = CH.walk(load2, 18, 72, 6);
+  load3 = CH.walk(load3, 10, 52, 5);
+  paintGauges();
+  CR.$('#g3l').textContent = (8 + rnd(14)) + ' ms';
+  CR.$('#g1c').textContent = (0.88 + Math.random() * 0.11).toFixed(3);
+}
+
+/* ------------------------------------------------------------ 流水线 */
+CH.pipeline(CR.$('#pipeline'), STEPS.map((s, i) => ({
+  id: 'node' + (i + 1), title: s.title, sub: s.sub, color: s.color
+})));
+
+let step = 0;
+function tickPipeline() {
+  if (step > 0) {
+    const prev = CR.$('#node' + step);
+    if (prev) prev.classList.remove('active');
+  }
+  if (step < STEPS.length) {
+    const node = CR.$('#node' + (step + 1));
+    if (node) node.classList.add('active');
+    CR.$('#reqBar').style.setProperty('--p', ((step + 1) / STEPS.length * 100) + '%');
+    CR.$('#reqStep').textContent = STEPS[step].title;
+    if (step === 1 || step === 2) {
+      CR.$('#g1p').textContent = (3 + rnd(9)) + ' 页 / ' + (24 + rnd(22)) + ' 段';
+    }
+    if (step === 4) {
+      CR.$('#g2h').textContent = rnd(4) + ' 项';
+    }
+    step++;
+  } else {
+    // 一轮结束：累加计数 + 写入一条真实形态的日志
+    step = 0;
+    reqTotal++;
+    CR.$('#reqCount').textContent = '已处理 ' + reqTotal + ' 单';
+    CR.$('#reqStep').textContent = '待命中';
+    CR.$('#reqBar').style.setProperty('--p', '0%');
+    pushLog(buildLog());
+  }
+}
+
+let logIdx = 0;
+function buildLog() {
+  const tpl = LOG_TMPL[logIdx % LOG_TMPL.length];
+  logIdx++;
+  const no = fmtNo();
+  return tpl.t
+    .replace('{no}', no)
+    .replace('{kb}', 120 + rnd(900))
+    .replace('{fp}', fmtFp())
+    .replace('{fmt}', pick(FMT))
+    .replace('{page}', 3 + rnd(9))
+    .replace('{para}', 24 + rnd(26))
+    .replace('{chars}', (3000 + rnd(6000)).toLocaleString('zh-CN'))
+    .replace('{cls}', 6 + rnd(5))
+    .replace('{party}', pick(PARTY))
+    .replace('{amt}', '¥' + (80 + rnd(900)) + ' 万')
+    .replace('{hit}', 1 + rnd(5))
+    .replace('{lvl}', pick(['中风险', '高风险', '低风险']))
+    .replace('{rule}', pick(RULES))
+    .replace('{concl}', pick(['建议拒绝', '需整改', '通过']))
+    .replace('{h}', rnd(3))
+    .replace('{cid}', 'C-' + (8000 + rnd(999)))
+    .replace('{why}', pick(WHY));
+}
+
+function pushLog(text) {
+  const list = CR.$('#logList');
+  const d = new Date();
+  const p = n => String(n).padStart(2, '0');
+  const cls = /受阻|失败/.test(text) ? 'fail' : (/命中|汇总|拉取/.test(text) ? 'run' : 'ok');
+  const el = document.createElement('div');
+  el.className = 'log-item';
+  el.innerHTML = '<span class="lt">' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' +
+    p(d.getSeconds()) + '</span><span class="lq">' + CR.esc(text) + '</span>' +
+    '<span class="ls ' + cls + '">' + (cls === 'fail' ? 'blocked' : cls === 'run' ? 'running' : 'done') +
+    '</span>';
+  list.insertBefore(el, list.firstChild);
+  while (list.children.length > 22) list.removeChild(list.lastChild);
+  CR.$('#logCount').textContent = Math.min(22, list.children.length) + ' 条';
+}
+
+/* ------------------------------------------------------------ 合规校验项 */
+function renderSec(d) {
+  const items = [
+    { ic: 'lock', t: '阻塞保护机制', d: '解析失败 / 加密 / 模糊时转入 blocked，不硬出结论',
+      tag: '生效', cls: 'ok' },
+    { ic: 'shield', t: '规则表达式白名单求值', d: '条件不是裸 eval，仅允许断言函数与字面量',
+      tag: '生效', cls: 'ok' },
+    { ic: 'checkCircle', t: '幂等控制与指纹去重', d: '同一审批单 / 同一文件不重复审查',
+      tag: '生效', cls: 'ok' },
+    { ic: 'refresh', t: '回写失败自动重试', d: '回写状态三态跟踪，失败可一键重试',
+      tag: d.blocked ? (d.blocked + ' 单待重试') : '无待重试', cls: d.blocked ? 'warn' : 'ok' },
+    { ic: 'db', t: '审查结论可复现', d: '规则判定与大模型措辞分离，结论可解释',
+      tag: '生效', cls: 'ok' },
+    { ic: 'eye', t: '全链路审计留痕', d: '解析 / 审查 / 回写每步写入审计表',
+      tag: '生效', cls: 'info' }
+  ];
+  CR.$('#secList').innerHTML = items.map(it =>
+    '<div class="sec-item">' +
+    '<div class="si-ic">' + CR.icon(it.ic, '', 15) + '</div>' +
+    '<div class="si-txt"><div class="t">' + CR.esc(it.t) + '</div>' +
+    '<div class="d">' + CR.esc(it.d) + '</div></div>' +
+    '<span class="si-tag ' + it.cls + '">' + CR.esc(it.tag) + '</span>' +
+    '</div>').join('');
+}
+
+/* ------------------------------------------------------------ 真实数据接入 */
+async function pullReal() {
+  let st = null, mt = null, h = null;
+  try {
+    const r = await Promise.all([
+      CR.api('GET', '/api/stats'), CR.api('GET', '/api/metrics'), CR.api('GET', '/api/health')
+    ]);
+    st = r[0]; mt = r[1]; h = r[2];
+  } catch (e) { /* 单次失败不阻断看板 */ }
+
+  if (st) {
+    stat.total = st.total || 0;
+    stat.high = (st.by_risk || {}).high || 0;
+    stat.wb = (st.by_writeback || {}).success || 0;
+    CR.countUp(CR.$('#kTotal'), stat.total, { duration: 1400 });
+    CR.countUp(CR.$('#kHigh'), stat.high, { duration: 1400 });
+    CR.countUp(CR.$('#kWb'), stat.wb, { duration: 1400 });
+    CR.$('#sTask').textContent = stat.total;
+    CR.$('#sWbOk').textContent = stat.wb;
+    renderSec(st);
+  }
+  if (mt) {
+    CR.countUp(CR.$('#kAvg'), Math.round(mt.avg_ms || 0), { duration: 1400 });
+    CR.countUp(CR.$('#kReq'), mt.requests || 0, { duration: 1600, thousands: true });
+    CR.$('#perfMeta').innerHTML = '　本次会话：' + mt.requests + ' 次请求 · 错误 ' +
+      mt.errors + ' 次（' + (mt.error_rate * 100).toFixed(2) + '%）· 运行 ' +
+      Math.round(mt.uptime_sec / 60) + ' 分钟';
+    CH.groupBars(CR.$('#perfBars'), [{
+      title: '热点接口平均耗时', color: 'var(--cyan)',
+      summary: CR.fmtMs(mt.avg_ms) + ' 均',
+      values: (mt.top_paths || []).slice(0, 6).map(t => t.avg_ms),
+      labels: (mt.top_paths || []).slice(0, 6).map(t => t.path.replace(/^[A-Z]+ /, '')),
+      xlabels: (mt.top_paths || []).slice(0, 6).map(t => t.path.replace(/^[A-Z]+ /, '').slice(-12)),
+      unit: 'ms'
+    }]);
+    reqSamples.push(mt.requests || 0);
+    paintSpark();
+  }
+  if (h) {
+    CR.$('#liveText').textContent = '运行中 · OCR ' + (h.ocr_backend || '—') +
+      ' · PDF ' + (h.browser_for_pdf ? '服务端直出' : '浏览器打印');
+    CR.$('#g1p').textContent = (h.ocr_backend || '').slice(0, 18) || '—';
+  }
+
+  // 规则库与示范条款库规模（真实）
+  try {
+    const rd = await CR.api('GET', '/api/rules?type=purchase');
+    CR.$('#g2r').textContent = ((rd.rules || {}).rules || []).length + ' 条';
+    CR.$('#sType').textContent = (rd.types || []).length + ' 类';
+    CR.$('#sVer').textContent = ((rd.rules || {}).version) || '—';
+    const lib = ((rd.library || {}).library) || {};
+    CR.$('#sLib').textContent = Object.keys(lib).length + ' 组';
+  } catch (e) { }
+}
+
+/* sparkline：会话内真实采样（每轮刷新记录一次累计请求数） */
+function paintSpark() {
+  let vals = reqSamples.slice(-12);
+  if (!vals.length) return;
+  // 首屏采样点不足时补一条平线，避免趋势位留空
+  while (vals.length < 5) vals = [vals[0]].concat(vals);
+  const base = Math.min.apply(null, vals);
+  const rel = vals.map(v => v - base + 1);
+  CH_spark(CR.$('#sparkReq'), rel, 'var(--brand-2)');
+}
+function CH_spark(el, vals, color) {
+  CR.spark(el, vals, color);
+  el.classList.add('in');
+}
+
+/* ------------------------------------------------------------ 启动 */
+(async function () {
+  renderSec({ blocked: 0 });
+  await pullReal();
+  CR.initReveal();
+
+  // 演示态动画节奏
+  setInterval(tickPipeline, 850);
+  setInterval(driftGauges, 2800);
+  setInterval(() => {
+    // 日志：真实形态的业务事件流
+    if (Math.random() < 0.55) pushLog(buildLog());
+  }, 3600);
+
+  // 真实指标每 8 秒回读一次（看板不造假，只是刷新频率低）
+  setInterval(pullReal, 8000);
+
+  // 首屏先铺几条日志，避免空面板
+  for (let i = 0; i < 5; i++) pushLog(buildLog());
+  paintGauges();
+  tickPipeline();
+})();
+</script><div id="topbar-progress" class="" style="width: 0px;"></div>
+
+
+<footer class="site-footer"><div class="fl"><img src="/assets/logo-sm.png" alt="亦大"><span class="sig">（亦大）</span><span>© 2026 合同智能审查系统 v2.0 · 保留所有权利</span></div><div class="spacer"></div><div class="fl"><span>规则引擎判定 · 大模型辅以措辞 · 全程可离线运行</span><span class="dot-sep">|</span><a href="/twin">动态孪生看板</a><span class="dot-sep">|</span><a href="/mock/feishu/api/todo" target="_blank" rel="noopener">模拟审批系统</a></div></footer></body></html>

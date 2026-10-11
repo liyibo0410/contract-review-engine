@@ -1,0 +1,85 @@
+=== 1) 语法编译 ===
+编译失败 0 个
+
+=== 2) 模块导入 ===
+  ok   app
+  ok   app.config
+  ok   app.store
+  ok   app.auth
+  ok   app.scheduler
+  ok   app.queue
+  ok   app.pdf_min
+  ok   app.parsers
+  ok   app.review
+  ok   app.output
+  ok   app.notify
+  ok   app.pipeline
+  ok   app.server
+  ok   app.llm
+  ok   app.writeback
+  ok   mock.feishu
+
+=== 3) 关键路径 ===
+配置告警：无
+boot -> {'version': '2.1.7', 'accounts': 3, 'purged_sessions': 0, 'queue_workers': 2, 'scheduler_enabled': False}
+账号：[('admin', 'admin'), ('applicant', 'applicant'), ('legal', 'legal')]
+legal 登录 -> ok=True role=legal
+会话解析 -> ('legal', 'legal')
+非法口令 -> False
+演示切换 admin -> ok=True role=admin
+--- 路由→能力 ---
+  GET    /                                need=auth             legal=OK applicant=OK admin=OK
+  GET    /rules                           need=edit_rules       legal=-- applicant=-- admin=OK
+  GET    /api/cases                       need=view_cases       legal=OK applicant=OK admin=OK
+  POST   /api/cases/1/writeback           need=writeback        legal=OK applicant=-- admin=--
+  POST   /api/rules/purchase              need=edit_rules       legal=-- applicant=-- admin=OK
+  POST   /api/upload                      need=submit_contract  legal=-- applicant=OK admin=OK
+  GET    /api/health                      need=None             legal=OK applicant=OK admin=OK
+  GET    /login                           need=None             legal=OK applicant=OK admin=OK
+  POST   /api/cases/1/retry               need=retry_blocked    legal=-- applicant=-- admin=OK
+  POST   /api/unknown-write               need=deny             legal=-- applicant=-- admin=--
+  GET    /mock/feishu/api/todo            need=None             legal=OK applicant=OK admin=OK
+  page /rules: legal=False applicant=False admin=True
+--- 通知脱敏 ---
+  party  -> 北**********司
+  credit -> 91**************2X
+  amount -> 人民币***（大写：壹佰贰拾万元整）
+  title  -> 北京华信…合同
+  sweep  -> 相对方 91**************2X 金额 ¥*** 手机 138****5678 a***@b.com
+--- PDF 直出 ---
+  写入 C:\Users\23329\AppData\Local\Temp\cr_v2_cjqi89qk\data/reports\devcheck_probe.pdf，3309 字节，头 b'%PDF-1.7\n'
+--- 页眉页脚剔除 ---
+  保留 7 行 / 剔除 5 行
+    剔除「第 1 页 共 3 页」@第1页 重复于 [1] → 页面边缘的页码/密级/编号类典型行
+    剔除「保密」@第2页 重复于 [2, 3] → 跨 2 页重复的页面边缘短行
+    剔除「第 2 页 共 3 页」@第2页 重复于 [2] → 页面边缘的页码/密级/编号类典型行
+    剔除「保密」@第3页 重复于 [2, 3] → 跨 2 页重复的页面边缘短行
+    剔除「第 3 页 共 3 页」@第3页 重复于 [3] → 页面边缘的页码/密级/编号类典型行
+  保留内容：['内部资料 严禁外传', '第一条 标的与价款', '甲方应于验收后付款。', '第二条 交付与验收', '乙方应于三十日内交付。', '第三条 违约责任', '违约方应赔偿守约方损失。']
+  保护名单与剔除断言通过（正文全保 / 页码密级全剔）
+  剔除后锚点可定位：True（重建全文 74 字）
+--- 审查队列 ---
+  stats -> workers=2 maxsize=50 quota=(True, '')
+--- 定时拉取调度 ---
+  enabled=False interval=120 next_in=0
+  开启后 -> {'enabled': True, 'interval_sec': 60, 'alive': False}
+  手动拉取 -> {'ok': True, 'created': 8, 'skipped': 0, 'reviewed': 8, 'error': '', 'ms': 789, 'trigger': 'manual'}
+  status -> {'runs': 1, 'created_total': 8, 'last_result': '新建 8 / 跳过 0 / 审查 8', 'consecutive_failures': 0, 'current_interval': 64}
+
+=== 4) 审查链路（含队列 + 模式对照 + 页眉页脚） ===
+  库内案件 8 个
+  已完成 6 个，受阻 2 个
+  状态分布：{'blocked': 2, 'completed': 6}
+  详情：案件 6 智能制造执行系统采购合同（扫描件） / 段落 18 / 风险项 6
+  摘要模式：规则引擎模式（available=False reason=llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置）
+  mode_compare：{'rule': '规则引擎模式', 'model': '规则引擎 + 模型润色模式', 'current': 'rule'}
+  剔除页眉页脚 0 行；剔除明细 []
+  首条风险：到货即付全款、未设验收前置条件 / 高风险 / p1 / char[235,267) 证据「乙方交付设备并经甲方签收后，甲方应于到货后 7 」
+  报告：MD 3517 字 / HTML 7551 字 / PDF=pdf 418812 字节
+  异步入队 -> {'ok': True, 'queued': True, 'task_id': 9, 'mode': 'async', 'queue': {'mode': 'async', 'task_id': 9, 'queued': True}, 'message': '已入队执行（并发上限 2），可轮询案件状态'}
+  队列状态 -> {'submitted': 9, 'completed': 7, 'workers': 2, 'queued': 0}
+  回写正文 1919 字，预览头：**【合同智能审查意见】**
+  回写 -> status=success comment_id=CMT-06-001
+  回写后案件状态 -> success
+  受阻案件示例 -> #8 技术保密协议（加密文件）：文档已加密，无法抽取文本，需人工解密后重新上传
+  重试 -> {'ok': False, 'blocked': True, 'reason': '文档已加密，无法抽取文本，需人工解密后重新上传'}

@@ -1,0 +1,235 @@
+<mxfile host="Electron" agent="Codex">
+  <diagram id="contract-approval-architecture" name="合同审批助手项目">
+    <mxGraphModel dx="3391" dy="2326" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3600" pageHeight="1300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="s1" parent="1" style="swimlane;html=1;startSize=44;rounded=0;whiteSpace=wrap;fillColor=#f8fafc;strokeColor=#94a3b8;fontColor=#0f172a;fontSize=20;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" value="业务场景与整体架构" vertex="1">
+          <mxGeometry height="780" width="640" x="60" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_n1" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#7c2d12;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="飞书审批待办" vertex="1">
+          <mxGeometry height="70" width="170" x="30" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_n2" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#7c2d12;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="审批实例与合同附件" vertex="1">
+          <mxGeometry height="70" width="170" x="235" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_n3" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#7c2d12;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="审查意见进入评论区" vertex="1">
+          <mxGeometry height="70" width="170" x="440" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_note" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ecfdf5;strokeColor=#10b981;fontColor=#064e3b;fontSize=15;spacing=12;arcSize=8;" value="&lt;b&gt;业务场景&lt;/b&gt;&lt;br&gt;这个项目面向企业合同审批场景，读取待审批合同和附件，抽取合同文本，识别合同风险，生成中文审查意见，并把审查意见写回审批评论区。最终审批结论仍由审批人决定。&lt;br&gt;&lt;br&gt;项目输出包括合同解析结果、风险命中情况、证据片段、风险等级、审查意见、评论回写状态和审计记录。业务人员可以在审批页面直接看到风险提示，研发和运营可以通过审计数据追踪每一次处理链路。" vertex="1">
+          <mxGeometry height="185" width="590" x="25" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_1" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="飞书审批&lt;br&gt;接入层" vertex="1">
+          <mxGeometry height="70" width="120" x="25" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_2" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="Hermes&lt;br&gt;编排层" vertex="1">
+          <mxGeometry height="70" width="120" x="175" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_3" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="MCP&lt;br&gt;工具层" vertex="1">
+          <mxGeometry height="70" width="120" x="325" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_4" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="文档&lt;br&gt;解析层" vertex="1">
+          <mxGeometry height="70" width="120" x="475" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_5" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="风险&lt;br&gt;审查层" vertex="1">
+          <mxGeometry height="70" width="120" x="25" y="305" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_6" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="评论&lt;br&gt;回写层" vertex="1">
+          <mxGeometry height="70" width="120" x="175" y="305" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_7" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="MySQL&lt;br&gt;审计层" vertex="1">
+          <mxGeometry height="70" width="120" x="325" y="305" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_8" parent="s1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="运维&lt;br&gt;观测层" vertex="1">
+          <mxGeometry height="70" width="120" x="475" y="305" as="geometry" />
+        </mxCell>
+        <mxCell id="s1_arch_caption" connectable="0" parent="s1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=14;fontColor=#334155;fontStyle=1;" value="架构分层（职责划分）" vertex="1">
+          <mxGeometry height="24" width="180" x="25" y="168" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="swimlane;html=1;startSize=44;rounded=0;whiteSpace=wrap;fillColor=#f8fafc;strokeColor=#94a3b8;fontColor=#0f172a;fontSize=20;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" value="审批任务处理链路" vertex="1">
+          <mxGeometry height="780" width="640" x="740" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_n1" parent="s2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="Cron 拉取&lt;br&gt;飞书待办" vertex="1">
+          <mxGeometry height="70" width="150" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_n2" parent="s2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="回写状态&lt;br&gt;去重检查" vertex="1">
+          <mxGeometry height="70" width="150" x="245" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_n3" parent="s2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="创建&lt;br&gt;Kanban" vertex="1">
+          <mxGeometry height="70" width="150" x="450" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_n4" parent="s2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="Hermes&lt;br&gt;接管任务" vertex="1">
+          <mxGeometry height="70" width="150" x="40" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_n5" parent="s2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="MCP 读取&lt;br&gt;审批详情" vertex="1">
+          <mxGeometry height="70" width="150" x="245" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_note" parent="s2" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ecfdf5;strokeColor=#10b981;fontColor=#064e3b;fontSize=15;spacing=12;arcSize=8;" value="&lt;b&gt;审批任务处理链路&lt;/b&gt;&lt;br&gt;审批任务处理链路从待办拉取开始。系统按固定频率读取待审批合同，并按照审批单唯一标识创建任务，已经处理过或已经回写过评论的审批单会自动跳过。&lt;br&gt;&lt;br&gt;审查任务开始后，系统先读取审批详情，提取申请人、标题、附件列表和审批上下文。存在合同附件时，系统下载附件并计算文件指纹，用于避免重复处理同一份文档。&lt;br&gt;&lt;br&gt;解析完成后，系统把合同文本交给风险审查模块。审查结果生成后先保存到数据库，再进入评论回写阶段。回写前会检查审批单和审查结果状态，避免重复写入评论。" vertex="1">
+          <mxGeometry height="220" width="590" x="25" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="s2_n6" parent="s2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=15;fontStyle=1;arcSize=10;spacing=8;" value="下载附件&lt;br&gt;计算 SHA256" vertex="1">
+          <mxGeometry height="70" width="150" x="450" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="swimlane;html=1;startSize=44;rounded=0;whiteSpace=wrap;fillColor=#f8fafc;strokeColor=#94a3b8;fontColor=#0f172a;fontSize=20;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" value="合同解析与风险审查" vertex="1">
+          <mxGeometry height="780" width="640" x="1420" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_n1" parent="s3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="PDF / Word&lt;br&gt;文本抽取" vertex="1">
+          <mxGeometry height="70" width="170" x="35" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_n2" parent="s3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="可选 OCR&lt;br&gt;识别" vertex="1">
+          <mxGeometry height="70" width="170" x="235" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_n3" parent="s3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="解析状态&lt;br&gt;与定位标记" vertex="1">
+          <mxGeometry height="70" width="170" x="435" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_n4" parent="s3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="YAML&lt;br&gt;风险规则" vertex="1">
+          <mxGeometry height="80" width="170" x="35" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_n5" parent="s3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="证据片段定位" vertex="1">
+          <mxGeometry height="80" width="170" x="235" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_n6" parent="s3" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="整体风险等级" vertex="1">
+          <mxGeometry height="80" width="170" x="435" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s3_note" parent="s3" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ecfdf5;strokeColor=#10b981;fontColor=#064e3b;fontSize=15;spacing=12;arcSize=8;" value="&lt;b&gt;合同解析与风险审查&lt;/b&gt;&lt;br&gt;合同解析覆盖 PDF、Word、图片和扫描件。可复制文本的 PDF 会直接抽取页面文本，Word 文档会抽取段落和表格内容，旧版文档会先转换成通用格式再解析，图片和扫描件会走 OCR 识别。&lt;br&gt;&lt;br&gt;解析结果包含正文、文档类型、解析引擎、页码位置、段落位置、表格位置、错误信息和人工处理状态。文本可用时进入风险审查，文本缺失或 OCR 质量不足时生成阻断类审查意见并提示人工复核。&lt;br&gt;&lt;br&gt;风险审查使用可配置规则完成，覆盖关键词命中、正则匹配和必备条款缺失检查。风险识别主路径是确定性规则，大模型只用于生成中文审查摘要和优化评论表达。" vertex="1">
+          <mxGeometry height="230" width="590" x="25" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="swimlane;html=1;startSize=44;rounded=0;whiteSpace=wrap;fillColor=#f8fafc;strokeColor=#94a3b8;fontColor=#0f172a;fontSize=20;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" value="评论回写与安全边界" vertex="1">
+          <mxGeometry height="780" width="640" x="2100" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_n1" parent="s4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="生成中文审查意见" vertex="1">
+          <mxGeometry height="70" width="170" x="35" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_n2" parent="s4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="DRY_RUN&lt;br&gt;状态检查" vertex="1">
+          <mxGeometry height="70" width="170" x="235" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_n3" parent="s4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="写入飞书&lt;br&gt;审批评论" vertex="1">
+          <mxGeometry height="70" width="170" x="435" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_safe" parent="s4" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fef2f2;strokeColor=#ef4444;fontColor=#7f1d1d;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="安全边界：只写审查意见&lt;br&gt;审批结论由审批人决定" vertex="1">
+          <mxGeometry height="80" width="490" x="75" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="s4_note" parent="s4" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ecfdf5;strokeColor=#10b981;fontColor=#064e3b;fontSize=15;spacing=12;arcSize=8;" value="&lt;b&gt;评论回写与安全边界&lt;/b&gt;&lt;br&gt;系统只提供审查意见生成和评论回写能力，不提供通过、拒绝、转交、撤回等改变审批结论或审批流向的能力。审批平台中的最终动作仍由审批人完成。&lt;br&gt;&lt;br&gt;评论回写前会读取最新审查结果，检查该结果是否已经回写。已经回写过的结果会直接跳过，未回写的结果才会进入评论写入流程。系统支持预览模式，预览模式下只记录待写入内容和状态，不会真正写入审批平台。&lt;br&gt;&lt;br&gt;每次回写都会记录状态。真实回写成功后保存平台返回的评论标识和回写时间，回写失败时保存错误信息。" vertex="1">
+          <mxGeometry height="220" width="590" x="25" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="swimlane;html=1;startSize=44;rounded=0;whiteSpace=wrap;fillColor=#f8fafc;strokeColor=#94a3b8;fontColor=#0f172a;fontSize=20;fontStyle=1;container=1;collapsible=0;recursiveResize=0;" value="工程支撑与交付" vertex="1">
+          <mxGeometry height="780" width="640" x="2780" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_n1" parent="s5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#312e81;fontSize=15;fontStyle=1;arcSize=10;spacing=8;align=center;verticalAlign=middle;" value="审批实例&lt;br&gt;contract_cases" vertex="1">
+          <mxGeometry height="70" width="190" x="35" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_n2" parent="s5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#312e81;fontSize=15;fontStyle=1;arcSize=10;spacing=8;align=center;verticalAlign=middle;" value="合同文档&lt;br&gt;contract_documents" vertex="1">
+          <mxGeometry height="70" width="190" x="35" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_n3" parent="s5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#312e81;fontSize=15;fontStyle=1;arcSize=10;spacing=8;align=center;verticalAlign=middle;" value="审查结果&lt;br&gt;review_results" vertex="1">
+          <mxGeometry height="70" width="190" x="265" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_n4" parent="s5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#312e81;fontSize=15;fontStyle=1;arcSize=10;spacing=8;align=center;verticalAlign=middle;" value="审计日志&lt;br&gt;audit_logs" vertex="1">
+          <mxGeometry height="70" width="190" x="265" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_n5" parent="s5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;fontSize=17;fontStyle=1;arcSize=10;spacing=8;" value="自检 / 报告 / 看板" vertex="1">
+          <mxGeometry height="70" width="210" x="395" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="s5_note" parent="s5" style="rounded=1;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#ecfdf5;strokeColor=#10b981;fontColor=#064e3b;fontSize=15;spacing=12;arcSize=8;" value="&lt;b&gt;工程支撑与交付&lt;/b&gt;&lt;br&gt;工程支撑重点放在幂等、可追溯、可配置和可观测。系统按照审批单、附件和文件指纹做幂等控制，避免同一审批单被重复建任务、重复解析或重复写评论。&lt;br&gt;&lt;br&gt;风险规则使用配置文件管理，新增或调整风险点时可以直接维护规则内容。数据库保存审批单、合同文档、审查结果和审计日志，支持从评论结果反查原始审批、附件、解析内容、命中规则和工具调用过程。&lt;br&gt;&lt;br&gt;运维侧提供运行前自检、规则评估、审计导出、运行报告和处理看板，用于确认系统连接、规则文件和工具链状态，并统计处理数量、成功数量、失败数量、阻断数量和回写状态。" vertex="1">
+          <mxGeometry height="240" width="590" x="25" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s1_1" edge="1" parent="1" source="s1_n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s1_n2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s1_2" edge="1" parent="1" source="s1_n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s1_n3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2_1" edge="1" parent="1" source="s2_n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s2_n2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2_2" edge="1" parent="1" source="s2_n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s2_n3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2_3" edge="1" parent="1" source="s2_n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitPerimeter=1;entryX=0.5;entryY=0;entryPerimeter=1;" target="s2_n4" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1265" y="325" />
+              <mxPoint x="855" y="325" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_s2_4" edge="1" parent="1" source="s2_n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s2_n5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3_1" edge="1" parent="1" source="s3_n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s3_n2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3_2" edge="1" parent="1" source="s3_n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s3_n3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3_3" edge="1" parent="1" source="s3_n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s3_n5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3_4" edge="1" parent="1" source="s3_n5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s3_n6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s4_1" edge="1" parent="1" source="s4_n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s4_n2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s4_2" edge="1" parent="1" source="s4_n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s4_n3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5_4" edge="1" parent="1" source="s5_n4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitPerimeter=1;entryX=0.5;entryY=0;entryPerimeter=1;" target="s5_n5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cross_1" edge="1" parent="1" source="s1_n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s2_n1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_cross_2" edge="1" parent="1" source="s2_n6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitPerimeter=1;entryX=0;entryY=0.5;entryPerimeter=1;" target="s3_n1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1400" y="390" />
+              <mxPoint x="1400" y="265" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_cross_3" edge="1" parent="1" source="s3_n6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s4_n1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2080" y="395" />
+              <mxPoint x="2080" y="265" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_cross_4" edge="1" parent="1" source="s4_n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitPerimeter=1;entryX=0;entryY=0.5;entryPerimeter=1;" target="s5_n1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5_chain_1" edge="1" parent="1" source="s5_n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitPerimeter=1;entryX=0.5;entryY=0;entryPerimeter=1;" target="s5_n2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5_chain_2" edge="1" parent="1" source="s5_n2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitPerimeter=1;entryX=0;entryY=0.5;entryPerimeter=1;" target="s5_n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s5_audit" edge="1" parent="1" source="s5_n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitPerimeter=1;entryX=0.5;entryY=0;entryPerimeter=1;" target="s5_n4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_label" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontColor=#334155;fontSize=14;" value="图例" vertex="1">
+          <mxGeometry height="30" width="60" x="1260" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_external_item" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;spacing=6;fontSize=12;fillColor=#fff7ed;strokeColor=#ea580c;fontColor=#7c2d12;" value="外部审批场景" vertex="1">
+          <mxGeometry height="30" width="130" x="1325" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_internal_item" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;spacing=6;fontSize=12;fillColor=#e7f0ff;strokeColor=#2563eb;fontColor=#1e3a8a;" value="内部处理能力" vertex="1">
+          <mxGeometry height="30" width="130" x="1475" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_store_item" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;spacing=6;fontSize=12;fillColor=#eef2ff;strokeColor=#4f46e5;fontColor=#312e81;" value="数据留痕" vertex="1">
+          <mxGeometry height="30" width="120" x="1625" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_safe_item" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;spacing=6;fontSize=12;fillColor=#fff1f2;strokeColor=#e11d48;fontColor=#7f1d1d;" value="安全边界" vertex="1">
+          <mxGeometry height="30" width="120" x="1765" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s2_5" edge="1" parent="1" source="s2_n5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;" target="s2_n6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s3_parse_to_rules" edge="1" parent="1" source="s3_n3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeColor=#475569;strokeWidth=2;fontSize=14;fontColor=#334155;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitPerimeter=1;entryX=0.5;entryY=0;entryPerimeter=1;" target="s3_n4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

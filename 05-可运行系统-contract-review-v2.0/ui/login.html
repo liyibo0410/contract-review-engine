@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>登录 · 衡鉴 V2.1.7 · 企业合同智能审查系统</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/fx.css">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('cr-theme');
+    if (t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { }
+})();
+</script>
+<style>
+  /* 登录页专用：整屏居中、无顶栏无页脚，保持「深空控制台」的克制感 */
+  body.login-body {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 32px 18px;
+  }
+  .login-wrap { width: 100%; max-width: 940px; display: grid;
+    grid-template-columns: 1.05fr .95fr; gap: 22px; align-items: stretch; }
+  @media (max-width: 880px) { .login-wrap { grid-template-columns: 1fr; } }
+  .login-card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 30px 30px 26px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .45);
+  }
+  .login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .login-brand img { width: 38px; height: 39px; }
+  .login-brand b { display: block; font-size: 16.5px; letter-spacing: .3px; }
+  .login-brand i { display: block; font-style: normal; font-size: 11px;
+    color: var(--faint); letter-spacing: .9px; text-transform: uppercase; }
+  .login-title { font-size: 21px; font-weight: 650; margin: 0 0 6px; }
+  .login-sub { font-size: 12.8px; color: var(--sub); margin: 0 0 22px; line-height: 1.75; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12.2px; color: var(--sub); margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 11px 13px; border-radius: 10px; font-size: 14px;
+    background: var(--bg); color: var(--ink);
+    border: 1px solid var(--line); outline: none; transition: border-color .15s;
+  }
+  .field input:focus { border-color: var(--brand); }
+  .login-btn { width: 100%; margin-top: 6px; padding: 12px; font-size: 14px; }
+  .login-err { min-height: 18px; font-size: 12.4px; color: var(--high); margin-top: 10px; }
+  .role-list { display: flex; flex-direction: column; gap: 11px; margin-top: 4px; }
+  .role-item {
+    display: flex; align-items: center; gap: 13px; text-align: left; width: 100%;
+    padding: 14px 16px; border-radius: 13px; cursor: pointer;
+    background: var(--bg); border: 1px solid var(--line); color: var(--ink);
+    transition: border-color .16s, transform .16s, background .16s;
+  }
+  .role-item:hover { border-color: var(--brand); transform: translateX(3px); }
+  .role-ic { width: 36px; height: 36px; flex: 0 0 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--brand-soft); color: var(--brand); }
+  .role-item b { display: block; font-size: 13.6px; margin-bottom: 3px; }
+  .role-item span { display: block; font-size: 11.6px; color: var(--sub); line-height: 1.6; }
+  .role-item .go { margin-left: auto; font-size: 11px; color: var(--faint); white-space: nowrap; }
+  .sec-title { font-size: 12px; letter-spacing: .6px; color: var(--faint);
+    text-transform: uppercase; margin: 0 0 12px; }
+  .hint { font-size: 11.4px; color: var(--faint); line-height: 1.8; margin-top: 16px;
+    padding-top: 14px; border-top: 1px dashed var(--line); }
+  .hint code { font-size: 11.2px; color: var(--brand); }
+</style>
+</head>
+<body class="login-body">
+
+<div class="login-wrap">
+
+  <!-- ==================== 左：口令登录 ==================== -->
+  <section class="login-card">
+    <div class="login-brand">
+      <img src="/assets/logo-sm.png" alt="衡鉴 V2.1.7 标识" id="loginLogo" width="38" height="39">
+      <div>
+        <b>衡鉴 V2.1.7</b>
+        <i>企业合同智能审查系统</i>
+      </div>
+    </div>
+
+    <h1 class="login-title">登录审查平台</h1>
+    <p class="login-sub" id="loginLead">
+      按需求 2.4.2 划分三类角色：法务审查人、业务经办人、系统管理员。
+      未登录的访客无法进入任何页面或接口。
+    </p>
+
+    <form id="loginForm" autocomplete="off">
+      <div class="field">
+        <label for="u">账号</label>
+        <input id="u" name="username" type="text" placeholder="请输入账号" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="p">口令</label>
+        <input id="p" name="password" type="password" placeholder="请输入口令" autocomplete="current-password">
+      </div>
+      <button class="btn primary login-btn" type="submit" id="loginBtn">登 录</button>
+      <div class="login-err" id="loginErr"></div>
+    </form>
+
+    <div class="hint" id="hintBox">
+      演示账号：<code>legal</code> / <code>applicant</code> / <code>admin</code>，
+      初始口令分别为 <code>Legal@2026</code>、<code>Apply@2026</code>、<code>Admin@2026</code>。<br>
+      服务端仅保存 pbkdf2-sha256 哈希与会话令牌；Cookie 为 HttpOnly，脚本不可读。
+    </div>
+  </section>
+
+  <!-- ==================== 右：按角色一键进入（演示） ==================== -->
+  <section class="login-card" id="quickCard">
+    <p class="sec-title">演示身份 · 一键进入</p>
+    <div class="role-list" id="roleList"></div>
+    <div class="hint">
+      演示按角色分段走流程（经办人送审 → 法务复核回写 → 管理员维护规则与处理阻塞），
+      一键进入可免去现场反复输口令，节奏不被打断。<br>
+      该开关由 <code>auth.demo_switch</code> 控制，生产化部署时应关闭。
+    </div>
+  </section>
+
+</div>
+
+<script src="/assets/app.js"></script>
+<script src="/assets/pet.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var ROLES = [
+    { role: 'legal', label: '法务审查人', user: 'legal',
+      desc: '查看审查详情、核对原文高亮、采纳或调整修改建议、补充法务意见并触发回写',
+      act: '可回写 · 可采纳建议 · 不可改规则' },
+    { role: 'applicant', label: '业务经办人', user: 'applicant',
+      desc: '提交合同审查申请、查看风险点与整改建议、下载审查报告',
+      act: '可送审 · 可下载报告 · 不可回写' },
+    { role: 'admin', label: '系统管理员', user: 'admin',
+      desc: '配置对接参数、维护规则与标准条款库、监控任务状态并处理阻塞重试',
+      act: '可改规则 · 可重试阻塞 · 可查看指标' }
+  ];
+
+  // 主题联动 logo（浅色主题用浅色版 logo）
+  try {
+    if (localStorage.getItem('cr-theme') === 'light') {
+      $('#loginLogo').src = '/assets/logo-sm-light.png';
+    }
+  } catch (e) { }
+
+  var ICONS = {
+    legal: '<path d="M12 4v16"/><path d="M6 8h12"/><path d="M6 8l-3 5.5h6z"/><path d="M18 8l-3 5.5h6z"/><path d="M8.5 20h7"/>',
+    applicant: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>',
+    admin: '<rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2"/>'
+  };
+
+  var html = ROLES.map(function (r, i) {
+    return '<button class="role-item" data-role="' + r.role + '" data-user="' + r.user + '">' +
+      '<span class="role-ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" ' +
+      'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+      ICONS[r.role] + '</svg></span>' +
+      '<span><b>' + r.label + '（' + r.user + '）</b><span>' + r.act + '</span></span>' +
+      '<span class="go">进入 →</span></button>';
+  }).join('');
+  $('#roleList').innerHTML = html;
+
+  function next() {
+    var n = new URLSearchParams(location.search).get('next');
+    if (!n || n.indexOf('/') !== 0 || n.indexOf('//') === 0) return '/';
+    return n;
+  }
+
+  function fail(msg) { $('#loginErr').textContent = msg || '登录失败'; }
+
+  $('#loginForm').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var u = $('#u').value.trim(), p = $('#p').value;
+    if (!u || !p) { fail('请输入账号与口令'); return; }
+    $('#loginBtn').disabled = true;
+    $('#loginErr').textContent = '';
+    fetch('/api/auth/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p })
+    }).then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); })
+      .then(function (o) {
+        $('#loginBtn').disabled = false;
+        if (o.j.code !== 0) { fail(o.j.msg || '账号或口令不正确'); return; }
+        location.href = next();
+      }).catch(function (e) {
+        $('#loginBtn').disabled = false;
+        fail('网络错误：' + e.message);
+      });
+  });
+
+  $('#roleList').addEventListener('click', function (ev) {
+    var el = ev.target.closest ? ev.target.closest('.role-item') : null;
+    if (!el) return;
+    var role = el.getAttribute('data-role');
+    el.style.opacity = '.6';
+    fetch('/api/auth/switch', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role: role })
+    }).then(function (r) { return r.json(); }).then(function (j) {
+      if (j.code !== 0) { el.style.opacity = ''; fail(j.msg || '切换失败'); return; }
+      location.href = next();
+    }).catch(function (e) {
+      el.style.opacity = '';
+      fail('网络错误：' + e.message);
+    });
+  });
+
+  $('#p').focus();
+})();
+</script>
+</body>
+</html>

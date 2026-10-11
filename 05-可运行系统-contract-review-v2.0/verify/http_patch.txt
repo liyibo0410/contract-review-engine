@@ -1,0 +1,9 @@
+ok   from app import config as cfg_mod, server as server_mod, store as stor
+ok   OPENER = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+ok   def call(method, path, body=None, raw=None, ctype=None, headers=None,
+ok   req = urllib.request.Request(url, data=data, method=method, headers=hd
+ok   code, hdrs, body = call("GET", "/", no_cookie=True)
+ok   ("/assets/app.css", b"--accent", "text/css"),
+ok   # 不存在的案件：批注应 404（原实现会静默成功）
+ok   code, _, body = call("GET", "/denied.html", no_cookie=True)
+ok   httpd.shutdown()

@@ -1,0 +1,2 @@
+ok   probe_authed("审查大盘渲染（KPI + 自动流转 + 队列 + 权限入口）", "/", [
+ok   probe_authed("动态孪生看板渲染", "/twin", [

@@ -1,0 +1,5 @@
+ok   from app import pipeline                                          
+ok   log = []
+ok   with io.open(os.path.join(ROOT, "verify",
+ok   probe_authed("合规规则与模板渲染（管理员可见）", "/rules", [
+ok   probe_authed("智能审查工作台渲染（正文高亮 + 风险卡 + 模式对照）", "/workbench?id=1", [

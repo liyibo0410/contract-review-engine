@@ -1,0 +1,144 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-09-18",
+  "note": "综合风险定级算法（补充篇十三）。纯函数实现，输入风险项列表 + 合同敞口，输出 score 与 grade，并把 breakdown 一并返回给前端展示。禁止在界面只给等级不给算法过程。",
+
+  "formula": "score = w1*max_item + w2*high_count + w3*density + w4*exposure",
+  "weights": {
+    "max_item": 0.40,
+    "high_count": 0.25,
+    "density": 0.20,
+    "exposure": 0.15
+  },
+
+  "components": {
+    "max_item": {
+      "desc": "最高单项风险分。表达「有一票大的就压过一切」。",
+      "source": "max(risk.level → score) of all risks",
+      "level_scores": { "high": 100, "medium": 60, "low": 30 },
+      "empty_value": 0
+    },
+    "high_count": {
+      "desc": "高风险项数量分。带饱和上限，避免小合同因条数多而被过度放大。",
+      "formula": "min(high_count, saturation) / saturation * 100",
+      "saturation": 4,
+      "override_level_counts": { "medium": 0.3, "low": 0.1 },
+      "note": "可选增强：把中/低风险按 0.3/0.1 权重折算成等效高风险数后再算，默认关闭（config.use_weighted_count=false）"
+    },
+    "density": {
+      "desc": "风险密度分 = 风险项数 / 条款总数，反映「这份合同烂得有多普遍」。",
+      "formula": "min(density_raw / density_norm_max, 1.0) * 100",
+      "density_raw": "risk_count / max(clause_count, 1)",
+      "density_norm_max": 0.35,
+      "empty_value": 0,
+      "note": "条款总数少于 5 时不计算密度，该项按 0 计并置 breakdown.density_skipped=true（短文本密度不具代表性）"
+    },
+    "exposure": {
+      "desc": "合同敞口分，按合同金额分档。",
+      "source": "amount_band_score",
+      "bands": [
+        { "max": 500000, "score": 20, "label": "50 万以下" },
+        { "max": 5000000, "score": 50, "label": "50 万 ~ 500 万" },
+        { "max": 20000000, "score": 75, "label": "500 万 ~ 2000 万" },
+        { "max": null, "score": 100, "label": "2000 万以上" }
+      ],
+      "missing_amount": 40,
+      "note": "相对方核验状态不参与本项打分——异常状态走一票否决（见 veto），避免重复计算权重"
+    }
+  },
+
+  "thresholds": {
+    "high": 70,
+    "medium": 45,
+    "note": "score >= 70 → 高；45 <= score < 70 → 中；< 45 → 低"
+  },
+
+  "veto": {
+    "desc": "一票否决：任一命中直接判为高风险，跳过加权计算，但 score 仍照常计算并展示（供参考）。",
+    "conditions": [
+      { "rule_id": "E-01", "reason": "相对方被列入经营异常名录" },
+      { "rule_id": "E-02", "reason": "相对方被列为失信被执行人" },
+      { "rule_id": "E-03", "reason": "主体名称与统一社会信用代码不一致" },
+      { "rule_id": "E-04", "reason": "相对方命中内部黑名单" },
+      { "rule_id": "R-LIA-001", "reason": "我方承担无上限赔偿责任" },
+      { "rule_id": "R-JUR-001", "only_if": { "party": "我方", "condition": "约定由相对方所在地法院管辖" }, "reason": "管辖地约定违规" },
+      { "rule_id": "R-PAY-001", "reason": "无验收前置条件的全额付款" }
+    ],
+    "veto_result": { "grade": "high", "score_display": "actual", "badge": "一票否决" }
+  },
+
+  "conclusion_mapping": {
+    "desc": "与现有 review_rules.json 的 conclusion_rules 保持兼容，用 grade 驱动结论",
+    "high": "建议整改",
+    "medium": "需法务复核",
+    "low": "通过"
+  },
+
+  "display": {
+    "template": "综合风险 {grade} ｜ 总分 {score} = 最高单项 {c1}（{max_item_title}，{max_item_level}）+ 高风险项数 {c2}（{high_count} 项）+ 风险密度 {c3} + 合同敞口 {c4}",
+    "veto_template": "综合风险 高（一票否决：{veto_reason}）｜ 加权总分 {score}（仅供参考）",
+    "note": "必须在风险卡片区顶部以一行小字展示；点击可展开完整 breakdown 表格"
+  },
+
+  "worked_examples": [
+    {
+      "case": "02_采购合同_风险版_软件采购.docx（预期）",
+      "risk_levels": { "high": 2, "medium": 4, "low": 0 },
+      "clause_count": 11,
+      "amount": 280000,
+      "expected_grade": "high",
+      "expected_conclusion": "建议整改",
+      "calc": {
+        "max_item": 40.0,
+        "high_count": 12.5,
+        "density": 20.0,
+        "exposure": 3.0,
+        "total": 75.5
+      },
+      "calc_note": "risk_count=6，density_raw=6/11=0.545>0.35 → 密度取满 100；amount 28 万落在「50 万以下」档 → 20 × 0.15 = 3.0"
+    },
+    {
+      "case": "03_销售合同_风险版_违约责任不对等.docx（预期）",
+      "risk_levels": { "high": 2, "medium": 3, "low": 0 },
+      "clause_count": 12,
+      "amount": 8000000,
+      "expected_grade": "high",
+      "expected_conclusion": "建议整改",
+      "calc": {
+        "max_item": 40.0,
+        "high_count": 12.5,
+        "density": 20.0,
+        "exposure": 11.25,
+        "total": 83.75
+      },
+      "calc_note": "risk_count=5，density_raw=5/12=0.417>0.35 → 密度取满；amount 800 万落在「500 万~2000 万」档 → 75 × 0.15 = 11.25"
+    },
+    {
+      "case": "01_采购合同_标准版.docx（预期）",
+      "risk_levels": { "high": 0, "medium": 0, "low": 0 },
+      "clause_count": 12,
+      "amount": 280000,
+      "expected_grade": "low",
+      "expected_conclusion": "通过",
+      "calc": {
+        "max_item": 0,
+        "high_count": 0,
+        "density": 0,
+        "exposure": 3.0,
+        "total": 3.0
+      },
+      "calc_note": "无风险时 score 仅由敞口决定（3.0），远低于 45，符合「低风险直通」预期"
+    }
+  ],
+
+  "implementation_contract": {
+    "signature": "score_review(risks: list[Risk], clause_count: int, amount: Decimal) -> {score, grade, vetoed, breakdown}",
+    "purity": "纯函数，无 IO、无 LLM 调用；相同输入必须得到相同输出",
+    "test_cases_required": [
+      "无风险 → score 由 exposure 决定，grade 不允许为 high",
+      "仅低风险 × 10 → grade != high（验证低风险不得靠数量堆成高危）",
+      "命中 E-01 → grade 必须为 high 且 vetoed=true",
+      "amount 缺失 → exposure 取 missing_amount=40 而非 0"
+    ]
+  }
+}

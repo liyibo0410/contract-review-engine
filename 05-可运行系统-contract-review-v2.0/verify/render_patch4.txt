@@ -1,0 +1,3 @@
+ok   if shot_path:
+ok   def run_browser(url, dump_dom=False, shot_path=None, cookie=None):
+ok   log.append("DOM 探针完成")

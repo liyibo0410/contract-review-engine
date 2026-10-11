@@ -1,0 +1,3 @@
+  ok   selftest.py :: except Exception as exc:                                
+  ok   tools/check_consistency.py :: ("tools/verify_render.py", "def body_only(dom)"),
+  ok   deploy/verify_remote_v2.py :: # ------------------------------------------------------

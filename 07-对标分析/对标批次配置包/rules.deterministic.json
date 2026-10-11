@@ -1,0 +1,314 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-09-18",
+  "source_type": "deterministic",
+  "note": "确定性校验规则库（P0-3 / 补充篇十一）。与 review_rules.json 的 12 条语义规则（R-xx）并列使用，互不覆盖。本类规则不调用大模型、不产生 token 成本、设计目标为零误报，因此不输出 confidence 字段，界面直接标注「确定」。所有 checker 必须写成纯函数并附单元测试。",
+
+  "integration_notes": [
+    "R-PARTY-001 原含「主体信息缺失或经营异常」两个语义。本文件把「经营异常」剥离为外部核验类 E-01，R-PARTY-001 保留「主体信息缺失/待补充」的语义部分。两处需同步微调，避免重复报同一条风险。",
+    "新增本类规则后，sample_contracts/_预期审查结果.json 的 expected_counts 会变化，必须重跑回归基线（见开发任务清单 T10）。",
+    "本类规则先于语义规则执行；命中 high 的确定性风险可短路，不必再进 LLM（见补充篇十六·三段流水线）。"
+  ],
+
+  "risk_levels": {
+    "high": "确定性高风险：事实性错误或金额/日期矛盾，无需人工判断，直接要求修正",
+    "medium": "确定性中风险：形式瑕疵，建议修正后签署",
+    "low": "确定性低风险：规范性提示，可不阻塞流程"
+  },
+
+  "rules": [
+    {
+      "rule_id": "D-01",
+      "name": "合同金额大小写不一致",
+      "dimension": "金额支付",
+      "contract_types": ["采购", "销售", "服务", "劳动"],
+      "risk_level": "high",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "amount_case_consistency",
+        "params": {
+          "fields": ["contract_amount", "each_payment_node"],
+          "compare_normalized": true
+        },
+        "required_fields": ["amount_in_words", "amount_in_digits"]
+      },
+      "skip_if_missing_fields": true,
+      "finding_template": "合同金额大写「{amount_in_words}」与小写「{amount_in_digits}」不一致，属于事实性错误，可能导致结算争议。",
+      "suggestion": {
+        "summary": "以大写金额为准统一全文，或核对后同步修正大小写两处。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-02",
+      "name": "付款比例合计不等于 100%",
+      "dimension": "金额支付",
+      "contract_types": ["采购", "销售", "服务"],
+      "risk_level": "high",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "payment_ratio_sum",
+        "params": {
+          "tolerance": 0.0001,
+          "min_nodes": 2,
+          "ratio_patterns": ["百分数", "小数比例", "几分之几"]
+        }
+      },
+      "finding_template": "合同共识别出 {node_count} 个付款节点，比例合计为 {sum_ratio}%，与 100% 不符（差额 {diff}%），存在漏付或多付敞口。",
+      "suggestion": {
+        "summary": "核对各付款节点比例并补齐至 100%，明确尾款与质保金的支付条件。",
+        "replacement_clause_id": "C-PAY-001"
+      }
+    },
+    {
+      "rule_id": "D-03",
+      "name": "日期逻辑矛盾",
+      "dimension": "履行期限",
+      "contract_types": ["采购", "销售", "服务", "劳动"],
+      "risk_level": "high",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "date_logic_consistency",
+        "params": {
+          "constraints": [
+            { "left": "sign_date", "op": "<=", "right": "effective_date" },
+            { "left": "perform_start", "op": "<=", "right": "perform_end" },
+            { "left": "delivery_date", "op": "<=", "right": "acceptance_end" },
+            { "left": "acceptance_end", "op": "<=", "right": "warranty_end" },
+            { "left": "sign_date", "op": "<=", "right": "termination_date" }
+          ],
+          "date_formats": ["YYYY年M月D日", "YYYY-MM-DD", "YYYY/M/D"]
+        }
+      },
+      "finding_template": "日期逻辑矛盾：{violations}（如签订日晚于生效日、履行终止早于起始、质保期早于验收合格日）。",
+      "suggestion": {
+        "summary": "核对全文日期口径，确保签订日 ≤ 生效日 ≤ 履行期 ≤ 验收期 ≤ 质保期。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-04",
+      "name": "合同金额与审批单申报金额不符",
+      "dimension": "金额支付",
+      "contract_types": ["采购", "销售", "服务"],
+      "risk_level": "high",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "amount_vs_approval_ticket",
+        "params": { "tolerance_abs": 0.01, "compare": "total_amount" },
+        "requires": ["approval_ticket.amount"]
+      },
+      "skip_if_missing_fields": true,
+      "finding_template": "合同文本金额 {contract_amount} 与审批单申报金额 {ticket_amount} 不一致（差额 {diff}），存在越权签署风险。",
+      "suggestion": {
+        "summary": "退回业务经办人核实，或按内部授权额度重新履行审批程序。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-05",
+      "name": "术语混用（同一相对方多种称谓）",
+      "dimension": "条款一致性",
+      "contract_types": ["采购", "销售", "服务"],
+      "risk_level": "medium",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "term_consistency",
+        "params": {
+          "term_groups": [
+            ["甲方", "需方", "买方", "采购方", "委托方"],
+            ["乙方", "供方", "卖方", "服务方", "受托方", "供应商"]
+          ],
+          "min_occurrences": 2,
+          "scope": "whole_document"
+        }
+      },
+      "finding_template": "同一主体在全文出现 {term_count} 种称谓（{terms}），权利义务指向存在歧义。",
+      "suggestion": {
+        "summary": "在合同首部统一定义甲方/乙方，并全文替换为统一定义词。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-06",
+      "name": "条款编号断裂或重复",
+      "dimension": "条款一致性",
+      "contract_types": ["采购", "销售", "服务", "劳动"],
+      "risk_level": "medium",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "clause_numbering_sequence",
+        "params": {
+          "patterns": ["第{cn}条", "{n}、", "{n}.", "（{n}）"],
+          "check": ["continuity", "uniqueness"]
+        }
+      },
+      "finding_template": "条款编号异常：{issues}（如缺失第{n}条、第{m}条重复出现），可能存在条款被删除或复制粘贴遗漏。",
+      "suggestion": {
+        "summary": "核对完整版本，补齐缺失条款并重新排序编号。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-07",
+      "name": "关键栏位空白或占位符未替换",
+      "dimension": "形式瑕疵",
+      "contract_types": ["采购", "销售", "服务", "劳动"],
+      "risk_level": "medium",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "placeholder_detection",
+        "params": {
+          "placeholder_patterns": ["_{2,}", "（\\s*）", "\\[\\s*\\]", "XX+", "待补充", "待填写", "此处内容缺失", "TODO"],
+          "exclude_zones": ["signature_block"]
+        }
+      },
+      "finding_template": "存在 {count} 处未替换的占位符或空白栏位：{samples}。",
+      "suggestion": {
+        "summary": "补齐全部占位字段；如某项确不适用，应显式写「不适用」而非留空。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-08",
+      "name": "关键期限缺失或异常",
+      "dimension": "履行期限",
+      "contract_types": ["采购", "销售", "服务"],
+      "risk_level": "medium",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "term_presence_and_range",
+        "params": {
+          "required_terms": ["履行期限", "交付期限"],
+          "range_checks": [
+            { "field": "perform_period_days", "max": 1095, "note": "履行期超过 3 年需复核" },
+            { "field": "warranty_months", "min": 6, "note": "质保期低于 6 个月低于行业惯例" },
+            { "field": "payment_days", "max": 90, "note": "账期超过 90 天需关注现金流" }
+          ]
+        }
+      },
+      "finding_template": "期限约定异常：{issues}。",
+      "suggestion": {
+        "summary": "补充/收紧期限约定，并明确期限起算点（如「自验收合格之日起」）。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-09",
+      "name": "正文提及的附件在文档中不存在",
+      "dimension": "形式瑕疵",
+      "contract_types": ["采购", "销售", "服务"],
+      "risk_level": "medium",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "attachment_reference_check",
+        "params": {
+          "reference_patterns": ["附件{cn}", "附件\\s*{n}", "见附件", "详见附件", "技术需求书", "报价单"],
+          "attachment_zones": ["document_tail", "separate_files"]
+        }
+      },
+      "finding_template": "正文引用「{refs}」，但文档中未找到对应附件内容。",
+      "suggestion": {
+        "summary": "补充缺失附件并将附件清单写入合同末尾，注明附件为合同不可分割部分。",
+        "replacement_clause_id": null
+      }
+    },
+    {
+      "rule_id": "D-10",
+      "name": "文档存在未接受的修订痕迹或批注",
+      "dimension": "形式瑕疵",
+      "contract_types": ["采购", "销售", "服务", "劳动"],
+      "risk_level": "low",
+      "detect": {
+        "mode": "deterministic",
+        "checker": "revision_marks_check",
+        "params": {
+          "docx_xml_nodes": ["w:ins", "w:del", "w:commentReference", "w:moveFrom", "w:moveTo"],
+          "pdf_annotations": ["Annot/Text", "Annot/StrikeOut"],
+          "pdf_tracked_changes_flag": "Marked"
+        }
+      },
+      "finding_template": "送审文档仍带有 {count} 处未接受的修订痕迹/批注（{kinds}），送审版本非终稿。",
+      "suggestion": {
+        "summary": "在 Word/WPS 中「接受全部修订」并删除全部批注后重新提交。",
+        "replacement_clause_id": null
+      }
+    }
+  ],
+
+  "external_rules": {
+    "note": "外部核验类规则（source_type=external）。依赖 mock 工商数据源 config/mock/gsxt.json 或真实第三方接口，命中结果带数据来源与查询时间戳，界面不显示置信度。",
+    "rules": [
+      {
+        "rule_id": "E-01",
+        "name": "相对方被列入经营异常名录",
+        "source_type": "external",
+        "dimension": "主体资质",
+        "risk_level": "high",
+        "checker": "gsxt_business_abnormal",
+        "veto": true,
+        "finding_template": "相对方「{party}」被列入经营异常名录（列入日期 {date}，决定机关 {authority}，列入原因 {reason}）。",
+        "suggestion": {
+          "summary": "要求相对方先移出经营异常名录并提供证明，或改为预付款比例更低、以验收为付款前置条件的交易结构。",
+          "replacement_clause_id": "C-PARTY-001"
+        }
+      },
+      {
+        "rule_id": "E-02",
+        "name": "相对方被列为失信被执行人",
+        "source_type": "external",
+        "dimension": "主体资质",
+        "risk_level": "high",
+        "checker": "gsxt_dishonest_judgment",
+        "veto": true,
+        "finding_template": "相对方「{party}」被列为失信被执行人，共 {case_count} 条记录，未履行金额合计 {unpaid_amount}。",
+        "suggestion": {
+          "summary": "建议终止该笔交易或改为款到发货/服务后付款结构，并要求提供履约担保。",
+          "replacement_clause_id": "C-PARTY-001"
+        }
+      },
+      {
+        "rule_id": "E-03",
+        "name": "主体名称与统一社会信用代码不一致",
+        "source_type": "external",
+        "dimension": "主体资质",
+        "risk_level": "high",
+        "checker": "party_name_code_match",
+        "veto": true,
+        "finding_template": "合同载明的相对方名称「{contract_name}」与统一社会信用代码 {credit_code} 登记的主体名称「{registered_name}」不一致。",
+        "suggestion": {
+          "summary": "以营业执照登记名称为准修正合同主体信息，并核验签署人授权文件。",
+          "replacement_clause_id": "C-PARTY-001"
+        }
+      },
+      {
+        "rule_id": "E-04",
+        "name": "相对方命中内部黑名单",
+        "source_type": "external",
+        "dimension": "主体资质",
+        "risk_level": "high",
+        "checker": "internal_blacklist_hit",
+        "veto": true,
+        "finding_template": "相对方「{party}」命中{scope}黑名单（加入日期 {date}，加入原因 {reason}）。",
+        "suggestion": {
+          "summary": "按集团黑名单管理规定终止本次交易；如确有业务需要，须走例外审批流程。",
+          "replacement_clause_id": null
+        }
+      },
+      {
+        "rule_id": "E-05",
+        "name": "相对方成立年限或注册资本与合同金额不匹配",
+        "source_type": "external",
+        "dimension": "主体资质",
+        "risk_level": "medium",
+        "checker": "party_capacity_vs_amount",
+        "veto": false,
+        "finding_template": "相对方成立于 {established_date}（成立 {years} 年），注册资本 {registered_capital}，本次合同金额 {amount}（为注册资本的 {ratio} 倍），履约能力与风险承接能力需评估。",
+        "suggestion": {
+          "summary": "要求提供履约能力证明（近三年审计报告/银行资信证明），或增加分期付款与验收前置条件。",
+          "replacement_clause_id": "C-PARTY-001"
+        }
+      }
+    ]
+  }
+}

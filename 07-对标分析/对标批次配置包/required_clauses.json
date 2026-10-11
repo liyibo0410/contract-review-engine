@@ -1,0 +1,128 @@
+{
+  "version": "1.0",
+  "updated_at": "2026-09-18",
+  "note": "合同类型 × 必备条款矩阵（补充篇十二·④）。用途不是「报风险」，而是驱动工作台与报告里的「必备条款清单 + 空槽位卡片」：已识别的条款打勾，缺失的显示为空槽位并给出标准示范条款入口。",
+
+  "usage": {
+    "review_engine": "审查完成后，用本矩阵对已切分条款做覆盖率比对，缺失项生成一条 source_type=semantic、dimension=必备条款缺失 的风险（由矩阵驱动，不走 LLM）",
+    "workspace_ui": "左栏底部渲染为折叠面板「必备条款清单 (9/12)」，缺失项显示灰色空槽位卡片，点击展开 suggestion_clause_id 对应示范条款，支持「引用到审查建议」",
+    "report": "「综合审查结论」段落输出一行：本类合同应含 12 类条款，已识别 9 类，缺失 3 类（验收标准与期限 / 知识产权归属 / 不可抗力与通知时效）",
+    "regression": "矩阵条目数与 sample_contracts/_预期审查结果.json 的 clause_count 是同一口径，变更时必须同步"
+  },
+
+  "clause_types": {
+    "_note": "全量条款类型注册表。matrix 中出现的每一个 name 都必须在此登记，否则契约测试失败（校验脚本会断言）。suggestion_clause_id 为 null 表示现有 clause_library.json 尚无对应示范条款，需扩充范本库。",
+    "主体信息": { "dimension": "主体资质", "suggestion_clause_id": "C-PARTY-001" },
+    "合同标的与范围": { "dimension": "标的物质量", "suggestion_clause_id": null },
+    "合同金额与币种": { "dimension": "金额支付", "suggestion_clause_id": null },
+    "付款方式与节点": { "dimension": "金额支付", "suggestion_clause_id": "C-PAY-001" },
+    "交付时间与地点": { "dimension": "履行期限", "suggestion_clause_id": null },
+    "验收标准与期限": { "dimension": "必备条款缺失", "suggestion_clause_id": "C-ACC-001" },
+    "质量标准与质保期": { "dimension": "标的物质量", "suggestion_clause_id": "C-QA-001" },
+    "违约责任与责任上限": { "dimension": "违约责任", "suggestion_clause_id": "C-LIA-001" },
+    "违约金比例": { "dimension": "金额支付", "suggestion_clause_id": "C-LIQ-001" },
+    "违约责任不对等": { "dimension": "违约责任", "suggestion_clause_id": "C-LIA-002" },
+    "知识产权归属": { "dimension": "知识产权", "suggestion_clause_id": "C-IP-001" },
+    "保密义务与期限": { "dimension": "保密", "suggestion_clause_id": "C-CONF-001" },
+    "不可抗力与通知时效": { "dimension": "不可抗力", "suggestion_clause_id": "C-FM-001" },
+    "争议解决与管辖": { "dimension": "争议管辖", "suggestion_clause_id": "C-JUR-001" },
+    "竞业限制与经济补偿": { "dimension": "劳动用工", "suggestion_clause_id": "C-COMP-001" },
+
+    "产品保证与合规": { "dimension": "标的物质量", "suggestion_clause_id": null },
+    "服务内容与范围": { "dimension": "标的物质量", "suggestion_clause_id": null },
+    "服务费用与支付": { "dimension": "金额支付", "suggestion_clause_id": "C-PAY-001" },
+    "服务期限": { "dimension": "履行期限", "suggestion_clause_id": null },
+    "服务成果与交付物": { "dimension": "必备条款缺失", "suggestion_clause_id": null },
+    "服务质量标准": { "dimension": "标的物质量", "suggestion_clause_id": null },
+    "保密与数据安全": { "dimension": "保密", "suggestion_clause_id": "C-CONF-001" },
+    "合同期限": { "dimension": "劳动用工", "suggestion_clause_id": null },
+    "工作内容与工作地点": { "dimension": "劳动用工", "suggestion_clause_id": null },
+    "劳动报酬": { "dimension": "金额支付", "suggestion_clause_id": null },
+    "工作时间与休息休假": { "dimension": "劳动用工", "suggestion_clause_id": null },
+    "社会保险与福利": { "dimension": "劳动用工", "suggestion_clause_id": null },
+    "劳动保护与职业危害防护": { "dimension": "劳动用工", "suggestion_clause_id": null },
+    "保守商业秘密": { "dimension": "保密", "suggestion_clause_id": "C-CONF-001" },
+    "合同解除与终止": { "dimension": "劳动用工", "suggestion_clause_id": null }
+  },
+
+  "matrix": {
+    "采购": {
+      "display_name": "采购合同",
+      "required_count": 12,
+      "clauses": [
+        { "key": "party", "name": "主体信息", "required": true, "risk_if_missing": "high", "slot_hint": "双方完整名称、统一社会信用代码、住所、联系人" },
+        { "key": "scope", "name": "合同标的与范围", "required": true, "risk_if_missing": "high", "slot_hint": "采购内容、规格型号、数量、技术需求书索引" },
+        { "key": "amount", "name": "合同金额与币种", "required": true, "risk_if_missing": "high", "slot_hint": "含税/不含税、币种、大小写金额" },
+        { "key": "payment", "name": "付款方式与节点", "required": true, "risk_if_missing": "high", "slot_hint": "预付款 / 到货款 / 验收款 / 质保金的比例与触发条件" },
+        { "key": "delivery", "name": "交付时间与地点", "required": true, "risk_if_missing": "medium", "slot_hint": "交付起算点、交付地点、运输与风险转移" },
+        { "key": "acceptance", "name": "验收标准与期限", "required": true, "risk_if_missing": "high", "slot_hint": "验收标准、验收期限、验收不合格的整改次数与后果" },
+        { "key": "quality", "name": "质量标准与质保期", "required": true, "risk_if_missing": "medium", "slot_hint": "质量标准依据、质保期起算点与时长、售后响应时效" },
+        { "key": "liability", "name": "违约责任与责任上限", "required": true, "risk_if_missing": "high", "slot_hint": "双方对等的违约金比例与封顶、责任范围排除间接损失" },
+        { "key": "ip", "name": "知识产权归属", "required": true, "risk_if_missing": "high", "slot_hint": "定制开发成果与源代码归属；对方通用组件的授权范围" },
+        { "key": "confidentiality", "name": "保密义务与期限", "required": true, "risk_if_missing": "medium", "slot_hint": "保密信息范围、保密期限（建议终止后 3 年）、违约后果" },
+        { "key": "force_majeure", "name": "不可抗力与通知时效", "required": true, "risk_if_missing": "medium", "slot_hint": "通知期限（建议 15 日）、证明文件提交期限（建议 30 日）" },
+        { "key": "jurisdiction", "name": "争议解决与管辖", "required": true, "risk_if_missing": "medium", "slot_hint": "管辖法院或仲裁机构、适用法律" }
+      ]
+    },
+
+    "销售": {
+      "display_name": "销售合同",
+      "required_count": 12,
+      "clauses": [
+        { "key": "party", "name": "主体信息", "required": true, "risk_if_missing": "high", "slot_hint": "双方完整名称、统一社会信用代码、住所、联系人" },
+        { "key": "scope", "name": "合同标的与范围", "required": true, "risk_if_missing": "high", "slot_hint": "产品名称、型号、数量、配置清单" },
+        { "key": "amount", "name": "合同金额与币种", "required": true, "risk_if_missing": "high", "slot_hint": "单价、总价、税费约定、调价机制" },
+        { "key": "payment", "name": "付款方式与节点", "required": true, "risk_if_missing": "high", "slot_hint": "预收款比例、发货款、验收款、质保金；账期天数" },
+        { "key": "delivery", "name": "交付时间与地点", "required": true, "risk_if_missing": "medium", "slot_hint": "交付起算点、交付方式、风险转移时点（建议款到发货）" },
+        { "key": "acceptance", "name": "验收标准与期限", "required": true, "risk_if_missing": "high", "slot_hint": "验收标准、验收期限、逾期未验收的视为通过条款" },
+        { "key": "quality", "name": "质量标准与质保期", "required": true, "risk_if_missing": "medium", "slot_hint": "质保期时长与起算点、质保范围与免责情形" },
+        { "key": "liability", "name": "违约责任与责任上限", "required": true, "risk_if_missing": "high", "slot_hint": "我方赔偿责任上限（不超过合同总额）、排除间接损失与停产损失" },
+        { "key": "warranty_compliance", "name": "产品保证与合规", "required": true, "risk_if_missing": "medium", "slot_hint": "权属无瑕疵保证、产品符合强制性标准的保证" },
+        { "key": "confidentiality", "name": "保密义务与期限", "required": true, "risk_if_missing": "medium", "slot_hint": "保密信息范围、保密期限、违约后果" },
+        { "key": "force_majeure", "name": "不可抗力与通知时效", "required": true, "risk_if_missing": "medium", "slot_hint": "双方对等的不可抗力免责与通知时效" },
+        { "key": "jurisdiction", "name": "争议解决与管辖", "required": true, "risk_if_missing": "medium", "slot_hint": "管辖法院或仲裁机构、适用法律" }
+      ]
+    },
+
+    "服务": {
+      "display_name": "服务合同",
+      "required_count": 11,
+      "clauses": [
+        { "key": "party", "name": "主体信息", "required": true, "risk_if_missing": "high", "slot_hint": "双方完整名称、统一社会信用代码、住所、联系人" },
+        { "key": "scope", "name": "服务内容与范围", "required": true, "risk_if_missing": "high", "slot_hint": "服务项目、服务边界、不含事项（避免范围蔓延）" },
+        { "key": "amount", "name": "服务费用与支付", "required": true, "risk_if_missing": "high", "slot_hint": "费用构成、支付节点与触发条件、发票与税负" },
+        { "key": "term", "name": "服务期限", "required": true, "risk_if_missing": "medium", "slot_hint": "服务起止日、续约条件、提前终止的通知期" },
+        { "key": "deliverable", "name": "服务成果与交付物", "required": true, "risk_if_missing": "high", "slot_hint": "交付物清单、交付格式与载体、交付时间点" },
+        { "key": "acceptance", "name": "验收标准与期限", "required": true, "risk_if_missing": "high", "slot_hint": "验收标准、验收期限、验收不合格的整改与救济" },
+        { "key": "quality", "name": "服务质量标准", "required": true, "risk_if_missing": "medium", "slot_hint": "服务水平指标（响应时效、可用率）、考核与扣款规则" },
+        { "key": "liability", "name": "违约责任与责任上限", "required": true, "risk_if_missing": "high", "slot_hint": "责任上限约定、排除间接损失" },
+        { "key": "ip", "name": "知识产权归属", "required": true, "risk_if_missing": "high", "slot_hint": "服务成果与定制交付物的知识产权归属" },
+        { "key": "confidentiality", "name": "保密与数据安全", "required": true, "risk_if_missing": "medium", "slot_hint": "保密期限、数据处理与个人信息保护、数据返还或销毁" },
+        { "key": "jurisdiction", "name": "争议解决与管辖", "required": true, "risk_if_missing": "medium", "slot_hint": "管辖法院或仲裁机构、适用法律" }
+      ]
+    },
+
+    "劳动": {
+      "display_name": "劳动合同",
+      "required_count": 10,
+      "clauses": [
+        { "key": "party", "name": "主体信息", "required": true, "risk_if_missing": "high", "slot_hint": "用人单位名称与住所、劳动者姓名与身份信息" },
+        { "key": "term", "name": "合同期限", "required": true, "risk_if_missing": "high", "slot_hint": "固定期限/无固定期限/以完成一定工作为期限；试用期时长不得超过法定上限" },
+        { "key": "job", "name": "工作内容与工作地点", "required": true, "risk_if_missing": "high", "slot_hint": "岗位名称、职责范围、工作地点" },
+        { "key": "pay", "name": "劳动报酬", "required": true, "risk_if_missing": "high", "slot_hint": "工资构成、发放日、试用期工资不得低于法定下限" },
+        { "key": "working_hours", "name": "工作时间与休息休假", "required": true, "risk_if_missing": "medium", "slot_hint": "工时制度、加班与调休、年休假" },
+        { "key": "social_insurance", "name": "社会保险与福利", "required": true, "risk_if_missing": "high", "slot_hint": "五险一金缴纳基数与起缴时间" },
+        { "key": "safety", "name": "劳动保护与职业危害防护", "required": true, "risk_if_missing": "medium", "slot_hint": "劳动保护用品、职业健康检查、危害告知" },
+        { "key": "confidentiality", "name": "保守商业秘密", "required": true, "risk_if_missing": "medium", "slot_hint": "商业秘密范围、保密期限、违约后果" },
+        { "key": "non_compete", "name": "竞业限制与经济补偿", "required": false, "risk_if_missing": "medium", "slot_hint": "若约定竞业限制，必须同时约定按月支付的经济补偿，期限不超过 2 年" },
+        { "key": "termination", "name": "合同解除与终止", "required": true, "risk_if_missing": "medium", "slot_hint": "协商解除、单方解除情形、离职交接与工作交接期" }
+      ]
+    }
+  },
+
+  "integration_notes": [
+    "本矩阵与现有 review_rules.json 的 R-ACC-001（必备条款缺失：验收标准与验收期限未约定）是同一件事的两种表达：R-ACC-001 走语义判定，本矩阵走覆盖率比对。建议保留 R-ACC-001 作为兜底，矩阵作为主路径（更准、更快、可解释），并在回归时校验两者结论一致。",
+    "clause_types 中的 suggestion_clause_id 全部来自现有 clause_library.json 的 12 条示范条款；标记为 null 的条款类型（标的范围、金额币种、交付地点、期限、产品保证、劳动类若干）说明范本库需要扩充。扩充时新增 id 格式延续 C-<维度缩写>-<序号>，并在契约测试中断言「矩阵引用的每个 id 都存在于 clause_library.json」。",
+    "样本 05（服务合同扫描件）与样本 01（采购标准版）应作为「覆盖率 100%」的正例，样本 02/03 应命中若干缺失项作为反例。首次接入需重跑并核对 _预期审查结果.json。"
+  ]
+}

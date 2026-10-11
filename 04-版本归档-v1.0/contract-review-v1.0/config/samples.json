@@ -1,0 +1,168 @@
+{
+  "version": "1.0",
+  "description": "示例合同集清单：既是示例文件集的生成配置，也是模拟审批系统的待办种子数据",
+  "samples": [
+    {
+      "code": "01",
+      "file": "01_软件采购合同_风险用例.docx",
+      "format": "docx",
+      "business_type": "purchase",
+      "title": "核心业务系统软件采购合同",
+      "applicant": "陈明远",
+      "send_dept": "信息技术部",
+      "counterparty": "深智远科技有限公司",
+      "credit_code": "",
+      "amount_text": "人民币 2,860,000 元",
+      "amount": 2860000,
+      "perform_period": "自合同生效之日起 12 个月",
+      "expect": {
+        "risk_level": "high",
+        "conclusion": "reject",
+        "expect_rules": ["PU-H-001", "PU-H-002"],
+        "note": "示例场景一：知识产权归属供应商 + 到货即付全款无验收，两项高风险，系统生成驳回意见"
+      }
+    },
+    {
+      "code": "02",
+      "file": "02_服务器设备采购合同_标准用例.pdf",
+      "format": "pdf",
+      "business_type": "purchase",
+      "title": "服务器及存储设备采购合同",
+      "applicant": "王思远",
+      "send_dept": "信息技术部",
+      "counterparty": "华中数联信息技术有限公司",
+      "credit_code": "91410100MA9K7X2L3D",
+      "amount_text": "人民币 1,248,000 元",
+      "amount": 1248000,
+      "perform_period": "自合同生效之日起 6 个月",
+      "expect": {
+        "risk_level": "none",
+        "conclusion": "pass",
+        "expect_rules": [],
+        "note": "标准用例：条款完备、权责对等，用于对照审查（未命中任何规则口径）"
+      }
+    },
+    {
+      "code": "03",
+      "file": "03_大额销售合同_违约责任不对等.docx",
+      "format": "docx",
+      "business_type": "sales",
+      "title": "年度框架销售合同（含大额订单）",
+      "applicant": "刘雨桐",
+      "send_dept": "销售中心",
+      "counterparty": "北方重工装备制造集团股份有限公司",
+      "credit_code": "91210300MA0Y6T8P1F",
+      "amount_text": "人民币 9,600,000 元",
+      "amount": 9600000,
+      "perform_period": "自合同生效之日起 18 个月",
+      "expect": {
+        "risk_level": "high",
+        "conclusion": "rectify",
+        "expect_rules": ["SA-H-001"],
+        "note": "示例场景二：客户方滞纳金每日万分之一 vs 我方赔偿无上限，违约责任严重不对等"
+      }
+    },
+    {
+      "code": "04",
+      "file": "04_技术服务合同_标准用例.pdf",
+      "format": "pdf",
+      "business_type": "service",
+      "title": "数据治理与报表开发技术服务合同",
+      "applicant": "赵一鸣",
+      "send_dept": "数据管理部",
+      "counterparty": "启元数据科技有限公司",
+      "credit_code": "91310115MA1H8KQ72N",
+      "amount_text": "人民币 680,000 元",
+      "amount": 680000,
+      "perform_period": "自合同生效之日起 8 个月",
+      "expect": {
+        "risk_level": "low",
+        "conclusion": "pass",
+        "expect_rules": [],
+        "note": "标准服务合同：含验收标准、SLA、保密与数据安全条款"
+      }
+    },
+    {
+      "code": "05",
+      "file": "05_劳动合同_风险用例.docx",
+      "format": "docx",
+      "business_type": "labor",
+      "title": "劳动合同（技术研发岗）",
+      "applicant": "人力资源部",
+      "send_dept": "人力资源部",
+      "counterparty": "拟入职员工 周航",
+      "credit_code": "91410100MA9K7X2L3D",
+      "amount_text": "月薪 18,000 元",
+      "amount": 216000,
+      "perform_period": "2026-10-01 至 2029-09-30",
+      "expect": {
+        "risk_level": "high",
+        "conclusion": "rectify",
+        "expect_rules": ["LA-H-001", "LA-H-002"],
+        "note": "劳动用工违法条款：约定离职违约金与押金、试用期超法定上限"
+      }
+    },
+    {
+      "code": "06",
+      "file": "06_软件采购合同_扫描件.png",
+      "format": "image",
+      "business_type": "purchase",
+      "title": "智能制造执行系统采购合同（扫描件）",
+      "applicant": "孙立",
+      "send_dept": "生产制造部",
+      "counterparty": "恒信自动化设备有限公司",
+      "credit_code": "",
+      "amount_text": "人民币 1,530,000 元",
+      "amount": 1530000,
+      "perform_period": "自合同生效之日起 10 个月",
+      "expect": {
+        "risk_level": "high",
+        "conclusion": "rectify",
+        "expect_rules": ["PU-H-002"],
+        "note": "扫描件用例：走 Windows 内置 OCR 通道，验证图片合同解析能力"
+      }
+    },
+    {
+      "code": "07",
+      "file": "07_设备采购合同_无文本层.pdf",
+      "format": "pdf_no_text",
+      "business_type": "purchase",
+      "title": "备品备件采购合同（图片型 PDF）",
+      "applicant": "何静",
+      "send_dept": "供应链管理部",
+      "counterparty": "中恒物资贸易有限公司",
+      "credit_code": "",
+      "amount_text": "人民币 96,000 元",
+      "amount": 96000,
+      "perform_period": "自合同生效之日起 3 个月",
+      "expect": {
+        "risk_level": "none",
+        "conclusion": "",
+        "expect_rules": [],
+        "blocked": true,
+        "note": "解析受阻用例：PDF 无文本层，任务进入 blocked 并提示重新上传，用于验证阻塞与重试"
+      }
+    },
+    {
+      "code": "08",
+      "file": "08_保密协议_加密用例.pdf",
+      "format": "pdf_encrypted",
+      "business_type": "service",
+      "title": "技术保密协议（加密文件）",
+      "applicant": "赵一鸣",
+      "send_dept": "数据管理部",
+      "counterparty": "启元数据科技有限公司",
+      "credit_code": "",
+      "amount_text": "无金额",
+      "amount": null,
+      "perform_period": "自合同生效之日起 5 年",
+      "expect": {
+        "risk_level": "none",
+        "conclusion": "",
+        "expect_rules": [],
+        "blocked": true,
+        "note": "解析受阻用例：PDF 已加密，任务进入 blocked 并记录原因，用于验证异常流转"
+      }
+    }
+  ]
+}

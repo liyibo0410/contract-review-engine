@@ -1,0 +1,5 @@
+$ python tools/devcheck.py
+exit=0
+----------------------------------------------------------------------------------------
+devcheck done -> E:\桌面\合同审批系统-李奕波\05-可运行系统-contract-review-v2.0\verify\devcheck.txt
+devcheck problems: 0

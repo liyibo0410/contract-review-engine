@@ -1,0 +1,171 @@
+{
+  "_mock": true,
+  "version": "1.0",
+  "updated_at": "2026-09-18",
+  "note": "相对方主体核验 MOCK 数据源（P0-4 / 补充篇十一·external 类）。全部为虚构数据，统一社会信用代码为按真实格式生成的占位号，不对应任何真实企业。生产环境替换为「国家企业信用信息公示系统 / 企查查 / 天眼查」等接口，字段结构保持不变，仅需替换 fetcher。",
+  "_disclaimer": "严禁将本文件用于任何对外演示之外的真实业务判断。",
+
+  "api": {
+    "endpoint": "GET /mock/gsxt/{credit_code}",
+    "query_params": {
+      "scenario": "可选，演示覆盖开关，见 scenarios 段。仅 mock 环境生效",
+      "refresh": "可选，true 时忽略本地缓存并返回新的 queried_at"
+    },
+    "response_shape": {
+      "credit_code": "",
+      "registered_name": "",
+      "match_status": "matched | mismatched | not_found",
+      "registration_status": "在营 | 存续 | 注销 | 吊销",
+      "established_date": "YYYY-MM-DD",
+      "registered_capital": "单位：万元",
+      "legal_person": "",
+      "business_abnormal": { "in_list": false, "date": null, "authority": null, "reason": null },
+      "dishonest_judgment": { "listed": false, "case_count": 0, "unpaid_amount": null },
+      "blacklist": { "hit": false, "scope": null, "date": null, "reason": null },
+      "queried_at": "ISO8601 时间戳（界面必须展示）",
+      "data_source": "mock-gsxt v1.0"
+    }
+  },
+
+  "organizations": {
+    "91410300MA9K2X3Y7Z": {
+      "registered_name": "恒远智能科技（洛阳）有限公司",
+      "short_name": "恒远智能",
+      "role_in_samples": "我方主体（party_a），全部样例合同的甲方",
+      "registration_status": "存续",
+      "established_date": "2019-04-11",
+      "registered_capital": "5000",
+      "legal_person": "李恒远",
+      "business_abnormal": { "in_list": false, "date": null, "authority": null, "reason": null },
+      "dishonest_judgment": { "listed": false, "case_count": 0, "unpaid_amount": null },
+      "blacklist": { "hit": false, "scope": null, "date": null, "reason": null }
+    },
+
+    "91440300MA5F8G2H4K": {
+      "registered_name": "云枢软件技术有限公司",
+      "short_name": "云枢软件",
+      "role_in_samples": "相对方，用于 02_采购合同_风险版_软件采购.docx",
+      "registration_status": "存续",
+      "established_date": "2017-08-23",
+      "registered_capital": "2000",
+      "legal_person": "陈云枢",
+      "business_abnormal": { "in_list": false, "date": null, "authority": null, "reason": null },
+      "dishonest_judgment": { "listed": false, "case_count": 0, "unpaid_amount": null },
+      "blacklist": { "hit": false, "scope": null, "date": null, "reason": null },
+      "_note": "保持正常状态，以便 02 号样例的预期风险计数（2 高 4 中）在接入外部核验后不被改变"
+    },
+
+    "91410100MA47B9C2X8": {
+      "registered_name": "中原重工装备制造有限公司",
+      "short_name": "中原重工",
+      "role_in_samples": "相对方，用于 03_销售合同_风险版_违约责任不对等.docx",
+      "registration_status": "存续",
+      "established_date": "2008-06-02",
+      "registered_capital": "38000",
+      "legal_person": "王中原",
+      "business_abnormal": { "in_list": false, "date": null, "authority": null, "reason": null },
+      "dishonest_judgment": { "listed": false, "case_count": 0, "unpaid_amount": null },
+      "blacklist": { "hit": false, "scope": null, "date": null, "reason": null },
+      "_note": "保持正常状态，同上"
+    },
+
+    "91410305MA3D6E8F1L": {
+      "registered_name": "洛水工程技术服务有限公司",
+      "short_name": "洛水工程",
+      "role_in_samples": "相对方，用于 05_服务合同_扫描件_OCR用例.pdf",
+      "registration_status": "存续",
+      "established_date": "2015-11-30",
+      "registered_capital": "800",
+      "legal_person": "刘洛水",
+      "business_abnormal": { "in_list": false, "date": null, "authority": null, "reason": null },
+      "dishonest_judgment": { "listed": false, "case_count": 0, "unpaid_amount": null },
+      "blacklist": { "hit": false, "scope": null, "date": null, "reason": null }
+    },
+
+    "91410600MA2B7C9D3M": {
+      "registered_name": "汉唐数字技术有限公司",
+      "short_name": "汉唐数字",
+      "role_in_samples": "演示用，无对应样例合同",
+      "registration_status": "存续",
+      "established_date": "2024-11-05",
+      "registered_capital": "100",
+      "legal_person": "赵汉唐",
+      "business_abnormal": { "in_list": true, "date": "2025-09-17", "authority": "鹤壁市市场监督管理局", "reason": "通过登记的住所或经营场所无法联系" },
+      "dishonest_judgment": { "listed": false, "case_count": 0, "unpaid_amount": null },
+      "blacklist": { "hit": false, "scope": null, "date": null, "reason": null },
+      "_note": "用于演示 E-01（经营异常，一票否决）与 E-05（成立不足 1 年 + 注册资本仅 100 万，与 280 万合同不匹配）"
+    },
+
+    "91410700MA1C5D7E9N": {
+      "registered_name": "豫鑫建材贸易有限公司",
+      "short_name": "豫鑫建材",
+      "role_in_samples": "演示用，无对应样例合同",
+      "registration_status": "存续",
+      "established_date": "2016-03-18",
+      "registered_capital": "1200",
+      "legal_person": "孙豫鑫",
+      "business_abnormal": { "in_list": false, "date": null, "authority": null, "reason": null },
+      "dishonest_judgment": { "listed": true, "case_count": 6, "unpaid_amount": "348.62" },
+      "blacklist": { "hit": true, "scope": "集团", "date": "2025-12-04", "reason": "连续两期合同逾期交付且拒不整改" },
+      "_note": "用于演示 E-02（失信被执行）与 E-04（命中集团黑名单）"
+    },
+
+    "91410300MA9K2X3Y7X": {
+      "registered_name": "恒远智能科技（洛阳）有限公司",
+      "short_name": "恒远智能（近似名）",
+      "role_in_samples": "演示用",
+      "registration_status": "存续",
+      "established_date": "2019-04-11",
+      "registered_capital": "5000",
+      "legal_person": "李恒远",
+      "business_abnormal": { "in_list": false, "date": null, "authority": null, "reason": null },
+      "dishonest_judgment": { "listed": false, "case_count": 0, "unpaid_amount": null },
+      "blacklist": { "hit": false, "scope": null, "date": null, "reason": null },
+      "_note": "E-03 名称↔代码不符演示：合同文本写「恒远智能科技（洛阳）公司」（漏「有限」二字），与登记名称比对判定 mismatched"
+    }
+  },
+
+  "natural_persons": {
+    "张明": {
+      "role_in_samples": "劳动者，用于 04_劳动合同_标准版.docx",
+      "note": "自然人相对方不适用工商核验；劳动类合同跳过 E-01~E-05，改由 R-COMP-001 等劳动规则覆盖"
+    }
+  },
+
+  "blacklist": [
+    { "scope": "集团", "credit_code": "91410700MA1C5D7E9N", "name": "豫鑫建材贸易有限公司", "date": "2025-12-04", "reason": "连续两期合同逾期交付且拒不整改", "applicant": "供应链管理部" },
+    { "scope": "单位", "credit_code": "91410600MA2B7C9D3M", "name": "汉唐数字技术有限公司", "date": "2026-01-20", "reason": "投标资料与实际资质不符", "applicant": "采购部" }
+  ],
+
+  "scenarios": {
+    "_note": "演示与自测用的覆盖开关。请求形如 GET /mock/gsxt/91440300MA5F8G2H4K?scenario=abnormal。仅 mock 环境生效，生产 fetcher 直接忽略。用途是在不改样例合同文件的前提下，现场演示外部核验类风险与一票否决。",
+    "normal": "返回组织原始数据（默认）",
+    "abnormal": "强制 business_abnormal.in_list=true，日期取当天，原因为「通过登记的住所或经营场所无法联系」→ 触发 E-01 一票否决",
+    "dishonest": "强制 dishonest_judgment.listed=true，case_count=3 → 触发 E-02 一票否决",
+    "blacklist": "强制 blacklist.hit=true，scope=集团 → 触发 E-04 一票否决",
+    "mismatch": "强制返回 registered_name 与请求方传入的名称不一致 → 触发 E-03",
+    "young": "强制 established_date 改为 8 个月前、registered_capital 改为 50 → 触发 E-05 中风险",
+    "not_found": "返回 match_status=not_found，用于验证「核验不到主体」时的降级处理（应报中风险并提示人工核实，不得静默通过）",
+    "timeout": "延迟 8 秒后返回 504，用于验证核验超时不得阻塞主审查流程（应降级为「核验未完成」并继续输出其余风险）"
+  },
+
+  "failure_policy": {
+    "note": "外部核验是唯一会依赖第三方的环节，必须有明确的降级策略，不能因为对方接口挂掉就整单失败。",
+    "timeout_ms": 3000,
+    "retry": { "max_attempts": 2, "backoff_ms": 500 },
+    "on_failure": {
+      "action": "continue_review",
+      "risk_emitted": { "level": "medium", "title": "相对方主体核验未完成", "source_type": "external" },
+      "task_status_impact": "none（不置 blocked）",
+      "ui": "交易对手卡显示「核验未完成 · 点击重试」，并展示失败原因与时间"
+    },
+    "cache": { "ttl_hours": 24, "note": "同一信用代码 24 小时内复用结果，避免演示时反复请求；但 queried_at 必须原样展示，不得伪装成实时" }
+  },
+
+  "production_swap_checklist": [
+    "替换 fetcher：新增 counterparty_provider.py，实现 fetch(credit_code) -> dict，保持 response_shape 不变",
+    "加超时与重试（见 failure_policy），任何异常都不得抛出到审查主流程",
+    "返回值必须带 queried_at 与 data_source，界面原样展示，不允许隐藏数据来源",
+    "主体名称模糊匹配需人工确认：名称与登记名仅差「（洛阳）」「有限」等字符时，标为 mismatched 并给出两者对比，不自动改判 matched"
+  ]
+}

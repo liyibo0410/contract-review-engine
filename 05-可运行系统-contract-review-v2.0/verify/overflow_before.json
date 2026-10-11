@@ -1,0 +1,1559 @@
+{
+ "tag": "before",
+ "port": 8799,
+ "viewports": [],
+ "pages": {
+  "大盘": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥0.00",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     }
+    ],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥0.00",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     }
+    ],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥0.00",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥0.00",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     }
+    ],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 74,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥0.00",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 114,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥0.00",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 9,
+      "t": "动态孪生看板"
+     },
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 144,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥0.00",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "大盘·大额注入": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#stats>div.stat.hl",
+      "cw": 210,
+      "sw": 232,
+      "d": 22,
+      "t": "高风险金额¥ 1,234,567,890.00 （123456.8 万）高风险合同累计金额"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 178,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 212,
+      "vClient": 178,
+      "vScroll": 216,
+      "vH": 190,
+      "clipped": 38
+     }
+    ],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#stats>div.stat.hl",
+      "cw": 177,
+      "sw": 232,
+      "d": 55,
+      "t": "高风险金额¥ 1,234,567,890.00 （123456.8 万）高风险合同累计金额"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 145,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 179,
+      "vClient": 145,
+      "vScroll": 216,
+      "vH": 190,
+      "clipped": 71
+     }
+    ],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#stats>div.stat.hl",
+      "cw": 184,
+      "sw": 232,
+      "d": 48,
+      "t": "高风险金额¥ 1,234,567,890.00 （123456.8 万）高风险合同累计金额"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 152,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 186,
+      "vClient": 152,
+      "vScroll": 216,
+      "vH": 190,
+      "clipped": 64
+     }
+    ],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#stats>div.stat.hl",
+      "cw": 148,
+      "sw": 232,
+      "d": 84,
+      "t": "高风险金额¥ 1,234,567,890.00 （123456.8 万）高风险合同累计金额"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "div#stats>div.stat.hl>div.v.num>span.faint",
+      "d": 27,
+      "t": "（123456.8 万）"
+     },
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 116,
+      "vH": 48,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 150,
+      "vClient": 116,
+      "vScroll": 216,
+      "vH": 190,
+      "clipped": 100
+     }
+    ],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 74,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 165,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 199,
+      "vClient": 165,
+      "vScroll": 168,
+      "vH": 112,
+      "clipped": 3
+     }
+    ],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 114,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 368,
+      "vClient": 334,
+      "vScroll": 334,
+      "vH": 75,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 9,
+      "t": "动态孪生看板"
+     },
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 144,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [
+     {
+      "k": "审查任务总数",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "中风险合同",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "审查完成",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "解析受阻",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "回写成功",
+      "v": "0",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 37,
+      "clipped": 0
+     },
+     {
+      "k": "高风险金额",
+      "v": "¥ 1,234,567,890.00 （123456.8 万）",
+      "cardW": 338,
+      "vClient": 304,
+      "vScroll": 304,
+      "vH": 75,
+      "clipped": 0
+     }
+    ],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "工作台": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 74,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 114,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 9,
+      "t": "动态孪生看板"
+     },
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 144,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "孪生看板": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 317,
+      "sw": 602,
+      "d": 285,
+      "t": "启动初始化完成：版本 2.1.6 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 220,
+      "sw": 602,
+      "d": 382,
+      "t": "启动初始化完成：版本 2.1.6 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "sw": 211,
+      "d": 47,
+      "t": "演示身份切换为 admin（系统管理员）"
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "sw": 602,
+      "d": 438,
+      "t": "启动初始化完成：版本 2.1.6 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     },
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 164,
+      "sw": 208,
+      "d": 44,
+      "t": "账号种子完成：新建 3 个 / 共 3 个"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "div#logStream>div.li>span.dt",
+      "cw": 459,
+      "sw": 602,
+      "d": 143,
+      "t": "启动初始化完成：版本 2.1.6 ｜ 账号 3 ｜ 清理过期会话 0 ｜ 队列 已启用(2 "
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 90,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 114,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a.active",
+      "d": 9,
+      "t": "动态孪生看板"
+     },
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 144,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 360"
+   }
+  },
+  "规则与模板": {
+   "桌面 1600": {
+    "vw": 1600,
+    "vh": 1000,
+    "pageOverflow": 0,
+    "clipped": [
+     {
+      "sel": "span#envTag",
+      "cw": 174,
+      "sw": 205,
+      "d": 31,
+      "t": "规则维护 · 修改前自动备份 .bak"
+     }
+    ],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "桌面 1600"
+   },
+   "笔记本 1366": {
+    "vw": 1366,
+    "vh": 900,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "笔记本 1366"
+   },
+   "竖屏平板 1024": {
+    "vw": 1024,
+    "vh": 1366,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "竖屏平板 1024"
+   },
+   "竖屏平板 820": {
+    "vw": 820,
+    "vh": 1180,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "button#petBtn>span.pet-tip.show",
+      "d": 212,
+      "t": "有问题点我，或让我带你走一遍"
+     }
+    ],
+    "stats": [],
+    "viewport": "竖屏平板 820"
+   },
+   "手机竖屏 430": {
+    "vw": 430,
+    "vh": 932,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a.active",
+      "d": 74,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 430"
+   },
+   "手机竖屏 390": {
+    "vw": 390,
+    "vh": 844,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a.active",
+      "d": 114,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 390"
+   },
+   "手机竖屏 360": {
+    "vw": 360,
+    "vh": 800,
+    "pageOverflow": 0,
+    "clipped": [],
+    "escaped": [
+     {
+      "sel": "div#topbar>nav.nav>a",
+      "d": 9,
+      "t": "动态孪生看板"
+     },
+     {
+      "sel": "div#topbar>nav.nav>a.active",
+      "d": 144,
+      "t": "合规规则与模板"
+     }
+    ],
+    "stats": [],
+    "viewport": "手机竖屏 360"
+   }
+  }
+ },
+ "notes": [
+  "登录令牌获取：成功",
+  "大额注入（大盘·大额注入）：替换 1 张金额卡",
+  "工作台 页面脚本报错 1 条：Failed to load resource: the server responded with a status of 404 (Not Found) http://127.0.0.1:8799/api/cases/1"
+ ]
+}

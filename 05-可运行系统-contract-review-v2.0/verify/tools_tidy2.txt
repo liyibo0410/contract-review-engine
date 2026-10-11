@@ -1,0 +1,10 @@
+tools/ 第二轮整理
+====================================================================================
+  [MOVE] verify_acceptance.py（落盘自检结果 —— 已由 run_selftest.py 取代（功能重合））
+  [MOVE] capture_screens.py（截图采集与渲染校验 —— 已由 verify_render.py 取代（后者探针更严））
+  [MOVE] verify_startup.py（启动入口验证 —— 已被 audit_frontend.py 覆盖（后者真开页面并量几何））
+  [WRITE] _onetime/README.md 追加取代关系说明
+  [WRITE] tools/README.md（登记 24 个在用脚本）
+
+顶层在用脚本 25 个；未登记 1 个 ：tidy_tools2.py
+====================================================================================

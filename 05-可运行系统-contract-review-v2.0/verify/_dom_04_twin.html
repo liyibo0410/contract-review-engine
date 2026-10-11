@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>动态孪生平台看板 · 衡鉴 V2.1.7 · 企业合同智能审查系统</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/fx.css">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('cr-theme');
+    if (t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { }
+})();
+</script>
+<style id="petStyle">.pet-root{position:fixed;right:20px;bottom:20px;z-index:9000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}.pet-root>*{pointer-events:auto}.pet-btn{position:relative;width:62px;height:62px;border-radius:50%;cursor:grab;border:1px solid var(--line);background:var(--panel-solid,#121a28);box-shadow:0 12px 30px -10px rgba(0,0,0,.55),0 0 0 1px var(--brand-soft);display:flex;align-items:center;justify-content:center;padding:0;transition:transform .22s cubic-bezier(.22,.68,.36,1),box-shadow .22s}.pet-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 16px 36px -10px rgba(0,0,0,.6),0 0 0 3px var(--brand-soft)}.pet-btn:focus-visible{outline:2px solid var(--brand);outline-offset:3px}.pet-btn svg{width:40px;height:40px;overflow:visible}.pet-btn .pet-a1{animation:petBreathe 3.2s ease-in-out infinite;transform-origin:50% 50%}.pet-btn .pet-a2{animation:petBreathe 3.2s ease-in-out infinite .35s;transform-origin:50% 50%}.pet-btn .pet-eye{animation:petBlink 4.4s infinite}.pet-btn.think .pet-a1,.pet-btn.think .pet-a2{animation-duration:.9s}@keyframes petBreathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2.5px) scale(1.035)}}@keyframes petBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.12)}}.pet-badge{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:999px;background:#b3261e;color:#fff;font-size:11px;line-height:18px;text-align:center;padding:0 5px;font-weight:700;display:none}.pet-badge.on{display:block}.pet-tip{position:absolute;right:74px;bottom:12px;white-space:nowrap;font-size:12.5px;background:var(--panel-solid,#121a28);border:1px solid var(--line);color:var(--ink);padding:6px 11px;border-radius:999px;opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;pointer-events:none;box-shadow:var(--shadow-sm)}.pet-btn:hover .pet-tip{opacity:1;transform:translateX(0)}.pet-tip.show{opacity:1;transform:translateX(0)}.pet-btn.attn{animation:petAttn 1.6s ease-in-out 3}@keyframes petAttn{0%,100%{transform:none}50%{transform:translateY(-6px) scale(1.05)}}.pet-panel{width:min(392px,calc(100vw - 32px));max-height:min(620px,calc(100vh - 110px));display:none;flex-direction:column;background:var(--panel-solid,#121a28);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}.pet-panel.on{display:flex;animation:petIn .24s cubic-bezier(.22,.68,.36,1)}@keyframes petIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}.pet-ph{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid var(--line);background:var(--panel-3)}.pet-ph b{font-size:13.6px}.pet-ph .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}.pet-ph .mode{font-size:11.3px;color:var(--sub)}.pet-ph .spacer{flex:1}.pet-x{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--sub);cursor:pointer;line-height:1;font-size:15px}.pet-x:hover{color:var(--ink);border-color:var(--brand)}.pet-body{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:11px}.pet-msg{display:flex;gap:8px;align-items:flex-start}.pet-msg .av{width:24px;height:24px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--brand-soft);color:var(--brand);font-size:12px}.pet-msg .bd{background:var(--panel-3);border:1px solid var(--line-2);border-radius:2px 12px 12px 12px;padding:9px 12px;font-size:13px;line-height:1.78;max-width:100%;word-break:break-word}.pet-msg.me{flex-direction:row-reverse}.pet-msg.me .av{background:var(--panel-3);color:var(--sub)}.pet-msg.me .bd{background:var(--brand-soft);border-color:transparent;border-radius:12px 2px 12px 12px}.pet-msg .bd p{margin:0 0 7px}.pet-msg .bd p:last-child{margin-bottom:0}.pet-msg .bd ul,.pet-msg .bd ol{margin:5px 0;padding-left:19px}.pet-msg .bd li{margin:3px 0}.pet-msg .bd code{font-family:var(--mono);font-size:11.9px;background:var(--panel-3);border:1px solid var(--line-2);border-radius:5px;padding:1px 5px}.pet-msg .bd table{border-collapse:collapse;font-size:12.3px;margin:6px 0;width:100%}.pet-msg .bd th,.pet-msg .bd td{border:1px solid var(--line-2);padding:4px 8px;text-align:left}.pet-msg .bd th{color:var(--sub);font-weight:600}.pet-msg .bd hr{border:0;border-top:1px dashed var(--line-2);margin:8px 0}.pet-refs{font-size:11.2px;color:var(--faint);margin-top:6px}.pet-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pet-act{font-size:12.2px;padding:4px 10px;border-radius:999px;cursor:pointer;border:1px solid var(--brand);background:transparent;color:var(--brand)}.pet-act:hover{background:var(--brand-soft)}.pet-typing span{display:inline-block;width:5px;height:5px;margin:0 1.5px;border-radius:50%;background:var(--sub);animation:petT 1.1s infinite}.pet-typing span:nth-child(2){animation-delay:.16s}.pet-typing span:nth-child(3){animation-delay:.32s}@keyframes petT{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}.pet-chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 13px 10px}.pet-chip{font-size:12.1px;padding:4px 10px;border-radius:999px;cursor:pointer;background:var(--panel-3);border:1px solid var(--line);color:var(--sub)}.pet-chip:hover{color:var(--ink);border-color:var(--brand)}.pet-pf{display:flex;gap:7px;padding:11px 13px;border-top:1px solid var(--line);background:var(--panel-3)}.pet-pf input{flex:1;min-width:0;font-size:13px;padding:8px 11px;border-radius:9px;background:var(--bg);color:var(--ink);border:1px solid var(--line);outline:none}.pet-pf input:focus{border-color:var(--brand)}.pet-pf button{flex:none;padding:8px 14px;border-radius:9px;border:1px solid var(--brand);background:var(--brand);color:#fff;font-size:13px;cursor:pointer}.pet-pf button:disabled{opacity:.5;cursor:not-allowed}.pet-spot{position:fixed;z-index:9500;border-radius:10px;pointer-events:none;box-shadow:0 0 0 9999px rgba(4,8,16,.66),0 0 0 2px var(--brand),0 0 22px 2px var(--brand-soft);transition:top .26s cubic-bezier(.22,.68,.36,1),left .26s cubic-bezier(.22,.68,.36,1),width .26s,height .26s;animation:petPulse 2.2s ease-in-out infinite}@keyframes petPulse{0%,100%{box-shadow:0 0 0 9999px rgba(4,8,16,.66),0 0 0 2px var(--brand),0 0 18px 2px var(--brand-soft)}50%{box-shadow:0 0 0 9999px rgba(4,8,16,.66),0 0 0 3px var(--brand),0 0 30px 6px var(--brand-soft)}}.pet-coach{position:fixed;z-index:9600;width:min(352px,calc(100vw - 28px));background:var(--panel-solid,#121a28);border:1px solid var(--brand);border-radius:14px;box-shadow:0 18px 48px -14px rgba(0,0,0,.7);overflow:hidden}.pet-coach .ch{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line-2);font-size:11.8px;color:var(--sub)}.pet-coach .ch b{color:var(--ink);font-size:12.6px}.pet-coach .cb{padding:11px 13px;font-size:12.8px;line-height:1.8;max-height:44vh;overflow-y:auto}.pet-coach .cb .hint{margin-top:8px;font-size:11.8px;color:var(--mid)}.pet-coach .cf{display:flex;gap:7px;align-items:center;padding:10px 12px;border-top:1px solid var(--line-2);background:var(--panel-3)}.pet-coach .cf .spacer{flex:1}.pet-coach button{font-size:12.4px;padding:5px 12px;border-radius:8px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}.pet-coach button.primary{background:var(--brand);border-color:var(--brand);color:#fff}.pet-coach button:disabled{opacity:.45;cursor:not-allowed}.pet-prog{display:flex;gap:3px}.pet-prog i{width:16px;height:3px;border-radius:999px;background:var(--line);display:block}.pet-prog i.on{background:var(--brand)}.pet-wait{font-size:11.6px;color:var(--mid)}@media (max-width:640px){.pet-root{right:12px;bottom:12px}.pet-btn{width:54px;height:54px}.pet-btn svg{width:34px;height:34px}.pet-panel{width:calc(100vw - 24px);max-height:calc(100vh - 96px)}.pet-tip{display:none}.pet-coach{left:12px !important;right:12px;width:auto}}@media (prefers-reduced-motion:reduce){.pet-btn .pet-a1,.pet-btn .pet-a2,.pet-btn .pet-eye,.pet-spot{animation:none}}</style></head>
+<body>
+
+<div class="topbar" id="topbar"><a class="brand" href="/" title="返回审查大盘"><img class="brand-logo" src="/assets/logo-sm.png" alt="衡鉴 V2.1.7 标识" width="30" height="31"><span class="brand-txt"><b>衡鉴 V2.1.7</b><i title="衡鉴 V2.1.7 · 企业合同智能审查系统 · intelligent contract review">企业合同智能审查系统</i></span></a><nav class="nav" aria-label="主导航"><a href="/">审查大盘</a><a href="/workbench">智能审查工作台</a><a href="/twin" class="active" aria-current="page">动态孪生看板</a><a href="/rules">合规规则与模板</a></nav><div class="spacer"></div><span class="role-bar"><span class="role-chip" id="roleChip" title="配置审批流对接参数、维护合规审查规则与标准条款库、监控审查任务状态并处理阻塞重试"><span class="rc-role">系统管理员</span><span class="rc-user">admin</span></span><select class="role-switch" id="roleSwitch" onchange="CR.roleSwitch(this.value)" aria-label="切换演示身份"><option value="legal">法务审查人</option><option value="applicant">业务经办人</option><option value="admin" selected="">系统管理员</option></select><a class="btn sm ghost" href="/logout" title="退出登录">退出</a></span><span class="env-tag" id="envTag" title="孪生看板 · 实时镜像">孪生看板 · 实时镜像</span><a class="btn sm ghost hide-md" href="/mock" title="模拟审批系统（美化查看页）"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M14 4h6v6"></path><path d="M20 4l-8.5 8.5"></path><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"></path></svg>模拟审批系统</a><button class="btn sm ghost compact-xs" id="themeBtn" onclick="CR.toggleTheme()" title="切换到浅色主题"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path></svg><span>浅色</span></button></div>
+
+<div class="twin-wrap">
+
+  <!-- ============================ 看板头部 ============================ -->
+  <div class="twin-head">
+    <h1>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="7.5" ry="3"></ellipse><path d="M4.5 6v12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V6"></path><path d="M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3"></path></svg>
+      动态孪生平台看板
+    </h1>
+    <span class="faint" style="font-size:12.5px" id="verTag">v2.1.7 · 数据生成于 2026-09-19 18:19:33</span>
+    <div class="twin-clock">
+      <span class="live-dot"><i></i><span id="liveText">服务已运行 13 秒 · 每 4 秒回读</span></span>
+      <div style="text-align:right">
+        <div class="t" id="clock">18:19:39</div>
+        <div class="d" id="date">2026-09-19 六</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-note" id="errBox" style="display:none;margin-bottom:14px;border-color:var(--high-line);
+              background:var(--high-bg);color:var(--ink)"></div>
+
+  <div class="data-note" style="margin-bottom:14px" id="srcNote">
+    <b>本页不构造任何演示数据。</b>全部数字来自服务端 <code>/api/twin</code> 的实时聚合：
+    任务与金额取自数据库，解析产出取自解析快照，命中与采纳取自审查结果表，
+    「实时审查日志」直接读取审计表（<code>audit_logs</code>）—— 每一条都能在库里对上。
+    自动刷新间隔 4 秒。
+  </div>
+
+  <!-- ============================ KPI ============================ -->
+  <div class="twin-kpi" id="kpi"><div class="tk cfx cfx-lift cfx-beam" style="--c:var(--brand)"><div class="k">审查任务总数</div><div class="v">8<small>个</small></div><div class="x">已完成 6 · 待处理 0</div></div><div class="tk cfx cfx-lift cfx-beam" style="--c:var(--ok)"><div class="k">审查完成</div><div class="v">6<small>个</small></div><div class="x">已生成审查意见</div></div><div class="tk cfx cfx-lift cfx-beam" style="--c:var(--mid)"><div class="k">解析受阻</div><div class="v">2<small>个</small></div><div class="x">待管理员重试</div></div><div class="tk cfx cfx-lift cfx-beam" style="--c:var(--high)"><div class="k">规则命中</div><div class="v">14<small>项</small></div><div class="x">高风险 7 · 中风险 7</div></div><div class="tk cfx cfx-lift cfx-beam" style="--c:var(--cyan)"><div class="k">建议采纳</div><div class="v">0<small>项</small></div><div class="x">法务已确认 0 / 14</div></div><div class="tk cfx cfx-lift cfx-beam" style="--c:var(--teal)"><div class="k">意见回写</div><div class="v">1<small>条</small></div><div class="x">共尝试 1 次</div></div></div>
+
+  <!-- ============================ 审查流水线 ============================ -->
+  <div class="panel reveal cfx cfx-beam in" style="margin-bottom: 14px;">
+    <div class="panel-head">
+      <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-7 4 15 2.5-8h5"></path></svg>审查流水线 · 七段真实计数</span>
+      <div class="spacer"></div>
+      <span class="faint" style="font-size:12.2px">每个节点下方标注了数据来源表/目录</span>
+    </div>
+    <div class="panel-body">
+      <div class="pipe" id="pipe"><div class="pipe-node ok cfx"><div class="nm">审批接入</div><div class="vl">8<small>个任务</small></div><div class="nt">审批拉取 8 · 本地上传 0</div><div class="src">来源 contract_cases</div></div><div class="pipe-node warn cfx"><div class="nm">文档解析</div><div class="vl">6<small>份</small></div><div class="nt">共 8 页 / 252 段（受阻 2）</div><div class="src">来源 contract_documents</div></div><div class="pipe-node ok cfx"><div class="nm">条款抽取</div><div class="vl">160<small>个条款</small></div><div class="nt">剔除页眉页脚 0 行 · 6 份快照</div><div class="src">来源 data/parsed/case_*.json</div></div><div class="pipe-node ok cfx"><div class="nm">规则审查</div><div class="vl">14<small>项命中</small></div><div class="nt">4 类规则共 41 条参与判定</div><div class="src">来源 review_results</div></div><div class="pipe-node ok cfx"><div class="nm">条款推荐</div><div class="vl">0<small>项已采纳</small></div><div class="nt">示范条款库 6 类 / 9 套备选，覆盖 16 类条款</div><div class="src">来源 review_results.adopted</div></div><div class="pipe-node ok cfx"><div class="nm">意见回写</div><div class="vl">1<small>条</small></div><div class="nt">共尝试 1 次（幂等去重 0 次）</div><div class="src">来源 writeback_logs</div></div><div class="pipe-node ok cfx"><div class="nm">报告产出</div><div class="vl">0<small>份文件</small></div><div class="nt">MD / HTML / PDF 三通道</div><div class="src">来源 data/reports/</div></div></div>
+    </div>
+  </div>
+
+  <!-- ============================ 引擎 / 水位 / 接口 ============================ -->
+  <div class="twin-mid">
+
+    <div class="panel reveal cfx cfx-beam in" style="">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"></rect><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"></path></svg>引擎运行指标</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:12.2px">真实读数</span>
+      </div>
+      <div class="panel-body">
+        <div class="metric-list" id="engineList"><div class="ml"><span class="mll">解析吞吐</span><span class="mlv">—</span><span class="mln">运行不足 2 分钟，暂不计算（避免刚重启的假峰值）</span></div><div class="ml"><span class="mll">接口平均耗时</span><span class="mlv">5 ms</span><span class="mln">峰值 101 ms · 累计 103 次请求</span></div><div class="ml"><span class="mll">规则命中密度</span><span class="mlv">2.3 项/份</span><span class="mln">累计 14 项（高 7 · 中 7）</span></div><div class="ml"><span class="mll">OCR 置信度</span><span class="mlv">100%</span><span class="mln">样本 1 份，偏少仅供参考 · 阈值 50%</span></div><div class="ml"><span class="mll">错误率</span><span class="mlv">0.00%</span><span class="mln">无错误记录</span></div><div class="ml"><span class="mll">运行时长</span><span class="mlv">13 秒</span><span class="mln">自 2026-09-19 18:19:19 起</span></div></div>
+        <div class="mode-note" id="capLine" style="margin-top:10px">引擎能力：解析 DOCX / PDF / OCR ｜ PDF 报告 浏览器无头打印 ｜ 规则库 41 条 / 4 类 ｜ 条款词典 16 类 / 示范条款 9 套</div>
+      </div>
+    </div>
+
+    <div class="panel reveal cfx cfx-beam" data-d="1" style="">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8.5 4.6-8.5 4.6L3.5 8.1z"></path><path d="M3.5 12.5L12 17l8.5-4.5"></path><path d="M3.5 16.5L12 21l8.5-4.5"></path></svg>资源水位与配额</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:12.2px" id="qWorkers">并发 2 · 队列上限 50</span>
+      </div>
+      <div class="panel-body">
+        <div class="meter-row" id="gauges"><div class="meter idle cfx cfx-lift"><div class="k"><span>队列水位</span><b>0 个</b></div><div class="bar"><i style="width:1.5%"></i></div><div class="sub">空闲 · 上限 50 个</div></div><div class="meter idle cfx cfx-lift"><div class="k"><span>待处理堆积</span><b>0 个</b></div><div class="bar"><i style="width:1.5%"></i></div><div class="sub">无积压 · 上限 40 个</div></div><div class="meter ok cfx cfx-lift"><div class="k"><span>附件存储</span><b>0.89 MB</b></div><div class="bar"><i style="width:1.5%"></i></div><div class="sub">占配额 0.04% · 配额 2048 MB</div></div><div class="meter ok cfx cfx-lift"><div class="k"><span>数据库</span><b>4 KB</b></div><div class="bar"><i style="width:1.5%"></i></div><div class="sub">含 14 个数据文件 · 报告 0 份</div></div></div>
+        <div class="mode-note" id="idleHint" style="margin-top:11px">水位以各自的<b>配额</b>为分母。当前<b>空闲</b> —— 接近 0 是正常的，表示没有积压。</div>
+      </div>
+    </div>
+
+    <div class="panel reveal cfx cfx-beam" data-d="2" style="">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6.5" rx="1.8"></rect><rect x="3" y="13.5" width="18" height="6.5" rx="1.8"></rect><path d="M7 7.2h.01M7 16.8h.01"></path></svg>接口响应</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:12.2px" id="httpMeta">自 2026-09-19 18:19:19 起</span>
+      </div>
+      <div class="panel-body">
+        <div id="httpStats"><div class="kv-grid"><div class="kv-cell cfx cfx-lift"><div class="k">累计请求</div><div class="v">103<div class="faint" style="font-size:11.7px">错误 0 次</div></div></div><div class="kv-cell cfx cfx-lift"><div class="k">平均响应</div><div class="v">5 ms<div class="faint" style="font-size:11.7px">全部请求历史均值</div></div></div><div class="kv-cell cfx cfx-lift"><div class="k">错误率</div><div class="v">0.00%<div class="faint" style="font-size:11.7px">无错误</div></div></div><div class="kv-cell cfx cfx-lift"><div class="k">响应总量</div><div class="v">1.88 MB<div class="faint" style="font-size:11.7px">压缩后实际发送</div></div></div></div></div>
+        <div class="sep"></div>
+        <div style="font-size:12.2px;color:var(--sub);margin-bottom:7px">热点接口（按累计耗时排序）</div>
+        <div id="topPaths"><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">GET /api/twin</span><span class="faint">1 次 · 均 101 ms · 峰 101 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:100%"></i></div></div><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">GET /assets/app.css</span><span class="faint">9 次 · 均 7 ms · 峰 18 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:6.910167818361303%"></i></div></div><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">GET /assets/fx.css</span><span class="faint">9 次 · 均 6 ms · 峰 27 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:5.824284304047384%"></i></div></div><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">GET /login</span><span class="faint">2 次 · 均 26 ms · 峰 50 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:25.172754195459035%"></i></div></div><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">GET /api/cases/1</span><span class="faint">2 次 · 均 21 ms · 峰 25 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:20.63178677196446%"></i></div></div><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">POST /api/auth/login</span><span class="faint">1 次 · 均 26 ms · 峰 26 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:25.863770977295164%"></i></div></div><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">GET /api/health</span><span class="faint">2 次 · 均 12 ms · 峰 19 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:11.648568608094768%"></i></div></div><div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:12.3px"><span class="mono" style="color:var(--ink-2)">GET /api/auth/me</span><span class="faint">9 次 · 均 2 ms · 峰 12 ms</span></div><div style="height:5px;border-radius:999px;background:var(--panel-3);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--brand));width:3%"></i></div></div></div>
+        <div id="slowBox"><div class="faint" style="font-size:12.1px;margin-top:12px">暂无慢请求。审查与 OCR 属耗时操作，正常会出现在这里。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ 日志 / 队列 / 合规 ============================ -->
+  <div class="twin-bottom">
+    <div class="panel reveal cfx cfx-beam" style="">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"></path><circle cx="18.5" cy="18" r="2.2"></circle></svg>实时审查日志</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:12.2px" id="logMeta">审计表共 86 条 · 显示最近 60</span>
+      </div>
+      <div class="panel-body" style="display:flex;flex-direction:column">
+        <div class="log-stream" id="logStream"><div class="li"><span class="ts">18:19:23</span><span class="st ok">ok</span><span class="tl" title="auth.login">auth.login</span><span class="dt" title="admin（系统管理员）登录成功，会话有效期 480 分钟">admin（系统管理员）登录成功，会话有效期 480 分钟</span></div><div class="li"><span class="ts">18:19:21</span><span class="st ok">ok</span><span class="tl" title="approval.post_comment">approval.post_comment</span><span class="dt" title="回写成功 comment_id=CMT-06-001">回写成功 comment_id=CMT-06-001</span></div><div class="li"><span class="ts">18:19:21</span><span class="st running">running</span><span class="tl" title="approval.post_comment">approval.post_comment</span><span class="dt" title="mode=live channel=approval_http app_id=contract-review instance=FS-AP-06 chars=1947">mode=live channel=approval_http app_id=contract-review instance=FS-AP-06 chars=1947</span></div><div class="li"><span class="ts">18:19:21</span><span class="st blocked">blocked</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="文档已加密，无法抽取文本，需人工解密后重新上传">文档已加密，无法抽取文本，需人工解密后重新上传</span></div><div class="li"><span class="ts">18:19:21</span><span class="st running">running</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="开始解析 08_保密协议_加密用例.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）">开始解析 08_保密协议_加密用例.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）</span></div><div class="li"><span class="ts">18:19:21</span><span class="st blocked">blocked</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="未抽取到有效文本层（可能为扫描件或图片型 PDF，共 1 页 / 0 字符，阈值 30）">未抽取到有效文本层（可能为扫描件或图片型 PDF，共 1 页 / 0 字符，阈值 30）</span></div><div class="li"><span class="ts">18:19:21</span><span class="st running">running</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="开始解析 07_设备采购合同_无文本层.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）">开始解析 07_设备采购合同_无文本层.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）</span></div><div class="li"><span class="ts">18:19:21</span><span class="st ok">ok</span><span class="tl" title="pipeline.run_review">pipeline.run_review</span><span class="dt" title="审查完成：综合风险=高风险 结论=建议拒绝">审查完成：综合风险=高风险 结论=建议拒绝</span></div><div class="li"><span class="ts">18:19:21</span><span class="st skipped">skipped</span><span class="tl" title="llm.polish_summary">llm.polish_summary</span><span class="dt" title="摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置">摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置</span></div><div class="li"><span class="ts">18:19:21</span><span class="st ok">ok</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则库 purchase（1.0）命中 6 项：PU-H-002、PU-H-005、PU-M-002、PU-M-003、PU-M-004、PU-M-005">规则库 purchase（1.0）命中 6 项：PU-H-002、PU-H-005、PU-M-002、PU-M-003、PU-M-004、PU-M-005</span></div><div class="li"><span class="ts">18:19:21</span><span class="st running">running</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则引擎合规审查">规则引擎合规审查</span></div><div class="li"><span class="ts">18:19:21</span><span class="st ok">ok</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="切分条款 6 段，识别条款类型 7/16 类">切分条款 6 段，识别条款类型 7/16 类</span></div><div class="li"><span class="ts">18:19:21</span><span class="st running">running</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="条款层级切分">条款层级切分</span></div><div class="li"><span class="ts">18:19:21</span><span class="st ok">ok</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="元数据：主体=恒信自动化设备有限公司 信用代码=未载明 金额=None CNY 期限=未识别">元数据：主体=恒信自动化设备有限公司 信用代码=未载明 金额=None CNY 期限=未识别</span></div><div class="li"><span class="ts">18:19:21</span><span class="st running">running</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="抽取合同元数据">抽取合同元数据</span></div><div class="li"><span class="ts">18:19:21</span><span class="st ok">ok</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="解析成功：引擎=ocr-win 页=1 段=18 字符=407 OCR 置信度=1.00">解析成功：引擎=ocr-win 页=1 段=18 字符=407 OCR 置信度=1.00</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="开始解析 06_软件采购合同_扫描件.png（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）">开始解析 06_软件采购合同_扫描件.png（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="pipeline.run_review">pipeline.run_review</span><span class="dt" title="审查完成：综合风险=高风险 结论=建议拒绝">审查完成：综合风险=高风险 结论=建议拒绝</span></div><div class="li"><span class="ts">18:19:20</span><span class="st skipped">skipped</span><span class="tl" title="llm.polish_summary">llm.polish_summary</span><span class="dt" title="摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置">摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则库 labor（1.0）命中 4 项：LA-H-001、LA-H-002、LA-M-001、LA-M-002">规则库 labor（1.0）命中 4 项：LA-H-001、LA-H-002、LA-M-001、LA-M-002</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则引擎合规审查">规则引擎合规审查</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="切分条款 27 段，识别条款类型 5/16 类">切分条款 27 段，识别条款类型 5/16 类</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="条款层级切分">条款层级切分</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="元数据：主体=周航 信用代码=91130100MA0D8YQK5T 金额=None CNY 期限=合同期限">元数据：主体=周航 信用代码=91130100MA0D8YQK5T 金额=None CNY 期限=合同期限</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="抽取合同元数据">抽取合同元数据</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="解析成功：引擎=docx-xml 页=1 段=35 字符=985">解析成功：引擎=docx-xml 页=1 段=35 字符=985</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="开始解析 05_劳动合同_风险用例.docx（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）">开始解析 05_劳动合同_风险用例.docx（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="pipeline.run_review">pipeline.run_review</span><span class="dt" title="审查完成：综合风险=无风险 结论=通过">审查完成：综合风险=无风险 结论=通过</span></div><div class="li"><span class="ts">18:19:20</span><span class="st skipped">skipped</span><span class="tl" title="llm.polish_summary">llm.polish_summary</span><span class="dt" title="摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置">摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则库 service（1.0）命中 0 项：无">规则库 service（1.0）命中 0 项：无</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则引擎合规审查">规则引擎合规审查</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="切分条款 35 段，识别条款类型 14/16 类">切分条款 35 段，识别条款类型 14/16 类</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="条款层级切分">条款层级切分</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="元数据：主体=启元数据科技有限公司 信用代码=91130100MA0D8YQK5T 金额=None CNY 期限=服务期限">元数据：主体=启元数据科技有限公司 信用代码=91130100MA0D8YQK5T 金额=None CNY 期限=服务期限</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="抽取合同元数据">抽取合同元数据</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="解析成功：引擎=pdf-text 页=2 段=63 字符=1562">解析成功：引擎=pdf-text 页=2 段=63 字符=1562</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="开始解析 04_技术服务合同_标准用例.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）">开始解析 04_技术服务合同_标准用例.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="pipeline.run_review">pipeline.run_review</span><span class="dt" title="审查完成：综合风险=高风险 结论=需整改">审查完成：综合风险=高风险 结论=需整改</span></div><div class="li"><span class="ts">18:19:20</span><span class="st skipped">skipped</span><span class="tl" title="llm.polish_summary">llm.polish_summary</span><span class="dt" title="摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置">摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则库 sales（1.0）命中 1 项：SA-H-001">规则库 sales（1.0）命中 1 项：SA-H-001</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则引擎合规审查">规则引擎合规审查</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="切分条款 32 段，识别条款类型 11/16 类">切分条款 32 段，识别条款类型 11/16 类</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="条款层级切分">条款层级切分</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="元数据：主体=华北智造集团有限公司 信用代码=91210300MA0Y6T8P1F 金额=9600000.0 CNY 期限=自2026年10月1日起至2028年3月31日止">元数据：主体=华北智造集团有限公司 信用代码=91210300MA0Y6T8P1F 金额=9600000.0 CNY 期限=自2026年10月1日起至2028年3月31日止</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="抽取合同元数据">抽取合同元数据</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="解析成功：引擎=docx-xml 页=1 段=41 字符=1247">解析成功：引擎=docx-xml 页=1 段=41 字符=1247</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="开始解析 03_大额销售合同_违约责任不对等.docx（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）">开始解析 03_大额销售合同_违约责任不对等.docx（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="pipeline.run_review">pipeline.run_review</span><span class="dt" title="审查完成：综合风险=无风险 结论=通过">审查完成：综合风险=无风险 结论=通过</span></div><div class="li"><span class="ts">18:19:20</span><span class="st skipped">skipped</span><span class="tl" title="llm.polish_summary">llm.polish_summary</span><span class="dt" title="摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置">摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则库 purchase（1.0）命中 0 项：无">规则库 purchase（1.0）命中 0 项：无</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则引擎合规审查">规则引擎合规审查</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="切分条款 33 段，识别条款类型 13/16 类">切分条款 33 段，识别条款类型 13/16 类</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.split_clauses">review.split_clauses</span><span class="dt" title="条款层级切分">条款层级切分</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="元数据：主体=华中数联信息技术有限公司 信用代码=91130100MA0D8YQK5T 金额=1248000.0 CNY 期限=未识别">元数据：主体=华中数联信息技术有限公司 信用代码=91130100MA0D8YQK5T 金额=1248000.0 CNY 期限=未识别</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="review.extract_metadata">review.extract_metadata</span><span class="dt" title="抽取合同元数据">抽取合同元数据</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="解析成功：引擎=pdf-text 页=2 段=59 字符=1562">解析成功：引擎=pdf-text 页=2 段=59 字符=1562</span></div><div class="li"><span class="ts">18:19:20</span><span class="st running">running</span><span class="tl" title="parsers.parse_document">parsers.parse_document</span><span class="dt" title="开始解析 02_服务器设备采购合同_标准用例.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）">开始解析 02_服务器设备采购合同_标准用例.pdf（引擎路由：按文件头与扩展名判定；阈值 正文≥30 字 / OCR 置信度≥0.50）</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="pipeline.run_review">pipeline.run_review</span><span class="dt" title="审查完成：综合风险=高风险 结论=建议拒绝">审查完成：综合风险=高风险 结论=建议拒绝</span></div><div class="li"><span class="ts">18:19:20</span><span class="st skipped">skipped</span><span class="tl" title="llm.polish_summary">llm.polish_summary</span><span class="dt" title="摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置">摘要表达模式=规则引擎模式（rule）；生成方式=rule-template；未启用原因：llm.enabled=false；未配置 llm.base_url；环境变量 OPENAI_API_KEY 未设置</span></div><div class="li"><span class="ts">18:19:20</span><span class="st ok">ok</span><span class="tl" title="review.run_rules">review.run_rules</span><span class="dt" title="规则库 purchase（1.0）命中 3 项：PU-H-001、PU-H-002、PU-M-001">规则库 purchase（1.0）命中 3 项：PU-H-001、PU-H-002、PU-M-001</span></div></div>
+        <div class="mode-note" style="margin-top:10px">
+          直接读取 <code>audit_logs</code>，覆盖「拉取 → 下载 → 指纹 → 解析 → 抽条款 →
+          规则命中 → 摘要 → 回写」全过程；新条目进入时整行高亮。可用
+          <code>/api/export</code> 导出全量。
+        </div>
+      </div>
+    </div>
+
+    <div class="panel reveal cfx cfx-beam" data-d="1" style="">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"></path><path d="M20 4v4h-4"></path></svg>流转与调度</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:12.2px">队列水位见左侧面板</span>
+      </div>
+      <div class="panel-body"><div id="opsKv"><div class="metric-list"><div class="ml"><span class="mll">定时拉取</span><span class="mlv">已关闭</span><span class="mln">默认关闭（避免演示数据自行变化）</span></div><div class="ml"><span class="mll">累计提交</span><span class="mlv">8 个</span><span class="mln">完成 6 · 失败 2</span></div><div class="ml"><span class="mll">解析快照</span><span class="mlv">6 份</span><span class="mln">8 页 / 252 段 / 6920 字符</span></div><div class="ml"><span class="mll">通知渠道</span><span class="mlv">未配置</span><span class="mln">脱敏 已开启 · 已发 0 / 失败 0</span></div><div class="ml"><span class="mll">越权拦截</span><span class="mlv">0 次</span><span class="mln">未登录拦截 0 次</span></div></div></div><div id="blockedBox2" style="margin-top:10px"><div class="sep"></div><div style="font-size:12.2px;color:var(--sub);margin-bottom:6px">解析受阻明细（共 2 个）</div><div class="blocked-item"><span class="no">#8</span><span class="rs"><b style="font-size:12.3px">技术保密协议（加密文件）</b><br><span class="faint">文档已加密，无法抽取文本，需人工解密后重新上传</span></span></div><div class="blocked-item"><span class="no">#7</span><span class="rs"><b style="font-size:12.3px">备品备件采购合同（图片型 PDF）</b><br><span class="faint">未抽取到有效文本层（可能为扫描件或图片型 PDF，共 1 页 / 0 字符，阈值 30）</span></span></div></div></div>
+    </div>
+
+    <div class="panel reveal cfx cfx-beam" data-d="2" style="">
+      <div class="panel-head">
+        <span class="ttl"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.4-3 8.3-7.5 9.7C7.5 20.3 4.5 16.4 4.5 12V6z"></path><path d="M9 12l2 2 4-4"></path></svg>合规机制与规则库</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:12.2px">配置实测值</span>
+      </div>
+      <div class="panel-body">
+        <div class="rule-bars" id="ruleBars"><div class="rb"><div class="hh"><span>劳动合同</span><span class="faint">9 条</span></div><div class="bar"><i style="width:75%"></i></div></div><div class="rb"><div class="hh"><span>采购合同</span><span class="faint">12 条</span></div><div class="bar"><i style="width:100%"></i></div></div><div class="rb"><div class="hh"><span>销售合同</span><span class="faint">11 条</span></div><div class="bar"><i style="width:91.66666666666666%"></i></div></div><div class="rb"><div class="hh"><span>服务合同</span><span class="faint">9 条</span></div><div class="bar"><i style="width:75%"></i></div></div></div>
+        <div class="sep"></div>
+        <div id="complianceKv"><div class="kv-grid"><div class="kv-cell cfx cfx-lift"><div class="k">规则引擎</div><div class="v">41 条<div class="faint" style="font-size:11.7px">风险判定 100% 由确定性规则产出，模型只改写措辞</div></div></div><div class="kv-cell cfx cfx-lift"><div class="k">外发脱敏</div><div class="v">已开启<div class="faint" style="font-size:11.7px">相对方 / 金额 / 信用代码一律掩码，正文片段不外发</div></div></div><div class="kv-cell cfx cfx-lift"><div class="k">事件收敛</div><div class="v">3 / 5 开启<div class="faint" style="font-size:11.7px">batch_summary 与 review_completed 默认关闭</div></div></div><div class="kv-cell cfx cfx-lift"><div class="k">三角色权限</div><div class="v">已启用<div class="faint" style="font-size:11.7px">越权 0 次被拦并写审计</div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/assets/app.js"></script><div class="glow g1"></div><div class="glow g2"></div><div class="scanline"></div>
+<script src="/assets/pet.js"></script>
+<script>
+let D = null;                 // 最近一次 /api/twin 结果
+let SEEN = {};                // 已渲染过的审计条目标识（用于判断「新条目」）
+let FIRST = true;
+
+CR.initAuth('/twin', '孪生看板 · 实时镜像');
+
+/* 把脚本异常/请求异常直接写到页面上：否则页面只会「空着」，
+   排查时只能靠猜（这类静默失败最难查）。 */
+window.addEventListener('error', function (ev) {
+  var n = CR.$('#srcNote');
+  if (n) n.innerHTML = '<b style="color:var(--high)">页面脚本异常：' +
+    CR.esc((ev.message || '') + ' @ 行 ' + (ev.lineno || '')) + '</b>';
+});
+window.addEventListener('unhandledrejection', function (ev) {
+  var n = CR.$('#srcNote');
+  if (n) n.innerHTML = '<b style="color:var(--high)">请求异常：' +
+    CR.esc(String((ev.reason && ev.reason.message) || ev.reason)) + '</b>';
+});
+
+/* ------------------------------------------------------------------ 工具 */
+function kv(k, v, sub) {
+  return '<div class="kv-cell"><div class="k">' + CR.esc(k) + '</div>' +
+    '<div class="v">' + v + (sub ? '<div class="faint" style="font-size:11.7px">' +
+      CR.esc(sub) + '</div>' : '') + '</div></div>';
+}
+function gauge(k, v, max, unit, sub, cls) {
+  const pct = max > 0 ? Math.min(100, v / max * 100) : 0;
+  return '<div class="meter ' + (cls || '') + '">' +
+    '<div class="k"><span>' + CR.esc(k) + '</span><b>' + v + (unit || '') + '</b></div>' +
+    '<div class="bar"><i style="width:' + Math.max(1.5, pct) + '%"></i></div>' +
+    '<div class="sub">' + CR.esc(sub || '') + '</div></div>';
+}
+function sec(ms) {
+  const h = Math.floor(ms / 3600), m = Math.floor(ms % 3600 / 60), s = ms % 60;
+  return (h ? h + ' 时 ' : '') + (h || m ? m + ' 分 ' : '') + s + ' 秒';
+}
+
+/* ------------------------------------------------------------------ 渲染 */
+/* 聚合异常必须看得见 —— 否则「取不到」会被当成「没有」，
+   面板显示的就是错误信息（本次踩过：通知状态读失败 → 显示"未配置/脱敏关闭"）。 */
+function renderErrors() {
+  var box = CR.$('#errBox');
+  if (!box) { return; }
+  var es = (D && D.errors) || [];
+  if (!es.length) { box.innerHTML = ''; box.style.display = 'none'; return; }
+  box.style.display = '';
+  box.innerHTML = '<b style="color:var(--high)">服务端聚合出现 ' + es.length +
+    ' 处异常，下列数字可能不完整：</b>' +
+    es.map(function (e) { return '<div>· ' + CR.esc(e) + '</div>'; }).join('');
+}
+
+function renderHead() {
+  CR.$('#verTag').textContent = 'v' + (D.version || '') + ' · 数据生成于 ' + D.generated_at;
+  CR.$('#liveText').textContent = '服务已运行 ' + sec(D.http.uptime_sec || 0) +
+    ' · 每 4 秒回读';
+}
+
+function renderKpi() {
+  const c = D.counts, r = D.rollup;
+  const cells = [
+    ['审查任务总数', c.total, '个', '已完成 ' + c.completed + ' · 待处理 ' + c.pending,
+     'var(--brand)'],
+    ['审查完成', c.completed, '个', '已生成审查意见', 'var(--ok)'],
+    ['解析受阻', c.blocked, '个', '待管理员重试', 'var(--mid)'],
+    ['规则命中', r.hits, '项', '高风险 ' + ((r.hits_by_risk || {}).high || 0) +
+      ' · 中风险 ' + ((r.hits_by_risk || {}).medium || 0), 'var(--high)'],
+    ['建议采纳', r.adopted, '项', '法务已确认 ' + r.adopted + ' / ' + r.hits, 'var(--cyan)'],
+    ['意见回写', c.writeback_success, '条', '共尝试 ' + r.writeback_total + ' 次', 'var(--teal)']
+  ];
+  CR.$('#kpi').innerHTML = cells.map(x =>
+    '<div class="tk" style="--c:' + x[4] + '">' +
+    '<div class="k">' + CR.esc(x[0]) + '</div>' +
+    '<div class="v' + (CR.motion.changed('kpi|' + x[0], x[1]) ? ' cfx-tick' : '') +
+    '">' + x[1] + '<small>' + x[2] + '</small></div>' +
+    '<div class="x">' + CR.esc(x[3]) + '</div></div>').join('');
+}
+
+function renderPipe() {
+  CR.$('#pipe').innerHTML = D.pipeline.map(n =>
+    '<div class="pipe-node ' + n.state + '">' +
+    '<div class="nm">' + CR.esc(n.name) + '</div>' +
+    '<div class="vl">' + n.value + '<small>' + CR.esc(n.unit) + '</small></div>' +
+    '<div class="nt">' + CR.esc(n.note) + '</div>' +
+    '<div class="src">来源 ' + CR.esc(n.src) + '</div></div>').join('');
+}
+
+/* 一行一项的对齐列表：标签 / 数值 / 说明 三列对齐。
+   比卡片栅格更适合「读数」——每行的三个信息固定在同一列上，眼睛不用来回找。 */
+function mline(k, v, note) {
+  return '<div class="ml"><span class="mll">' + CR.esc(k) + '</span>' +
+    '<span class="mlv">' + v + '</span>' +
+    '<span class="mln">' + CR.esc(note || '') + '</span></div>';
+}
+
+function renderEngine() {
+  const q = D.queue, e = D.engines, s = D.storage, h = D.http, r = D.rollup;
+  const upSec = h.uptime_sec || 0;
+  const upMin = upSec / 60;
+  const parsed = r.docs || 0;
+  const ocrN = e.ocr.docs || 0;
+  const ocrPct = ocrN ? Math.round((e.ocr.avg_confidence || 0) * 100) : 0;
+  const peek = (h.top_paths || []).reduce((m, t) => Math.max(m, t.max_ms || 0), 0);
+
+  CR.$('#qWorkers').textContent = '并发 ' + q.workers + ' · 队列上限 ' + q.maxsize;
+
+  /* ① 引擎运行指标：一行一项，三列对齐 */
+  CR.$('#engineList').innerHTML =
+    mline('解析吞吐',
+          upSec < 120 ? '—' : (parsed / Math.max(upMin, 0.001)).toFixed(1) + ' 份/分钟',
+          upSec < 120 ? '运行不足 2 分钟，暂不计算（避免刚重启的假峰值）'
+                      : '累计已解析 ' + parsed + ' 份') +
+    mline('接口平均耗时', CR.fmtMs(h.avg_ms),
+          '峰值 ' + (peek ? CR.fmtMs(peek) : '—') + ' · 累计 ' + h.requests + ' 次请求') +
+    mline('规则命中密度', parsed ? (r.hits / parsed).toFixed(1) + ' 项/份' : '—',
+          '累计 ' + r.hits + ' 项（高 ' + ((r.hits_by_risk || {}).high || 0) +
+          ' · 中 ' + ((r.hits_by_risk || {}).medium || 0) + '）') +
+    mline('OCR 置信度', ocrN ? ocrPct + '%' : '无样本',
+          ocrN === 0 ? '尚未处理过扫描件'
+            : '样本 ' + ocrN + ' 份' + (ocrN < 3 ? '，偏少仅供参考' : '') + ' · 阈值 50%') +
+    mline('错误率', (h.error_rate * 100).toFixed(2) + '%',
+          h.errors ? '累计 ' + h.errors + ' 次错误' : '无错误记录') +
+    mline('运行时长', sec(upSec), '自 ' + (h.started_at || '—') + ' 起');
+
+  /* 能力清单压成一行（它不是"读数"，占栅格只会让面板更乱） */
+  CR.$('#capLine').innerHTML =
+    '引擎能力：解析 ' + CR.esc('DOCX / PDF / OCR') +
+    ' ｜ PDF 报告 ' + CR.esc(e.pdf.effective === 'browser' ? '浏览器无头打印' : '标准库直出') +
+    ' ｜ 规则库 ' + e.rules.total + ' 条 / ' + e.rules.types.length + ' 类' +
+    ' ｜ 条款词典 ' + e.clause_types + ' 类 / 示范条款 ' + e.clause_variants + ' 套';
+
+  /* ② 资源水位：以各自配额为分母 */
+  const g = (k, v, max, unit, sub) => {
+    const ratio = max > 0 ? v / max : 0;
+    const cls = v === 0 ? 'idle' : (ratio > .95 ? 'hl' : ratio > .8 ? 'warn' : 'ok');
+    return gauge(k, v, max, unit, sub, cls);
+  };
+  CR.$('#gauges').innerHTML =
+    g('队列水位', q.queued, q.maxsize, ' 个',
+      q.queued === 0 ? '空闲 · 上限 ' + q.maxsize + ' 个'
+                     : '在飞 ' + (q.inflight || []).length + ' 个 · 上限 ' + q.maxsize + ' 个') +
+    g('待处理堆积', q.pending_cases, q.max_pending, ' 个',
+      q.pending_cases === 0 ? '无积压 · 上限 ' + q.max_pending + ' 个'
+                            : '累计提交 ' + q.submitted + ' 个') +
+    g('附件存储', s.uploads_mb, q.max_total_mb, ' MB',
+      '占配额 ' + (s.uploads_mb / q.max_total_mb * 100).toFixed(2) + '% · 配额 ' +
+      q.max_total_mb + ' MB') +
+    g('数据库', Math.round(s.db_kb * 10) / 10, Math.max(1024, q.max_total_mb * 1024), ' KB',
+      '含 ' + s.data_files + ' 个数据文件 · 报告 ' + s.reports + ' 份');
+
+  const idle = q.queued === 0 && q.pending_cases === 0;
+  CR.$('#idleHint').innerHTML = '水位以各自的<b>配额</b>为分母。' + (idle
+    ? '当前<b>空闲</b> —— 接近 0 是正常的，表示没有积压。'
+    : '当前有在跑的活，注意别接近上限。');
+}
+
+function renderHttp() {
+  const h = D.http;
+  CR.$('#httpMeta').textContent = '自 ' + (h.started_at || '-') + ' 起';
+  CR.$('#httpStats').innerHTML = '<div class="kv-grid">' +
+    kv('累计请求', h.requests, '错误 ' + h.errors + ' 次') +
+    kv('平均响应', CR.fmtMs(h.avg_ms), '全部请求历史均值') +
+    kv('错误率', (h.error_rate * 100).toFixed(2) + '%', h.errors ? '有错误记录' : '无错误') +
+    kv('响应总量', (h.bytes_out / 1048576).toFixed(2) + ' MB', '压缩后实际发送') +
+    '</div>';
+  const top = h.top_paths || [];
+  const maxMs = Math.max.apply(null, top.map(t => t.avg_ms).concat([1]));
+  CR.$('#topPaths').innerHTML = top.length ? top.map(t =>
+    '<div style="margin-bottom:8px">' +
+    '<div style="display:flex;justify-content:space-between;font-size:12.3px">' +
+    '<span class="mono" style="color:var(--ink-2)">' + CR.esc(t.path) + '</span>' +
+    '<span class="faint">' + t.count + ' 次 · 均 ' + CR.fmtMs(t.avg_ms) +
+    ' · 峰 ' + CR.fmtMs(t.max_ms) + '</span></div>' +
+    '<div style="height:5px;border-radius:999px;background:var(--panel-3);' +
+    'overflow:hidden;margin-top:4px"><i style="display:block;height:100%;background:' +
+    'linear-gradient(90deg,var(--cyan),var(--brand));width:' +
+    Math.max(3, t.avg_ms / maxMs * 100) + '%"></i></div></div>').join('')
+    : '<div class="faint" style="font-size:12.2px">暂无请求记录</div>';
+  const slow = h.slow_requests || [];
+  CR.$('#slowBox').innerHTML = slow.length
+    ? '<div style="font-size:12.2px;color:var(--sub);margin:12px 0 6px">慢请求（≥ 1s）</div>' +
+      slow.map(s => '<div class="row" style="font-size:12.1px;gap:10px;padding:3px 0">' +
+        '<span class="faint mono">' + CR.esc(s.at) + '</span>' +
+        '<span style="color:var(--mid)">' + s.ms + 'ms</span>' +
+        '<span class="mono" style="color:var(--ink-2)">' + CR.esc(s.path) + '</span></div>').join('')
+    : '<div class="faint" style="font-size:12.1px;margin-top:12px">' +
+      '暂无慢请求。审查与 OCR 属耗时操作，正常会出现在这里。</div>';
+}
+
+function renderLog() {
+  const act = D.activity || [];
+  CR.$('#logMeta').textContent = '审计表共 ' + D.rollup.audit + ' 条 · 显示最近 ' + act.length;
+  const box = CR.$('#logStream');
+  let fresh = 0;
+  box.innerHTML = act.map(function (a) {
+    const k = a.created_at + '|' + a.id;
+    const isNew = !FIRST && !SEEN[k];
+    if (isNew) fresh++;
+    SEEN[k] = 1;
+    return '<div class="li' + (isNew ? ' fresh' : '') + '">' +
+      '<span class="ts">' + CR.esc((a.created_at || '').slice(11, 19)) + '</span>' +
+      '<span class="st ' + CR.esc(a.status) + '">' + CR.esc(a.status) + '</span>' +
+      '<span class="tl" title="' + CR.esc(a.tool) + '">' + CR.esc(a.tool) + '</span>' +
+      '<span class="dt" title="' + CR.esc(a.detail || '') + '">' +
+      CR.esc((a.detail || '').replace(/\s+/g, ' ')) + '</span></div>';
+  }).join('') || '<div class="faint">暂无审计记录</div>';
+  if (fresh && D) {
+    CR.$('#liveText').textContent = '新增 ' + fresh + ' 条日志';
+    setTimeout(function () {
+      if (D) CR.$('#liveText').textContent =
+        '服务已运行 ' + sec(D.http.uptime_sec || 0) + ' · 每 4 秒回读';
+    }, 2800);
+  }
+}
+
+/* 流转与调度：只放「流程流转」相关的内容。
+   队列水位、数据库大小已经在「资源水位与配额」面板里，这里不再重复 ——
+   同一信息出现两处是上一版"乱"的主因之一。 */
+function renderOps() {
+  const q = D.queue, s = D.scheduler, n = D.notify;
+  const blocked = D.blocked_detail || [];
+  CR.$('#opsKv').innerHTML = '<div class="metric-list">' +
+    mline('定时拉取', s.enabled ? '运行中' : '已关闭',
+          s.enabled
+            ? '间隔 ' + (s.current_interval || s.interval_sec || 0) + ' 秒 · 累计 ' +
+              (s.runs || 0) + ' 轮'
+            : '默认关闭（避免演示数据自行变化）') +
+    mline('累计提交', q.submitted + ' 个',
+          '完成 ' + q.completed + ' · 失败 ' + q.failed +
+          (q.rejected_queue_full ? ' · 队列满被拒 ' + q.rejected_queue_full : '')) +
+    mline('解析快照', D.rollup.docs + ' 份',
+          D.rollup.pages + ' 页 / ' + D.rollup.paras + ' 段 / ' + D.rollup.chars + ' 字符') +
+    mline('通知渠道', n.configured ? '已配置' : '未配置',
+          '脱敏 ' + ((n.mask || {}).party ? '已开启' : '关闭') +
+          ' · 已发 ' + ((n.stats || {}).sent || 0) +
+          ' / 失败 ' + ((n.stats || {}).failed || 0)) +
+    mline('越权拦截', (D.auth.forbidden || 0) + ' 次',
+          '未登录拦截 ' + (D.auth.unauthorized || 0) + ' 次') +
+    '</div>';
+
+  CR.$('#blockedBox2').innerHTML = blocked.length
+    ? '<div class="sep"></div><div style="font-size:12.2px;color:var(--sub);' +
+      'margin-bottom:6px">解析受阻明细（共 ' + D.counts.blocked + ' 个）</div>' +
+      blocked.map(b => '<div class="blocked-item">' +
+        '<span class="no">#' + b.id + '</span>' +
+        '<span class="rs"><b style="font-size:12.3px">' + CR.esc(b.title) + '</b><br>' +
+        '<span class="faint">' + CR.esc(b.reason) + '</span></span></div>').join('')
+    : '<div class="mode-note">当前没有解析受阻的任务。</div>';
+}
+
+function renderRules() {
+  const t = D.engines.rules.types || [];
+  const max = Math.max.apply(null, t.map(x => x.rules).concat([1]));
+  CR.$('#ruleBars').innerHTML = t.map(x =>
+    '<div class="rb"><div class="hh"><span>' + CR.esc(x.label) +
+    '</span><span class="faint">' + x.rules + ' 条</span></div>' +
+    '<div class="bar"><i style="width:' + Math.max(4, x.rules / max * 100) + '%"></i></div></div>'
+  ).join('') || '<div class="faint" style="font-size:12.2px">未加载到规则库</div>';
+  const m = D.notify.mask || {}, ev = D.notify.events || {};
+  const evOn = Object.keys(ev).filter(k => ev[k]).length;
+  CR.$('#complianceKv').innerHTML = '<div class="kv-grid">' +
+    kv('规则引擎', D.engines.rules.total + ' 条',
+       '风险判定 100% 由确定性规则产出，模型只改写措辞') +
+    kv('外发脱敏', (m.party && m.amount && m.credit_code) ? '已开启' : '部分关闭',
+       '相对方 / 金额 / 信用代码一律掩码，正文片段不外发') +
+    kv('事件收敛', evOn + ' / ' + Object.keys(ev).length + ' 开启',
+       'batch_summary 与 review_completed 默认关闭') +
+    kv('三角色权限', '已启用', '越权 ' + (D.auth.forbidden || 0) + ' 次被拦并写审计') +
+    '</div>';
+}
+
+/* ------------------------------------------------------------------ 拉取 */
+async function refresh() {
+  try {
+    D = await CR.api('GET', '/api/twin');
+  } catch (e) {
+    CR.$('#srcNote').innerHTML = '<b style="color:var(--high)">读取 /api/twin 失败：' +
+      CR.esc(e.message) + '</b>　页面保留上一次成功的数据。';
+    return;
+  }
+  renderHead();
+  renderErrors();
+  renderKpi();
+  renderPipe();
+  renderEngine();
+  renderHttp();
+  renderLog();
+  renderOps();
+  renderRules();
+  FIRST = false;
+  CR.motion.enter();            // 首屏播一次；后续 4 秒刷新不再重播入场
+  CR.initReveal();
+}
+
+/* ------------------------------------------------------------------ 时钟 */
+function tick() {
+  const d = new Date();
+  CR.$('#clock').textContent = [d.getHours(), d.getMinutes(), d.getSeconds()]
+    .map(n => String(n).padStart(2, '0')).join(':');
+  CR.$('#date').textContent = d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0') + ' ' +
+    ['日', '一', '二', '三', '四', '五', '六'][d.getDay()];
+}
+
+(async function () {
+  tick();
+  setInterval(tick, 1000);
+  await refresh();
+  setInterval(refresh, 4000);      // 真实数据 4 秒回读，不做本地造数插值
+})();
+</script><div id="topbar-progress" class="" style="width: 0px;"></div>
+
+
+<span id="petErrLog" hidden="" aria-hidden="true"></span><div class="pet-root" id="petRoot"><div class="pet-panel" id="petPanel" role="dialog" aria-label="AI 助手对话框"><div class="pet-ph"><span class="dot" id="petDot"></span><b>小亦 · 使用助手</b><span class="mode" id="petMode"></span><div class="spacer"></div><button class="pet-x" id="petTour" type="button" title="开始新手引导">引导</button><button class="pet-x" id="petClose" type="button" aria-label="关闭">×</button></div><div class="pet-body" id="petBody" aria-live="polite"></div><div class="pet-chips" id="petChips"></div><div class="pet-pf"><input id="petInput" type="text" autocomplete="off" placeholder="问点关于审查、权限、操作的问题…" aria-label="输入问题"><button id="petSend" type="button">发送</button></div></div><button class="pet-btn attn" id="petBtn" type="button" aria-expanded="false" aria-controls="petPanel" title="点我提问，或让我带你走一遍"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><defs><linearGradient id="petG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5aa8ff"></stop><stop offset="1" stop-color="#2fbfa8"></stop></linearGradient></defs><ellipse class="pet-a1" cx="24" cy="30" rx="14" ry="12" fill="url(#petG)" opacity=".22"></ellipse><path class="pet-a2" d="M11 20c0-8 5.8-13 13-13s13 5 13 13v9c0 6-5.8 10-13 10s-13-4-13-10z" fill="url(#petG)" opacity=".9"></path><path d="M13 15l3.5-8 4.5 6.2M35 15l-3.5-8-4.5 6.2" stroke="url(#petG)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"></path><g class="pet-eye"><circle cx="19.5" cy="24" r="2.6" fill="#0b1220"></circle><circle cx="28.8" cy="24" r="2.6" fill="#0b1220"></circle><circle cx="20.4" cy="23.1" r=".9" fill="#fff"></circle><circle cx="29.7" cy="23.1" r=".9" fill="#fff"></circle></g><path d="M21 31c1.8 1.6 4.2 1.6 6 0" stroke="#0b1220" stroke-width="1.9" stroke-linecap="round" fill="none"></path></svg><span class="pet-tip show">有问题点我，或让我带你走一遍</span><span class="pet-badge on" id="petBadge">1</span></button></div><footer class="site-footer"><div class="fl"><img src="/assets/logo-sm.png" alt="衡鉴 V2.1.7"><span class="sig">（HENGJIAN）</span><span>© 2026 衡鉴 V2.1.7 · 保留所有权利</span></div><div class="spacer"></div><div class="fl"><span>规则引擎判定 · 大模型辅以措辞 · 全程可离线运行</span><span class="dot-sep">|</span><a href="/twin">动态孪生看板</a><span class="dot-sep">|</span><a href="/mock/feishu/api/todo" target="_blank" rel="noopener">模拟审批系统</a></div></footer></body></html>

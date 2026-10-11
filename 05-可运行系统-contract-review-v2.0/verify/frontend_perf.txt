@@ -1,0 +1,153 @@
+前端优化体检（体积 / 缓存 / 时间线 / 样式一致性）
+====================================================================================================
+目标 http://127.0.0.1:8797 ｜ 2026-09-19 18:17:20
+
+① 静态资源体积（raw / gzip / 可省比例）
+----------------------------------------------------------------------------------------------------
+   ui/assets/app.css                     69.3 KB   传输    18.5 KB  （省 73%）
+   ui/index.html                         53.8 KB   传输    15.9 KB  （省 70%）
+   ui/workbench.html                     47.3 KB   传输    15.1 KB  （省 68%）
+   ui/assets/pet.js                      39.1 KB   传输    12.9 KB  （省 67%）
+   ui/assets/app.js                      33.0 KB   传输    12.0 KB  （省 64%）
+   ui/assets/fx.css                      25.0 KB   传输     6.7 KB  （省 73%）
+   ui/twin.html                          23.2 KB   传输     8.2 KB  （省 65%）
+   ui/rules.html                         19.2 KB   传输     6.2 KB  （省 68%）
+   ui/assets/charts.js                   13.7 KB   传输     4.5 KB  （省 67%）
+   ui/mock.html                          11.9 KB   传输     4.4 KB  （省 63%）
+   ui/assets/logo-sm.png                 11.5 KB   传输    11.5 KB
+   ui/assets/logo-sm-light.png           11.2 KB   传输    11.2 KB
+   ui/login.html                          9.5 KB   传输     3.9 KB  （省 59%）
+   ui/assets/favicon.png                  6.3 KB   传输     6.3 KB
+   ui/denied.html                         5.3 KB   传输     2.5 KB  （省 52%）
+   —— 合计 379.3 KB，压缩后传输 139.7 KB（省 63%）
+   首页引用的资源：/assets/app.css、/assets/app.js、/assets/charts.js、/assets/favicon.png、/assets/fx.css、/assets/pet.js
+   首页外链主机：无（零外部依赖）
+[OK ] 零外部依赖：无外链字体、无 CDN，断网也能完整渲染
+
+② 响应头与缓存策略（决定第二次打开要不要重新下载）
+----------------------------------------------------------------------------------------------------
+   /assets/app.css          200  实际收到  18.5 KB
+       cache-control:     no-cache, must-revalidate
+       etag:              W/"6aae5d91-1152e"
+       content-encoding:  gzip
+       vary:              Accept-Encoding
+       content-length:    18977
+   /assets/app.js           200  实际收到  12.0 KB
+       cache-control:     no-cache, must-revalidate
+       etag:              W/"6aae5d91-8404"
+       content-encoding:  gzip
+       vary:              Accept-Encoding
+       content-length:    12323
+   /assets/logo-sm.png      200  实际收到  11.5 KB
+       cache-control:     no-cache, must-revalidate
+       etag:              W/"6aae15fb-2e0d"
+       content-length:    11789
+   /assets/favicon.png      200  实际收到   6.3 KB
+       cache-control:     no-cache, must-revalidate
+       etag:              W/"6aad5250-1947"
+       content-length:    6471
+   /                        200  实际收到  15.9 KB
+       cache-control:     no-store
+       content-encoding:  gzip
+       vary:              Accept-Encoding
+       content-length:    16312
+   /api/stats               200  实际收到    316 B
+       cache-control:     no-store
+       content-length:    316
+
+   条件请求复验（浏览器翻页时的实际行为）：
+       /assets/app.css          首次 200(18.5 KB) → 再次 304(0 B)  ETag=W/"6aae5d91-1152e"
+       /assets/app.js           首次 200(12.0 KB) → 再次 304(0 B)  ETag=W/"6aae5d91-8404"
+       /assets/logo-sm.png      首次 200(11.5 KB) → 再次 304(0 B)  ETag=W/"6aae15fb-2e0d"
+       /assets/favicon.png      首次 200(6.3 KB) → 再次 304(0 B)  ETag=W/"6aad5250-1947"
+       单次翻页可省约 48.4 KB（这些资源每次导航都被请求）
+[OK ] 静态资源可缓存并可条件请求：no-cache, must-revalidate
+[OK ] 静态资源带 ETag（弱校验，兼容 gzip 与非压缩两种编码）
+[OK ] 页面 HTML 仍为 no-store（含登录态/角色信息，安全口径未放松）
+[OK ] 接口响应仍为 no-store（数据实时性 + 不落盘）
+
+③ 每页加载时间线（首次加载，无浏览器缓存）
+----------------------------------------------------------------------------------------------------
+   审查大盘           DOM    67 ms ｜ load    85 ms ｜ 请求 15 个 ｜ 文档 15.9 KB ｜ FCP 144 ms
+       · health                   1.1 KB      8 ms  [fetch]
+       · app.js                  12.0 KB      7 ms  [script]
+       · pet.js                  12.9 KB      7 ms  [script]
+       · charts.js                4.5 KB      7 ms  [script]
+       · app.css                 18.5 KB      6 ms  [link]
+       · fx.css                   6.7 KB      5 ms  [link]
+       · me                       0.9 KB      2 ms  [fetch]
+       · config                   0.3 KB      2 ms  [fetch]
+   智能审查工作台        DOM    56 ms ｜ load    73 ms ｜ 请求  8 个 ｜ 文档 15.1 KB ｜ FCP 120 ms
+       · 1                        7.5 KB     34 ms  [fetch]
+       · app.css                 18.5 KB      4 ms  [link]
+       · pet.js                  12.9 KB      4 ms  [script]
+       · app.js                  12.0 KB      4 ms  [script]
+       · fx.css                   6.7 KB      3 ms  [link]
+       · me                       0.9 KB      2 ms  [fetch]
+       · logo-sm.png             11.5 KB      2 ms  [img]
+       · status                   0.7 KB      2 ms  [fetch]
+   合规规则与模板        DOM    16 ms ｜ load    56 ms ｜ 请求  8 个 ｜ 文档 6.2 KB ｜ FCP 112 ms
+       · app.css                 18.5 KB      3 ms  [link]
+       · fx.css                   6.7 KB      3 ms  [link]
+       · pet.js                  12.9 KB      3 ms  [script]
+       · charts.js                4.5 KB      3 ms  [script]
+       · app.js                  12.0 KB      3 ms  [script]
+       · rules?type=purchase      6.9 KB      3 ms  [fetch]
+       · me                       0.9 KB      2 ms  [fetch]
+       · logo-sm.png             11.5 KB      2 ms  [img]
+   动态孪生看板         DOM    18 ms ｜ load    71 ms ｜ 请求  7 个 ｜ 文档 8.2 KB ｜ FCP 144 ms
+       · twin                     3.7 KB     41 ms  [fetch]
+       · app.css                 18.5 KB      2 ms  [link]
+       · fx.css                   6.7 KB      2 ms  [link]
+       · app.js                  12.0 KB      2 ms  [script]
+       · pet.js                  12.9 KB      2 ms  [script]
+       · logo-sm.png             11.5 KB      2 ms  [img]
+       · me                       0.9 KB      1 ms  [fetch]
+   模拟审批系统         DOM    13 ms ｜ load    61 ms ｜ 请求  8 个 ｜ 文档 4.4 KB ｜ FCP 132 ms
+       · app.css                 18.5 KB      3 ms  [link]
+       · fx.css                   6.7 KB      3 ms  [link]
+       · app.js                  12.0 KB      3 ms  [script]
+       · pet.js                  12.9 KB      3 ms  [script]
+       · me                       0.9 KB      2 ms  [fetch]
+       · overview                 1.2 KB      2 ms  [fetch]
+       · logo-sm.png             11.5 KB      2 ms  [img]
+       · overview                 1.2 KB      2 ms  [fetch]
+   登录页            DOM    85 ms ｜ load    91 ms ｜ 请求  5 个 ｜ 文档 3.9 KB ｜ FCP 136 ms
+       · logo-sm.png             11.5 KB      6 ms  [img]
+       · app.css                 18.5 KB      3 ms  [link]
+       · fx.css                   6.7 KB      3 ms  [link]
+       · app.js                  12.0 KB      3 ms  [script]
+       · pet.js                  12.9 KB      3 ms  [script]
+[OK ] 各页 DOMContentLoaded 最大 85 ms（中位 56 ms）
+
+④ 样式卫生与令牌一致性
+----------------------------------------------------------------------------------------------------
+   ui/assets/app.css        69.3 KB ｜ 规则块  598 ｜ !important  12 ｜ 注释块 105
+   ui/assets/fx.css         25.0 KB ｜ 规则块  238 ｜ !important  16 ｜ 注释块 38
+[OK ] !important 共 28 处（>40 说明层叠在打补丁，容易一路加码）
+   色值：var(--token) 用了 563 次 ｜ 硬编码 #hex 97 处（82 个不同值）｜ rgba() 96 处（80 个不同值）
+   最常出现的硬编码 hex：#fff×8、#111×3、#ffffff×3、#0d9488×2、#2fbfa8×2、#04101f×2、#dcdfe6×2、#e9eff9×1
+[OK ] 设计令牌覆盖率 74%（var() 占比）—— 越低越说明颜色散在各处、改主题容易漏
+   border-radius 源码里共 12 种不同写法 ｜ box-shadow 共 28 种
+     圆角：0 var(--radius-s) var(--radius-s)  ｜ 2px ｜ 2px 2px 0 0 ｜ 3px ｜ 4px ｜ 4px 4px 0 0 ｜ 50% ｜ 5px ｜ 6px ｜ 999px ｜ var(--radius) ｜ var(--radius-s)
+     （药丸 999px / 圆形 50% / 微元素 2–6px 本就该不同，真正的判据是同族元素是否一致 —— 见 ⑤ 的浏览器实测）
+[OK ] 顶层 :root 共 2 个 ｜ 结构性令牌 --radius/--radius-s 声明次数：--radius×1、--radius-s×1（无死值）
+       （提示：以下变量在两个 :root 里都写过，前者已被覆盖 —— 属于 v2.0.1「配色重定」的历史分层，合并有回归风险，本次不动：--bg、--bg-2、--brand、--brand-2、--brand-soft、--cyan、--faint、--glow、--high、--ink、--ink-2、--line、--line-2、--line-3、--low、--mid、--ok、--panel、--panel-2、--panel-3、--panel-solid、--sub、--teal）
+   审查大盘           源码内联 style 属性  98 处 ｜ <style> 块 0 个 ｜ 行数 1129
+   动态孪生看板         源码内联 style 属性  40 处 ｜ <style> 块 0 个 ｜ 行数 478
+   合规规则与模板        源码内联 style 属性  60 处 ｜ <style> 块 0 个 ｜ 行数 386
+
+⑤ 圆角族一致性（浏览器计算值，逐页实测）
+----------------------------------------------------------------------------------------------------
+   审查大盘           深: 卡片族 14px / 小底板族 9px ｜ 浅: 卡片族 14px / 小底板族 9px
+   智能审查工作台        深: 卡片族 14px / 小底板族 9px ｜ 浅: 卡片族 14px / 小底板族 9px
+   动态孪生看板         深: 卡片族 14px / 小底板族 9px ｜ 浅: 卡片族 14px / 小底板族 9px
+   合规规则与模板        深: 卡片族 14px / 小底板族 9px ｜ 浅: 卡片族 14px / 小底板族 9px
+[OK ] 深色主题 · 卡片/面板族（.panel/.card/.risk-card/.kv-cell/… 共 70 个元素）计算圆角：14px
+[OK ] 浅色主题 · 卡片/面板族（.panel/.card/.risk-card/.kv-cell/… 共 70 个元素）计算圆角：14px
+[OK ] 深色主题 · 小底板族（.btn/.nav a/.log-item/图标底 共 110 个元素）计算圆角：9px
+[OK ] 浅色主题 · 小底板族（.btn/.nav a/.log-item/图标底 共 110 个元素）计算圆角：9px
+
+====================================================================================================
+未发现可优化点。
+====================================================================================================

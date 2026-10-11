@@ -1,0 +1,257 @@
+{
+  "version": "1.0.0",
+  "generated_by": "tools/gen_samples.py",
+  "usage": "评测集与样例集同源生成：改样例必须重跑本脚本，避免标注与文件错位",
+  "total": 13,
+  "cases": [
+    {
+      "file": "01_软件采购合同_埋雷版.docx",
+      "kind": "docx",
+      "name": "企业资源管理系统软件采购合同",
+      "biz_type": "采购",
+      "applicant": "王倩",
+      "dept": "信息技术部",
+      "expect_high": [
+        "HJ-H-001",
+        "HJ-H-002",
+        "HJ-H-003",
+        "HJ-H-004",
+        "HJ-H-007",
+        "HJ-H-008"
+      ],
+      "expect_medium": [
+        "HJ-M-001",
+        "HJ-M-004"
+      ],
+      "expect_low": [
+        "HJ-L-003"
+      ],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "端到端演示主用例：知识产权归属供应商（H-001）+ 到货即付全款（H-002）双高风险"
+    },
+    {
+      "file": "02_设备采购合同_标准版.docx",
+      "kind": "docx",
+      "name": "生产设备采购合同",
+      "biz_type": "采购",
+      "applicant": "刘洋",
+      "dept": "生产保障部",
+      "expect_high": [],
+      "expect_medium": [],
+      "expect_low": [],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "干净基线用例：用于验证误报率，任何高风险命中都算误报"
+    },
+    {
+      "file": "03_办公用品采购合同_风险版.docx",
+      "kind": "docx",
+      "name": "办公用品年度采购合同",
+      "biz_type": "采购",
+      "applicant": "赵磊",
+      "dept": "行政部",
+      "expect_high": [
+        "HJ-H-002"
+      ],
+      "expect_medium": [
+        "HJ-M-001",
+        "HJ-M-004",
+        "HJ-M-006",
+        "HJ-M-007",
+        "HJ-M-008",
+        "HJ-M-010",
+        "HJ-M-012"
+      ],
+      "expect_low": [
+        "HJ-L-003",
+        "HJ-L-004",
+        "HJ-L-008"
+      ],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "中风险密集用例：付款无验收前置（H-002）、模糊表述、缺失必备条款、违约金偏高"
+    },
+    {
+      "file": "04_服务外包采购合同_标准版.pdf",
+      "kind": "pdf",
+      "name": "IT 运维服务外包采购合同",
+      "biz_type": "采购",
+      "applicant": "陈晨",
+      "dept": "信息技术部",
+      "expect_high": [],
+      "expect_medium": [],
+      "expect_low": [],
+      "expect_blocked": false,
+      "expect_file_type": "pdf",
+      "note": "PDF 标准用例：验证 PDF 文本抽取与坐标映射"
+    },
+    {
+      "file": "05_大额销售合同_埋雷版.docx",
+      "kind": "docx",
+      "name": "成套设备销售合同",
+      "biz_type": "销售",
+      "applicant": "周浩",
+      "dept": "销售中心",
+      "expect_high": [
+        "HJ-H-003",
+        "HJ-H-004",
+        "HJ-H-008"
+      ],
+      "expect_medium": [
+        "HJ-M-001",
+        "HJ-M-003",
+        "HJ-M-004"
+      ],
+      "expect_low": [
+        "HJ-L-003",
+        "HJ-L-004"
+      ],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "第二大埋雷用例：违约责任不对等（我方无上限赔偿 vs 对方万分之一）"
+    },
+    {
+      "file": "06_标准销售合同_标准版.pdf",
+      "kind": "pdf",
+      "name": "标准产品销售合同",
+      "biz_type": "销售",
+      "applicant": "周浩",
+      "dept": "销售中心",
+      "expect_high": [],
+      "expect_medium": [],
+      "expect_low": [],
+      "expect_blocked": false,
+      "expect_file_type": "pdf",
+      "note": "销售视角标准用例：验证「我方=乙方」视角下的误报控制"
+    },
+    {
+      "file": "07_经销合同_风险版.docx",
+      "kind": "docx",
+      "name": "区域经销合作合同",
+      "biz_type": "销售",
+      "applicant": "钱伟",
+      "dept": "渠道部",
+      "expect_high": [],
+      "expect_medium": [
+        "HJ-M-001",
+        "HJ-M-004",
+        "HJ-M-006",
+        "HJ-M-007",
+        "HJ-M-008",
+        "HJ-M-010",
+        "HJ-M-012"
+      ],
+      "expect_low": [
+        "HJ-L-003",
+        "HJ-L-004",
+        "HJ-L-008"
+      ],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "中风险用例：经销场景下的模糊条款与必备条款缺失"
+    },
+    {
+      "file": "08_劳动合同_标准版.docx",
+      "kind": "docx",
+      "name": "全日制劳动合同",
+      "biz_type": "劳动",
+      "applicant": "人事部",
+      "dept": "人力资源部",
+      "expect_high": [],
+      "expect_medium": [
+        "HJ-M-004"
+      ],
+      "expect_low": [],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "劳动场景标准用例：验证条款分类对劳动类文档的适配"
+    },
+    {
+      "file": "09_劳动合同_风险版.docx",
+      "kind": "docx",
+      "name": "项目制劳动合同",
+      "biz_type": "劳动",
+      "applicant": "人事部",
+      "dept": "人力资源部",
+      "expect_high": [
+        "HJ-H-011"
+      ],
+      "expect_medium": [
+        "HJ-M-001",
+        "HJ-M-003",
+        "HJ-M-004",
+        "HJ-M-011"
+      ],
+      "expect_low": [
+        "HJ-L-004",
+        "HJ-L-005"
+      ],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "劳动风险用例：竞业限制无经济补偿（H-011）+ 必备条款缺失"
+    },
+    {
+      "file": "10_技术服务合同_标准版.docx",
+      "kind": "docx",
+      "name": "工业自动化技术服务合同",
+      "biz_type": "服务",
+      "applicant": "陈晨",
+      "dept": "技术中心",
+      "expect_high": [],
+      "expect_medium": [],
+      "expect_low": [],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "服务类标准用例：验证知识产权条款的视角判定（归我方=不报）"
+    },
+    {
+      "file": "11_运维服务合同_标准版.docx",
+      "kind": "docx",
+      "name": "信息系统运维服务合同",
+      "biz_type": "服务",
+      "applicant": "陈晨",
+      "dept": "信息技术部",
+      "expect_high": [],
+      "expect_medium": [],
+      "expect_low": [],
+      "expect_blocked": false,
+      "expect_file_type": "docx",
+      "note": "服务类标准用例：季度考核付款 + 完整条款"
+    },
+    {
+      "file": "12_咨询服务合同_扫描件.png",
+      "kind": "scan",
+      "name": "管理咨询服务合同（扫描件）",
+      "biz_type": "服务",
+      "applicant": "赵磊",
+      "dept": "战略发展部",
+      "expect_high": [],
+      "expect_medium": [
+        "HJ-M-004",
+        "HJ-M-011"
+      ],
+      "expect_low": [
+        "HJ-L-003",
+        "HJ-L-007"
+      ],
+      "expect_blocked": false,
+      "expect_file_type": "image",
+      "note": "扫描件用例：验证 OCR 路径与低置信度处理"
+    },
+    {
+      "file": "13_软件采购合同_加密件.pdf",
+      "kind": "encrypted_pdf",
+      "name": "涉密软件采购合同（加密）",
+      "biz_type": "采购",
+      "applicant": "王倩",
+      "dept": "信息技术部",
+      "expect_high": [],
+      "expect_medium": [],
+      "expect_low": [],
+      "expect_blocked": true,
+      "expect_file_type": "pdf",
+      "note": "阻塞用例：加密 PDF 应进入 blocked 状态并给出可读原因，支持一键重试"
+    }
+  ]
+}

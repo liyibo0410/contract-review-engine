@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>衡鉴 · 合规规则与模板</title>
+<link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar"></header>
+  <main>
+    <div class="wrap">
+      <div class="grid c4" id="ruleStats"></div>
+      <div class="grid c2 mt" style="grid-template-columns: 420px 1fr">
+
+        <div class="card">
+          <div class="card-title"><span class="em">审查规则树</span>
+            <span class="small muted" id="ruleVer"></span></div>
+          <div class="row" style="gap:8px;margin-bottom:10px">
+            <select id="fLevel" style="flex:1">
+              <option value="">全部等级</option>
+              <option value="high">高风险</option>
+              <option value="medium">中风险</option>
+              <option value="low">低风险</option>
+            </select>
+            <input id="fKw" placeholder="搜索规则" style="flex:1.4">
+          </div>
+          <div class="tree" id="tree" style="max-height:calc(100vh - 340px);overflow:auto"></div>
+        </div>
+
+        <div>
+          <div class="card" id="ruleDetail">
+            <div class="empty">从左侧选择一条规则查看与编辑</div>
+          </div>
+
+          <div class="card mt">
+            <div class="card-title"><span class="em">标准示范条款库</span>
+              <span class="small muted" id="tplHint"></span></div>
+            <div id="tplBox" class="grid c2"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/rules.js"></script>
+</body>
+</html>

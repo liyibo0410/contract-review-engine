@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>衡鉴 · 评测与观测</title>
+<link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar"></header>
+  <main>
+    <div class="wrap">
+      <div class="row between">
+        <h2 style="margin:0;font-size:17px">黄金样例集回归评测</h2>
+        <div class="row" style="gap:8px">
+          <button class="btn" id="btnRun">运行评测（全量 13 份）</button>
+          <button class="btn ghost" id="btnRefresh">刷新</button>
+        </div>
+      </div>
+      <p class="small muted" style="margin:8px 0 16px">
+        评测集与样例合同同源生成（<span class="mono">tools/gen_samples.py</span>）。
+        每次修改规则库后重跑，用于防止"改一条、伤三处"。
+        指标口径参见《审核规则体系梳理》文档。
+      </p>
+
+      <div class="grid c6" id="metrics"></div>
+
+      <div class="card mt">
+        <div class="card-title"><span class="em">逐份样例明细</span>
+          <span class="small muted" id="runHint"></span></div>
+        <div style="overflow:auto">
+          <table class="tb">
+            <thead><tr>
+              <th>#</th><th>样例</th><th>解析引擎</th><th>解析</th>
+              <th style="text-align:right">条款</th><th style="text-align:right">字数</th>
+              <th style="text-align:right">耗时</th>
+              <th>命中高风险</th><th>漏报</th><th>误报</th>
+            </tr></thead>
+            <tbody id="caseBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid c2 mt">
+        <div class="card">
+          <div class="card-title"><span class="em">系统运行观测</span></div>
+          <div id="obs"></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="em">评测历史</span></div>
+          <div id="hist" class="small"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/eval.js"></script>
+</body>
+</html>

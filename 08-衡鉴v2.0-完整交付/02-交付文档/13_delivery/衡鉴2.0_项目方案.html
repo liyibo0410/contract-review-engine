@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>衡鉴 2.0 · 企业合同智能审查系统 · 项目方案</title>
+<style>
+  :root{
+    --bg:#0B0E14; --bg1:#11161F; --bg2:#161C27; --bg3:#1D2533;
+    --line:#232C3B; --line2:#2E394B;
+    --text:#E6EAF2; --text2:#A7B0C0; --text3:#6E7A8D;
+    --brand:#4C8DFF; --brand2:#2C5FA8;
+    --ok:#35CE8D; --warn:#F5C542; --high:#FF5D5D; --purple:#A98BFF; --cyan:#3FD0D4;
+    --mono:"JetBrains Mono","Cascadia Mono",Consolas,monospace;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:74px}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;
+    font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#2A3446;border-radius:5px}
+
+  /* ---------- 顶栏 ---------- */
+  .top{position:sticky;top:0;z-index:50;background:rgba(17,22,31,.92);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .top .in{max-width:var(--maxw);margin:0 auto;padding:0 18px;height:58px;
+    display:flex;align-items:center;gap:16px;flex-wrap:nowrap;overflow-x:auto}
+  .brand{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+  .brand b{font-size:19px;letter-spacing:1px}
+  .brand span{font-size:11px;color:var(--text3);letter-spacing:2.5px}
+  .brand i{font-size:11px;font-style:normal;color:var(--brand);
+    border:1px solid var(--brand2);border-radius:20px;padding:1px 8px}
+  .nav{display:flex;gap:2px;margin-left:10px}
+  .nav a{padding:5px 11px;border-radius:6px;color:var(--text2);font-size:12.5px;white-space:nowrap}
+  .nav a:hover{background:var(--bg2);color:var(--text);text-decoration:none}
+  .kbd{margin-left:auto;font-size:11px;color:var(--text3);white-space:nowrap}
+
+  /* ---------- 通用 ---------- */
+  .sec{max-width:var(--maxw);margin:0 auto;padding:52px 18px 8px}
+  .sec > .kick{font-size:11.5px;color:var(--brand);font-weight:700;letter-spacing:1.5px}
+  h2{margin:6px 0 6px;font-size:25px;font-weight:700;letter-spacing:.3px}
+  .lede{margin:0 0 22px;color:var(--text2);font-size:13.5px;max-width:900px}
+  h3{margin:26px 0 12px;font-size:16px;font-weight:700;display:flex;align-items:center;gap:9px}
+  h3::before{content:'';width:3px;height:15px;background:var(--brand);border-radius:2px}
+  p{margin:0 0 12px;color:var(--text2)}
+  code{font-family:var(--mono);font-size:12px;background:var(--bg2);
+    padding:1px 5px;border-radius:3px;color:#C7D2E0}
+
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .g6{grid-template-columns:repeat(6,minmax(0,1fr))}
+  @media(max-width:1080px){.g4,.g6{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:1fr}}
+  @media(max-width:760px){.g2,.g4,.g6{grid-template-columns:1fr}}
+
+  .card{background:var(--bg1);border:1px solid var(--line);border-radius:11px;padding:16px 18px}
+  .card.accent{border-color:var(--brand2);
+    background:linear-gradient(180deg,rgba(76,141,255,.09),var(--bg1))}
+  .card .t{font-size:13.5px;font-weight:700;margin-bottom:6px}
+  .card .b{font-size:12.5px;color:var(--text2);line-height:1.75}
+  .card .f{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:9px;
+    padding-top:9px;border-top:1px dashed var(--line2)}
+
+  .kpi{background:var(--bg1);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kpi .k{font-size:11.5px;color:var(--text3)}
+  .kpi .v{font-family:var(--mono);font-size:23px;font-weight:700;margin-top:2px}
+  .kpi .d{font-size:11px;color:var(--text3);margin-top:2px}
+  .c-ok{color:var(--ok)} .c-brand{color:var(--brand)} .c-high{color:var(--high)}
+  .c-warn{color:var(--warn)} .c-purple{color:var(--purple)}
+
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 8px;
+    border-radius:20px;white-space:nowrap}
+  .t-ok{background:rgba(53,206,141,.14);color:var(--ok)}
+  .t-part{background:rgba(245,197,66,.14);color:var(--warn)}
+  .t-todo{background:rgba(255,93,93,.14);color:var(--high)}
+  .t-info{background:rgba(76,141,255,.14);color:var(--brand)}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0 14px}
+  th{text-align:left;color:var(--text3);font-weight:600;font-size:11.5px;
+     padding:8px;border-bottom:1px solid var(--line2)}
+  td{padding:9px 8px;border-bottom:1px solid var(--line);color:var(--text2);vertical-align:top}
+  td.m{font-family:var(--mono);color:var(--text);font-size:11.5px}
+  tr:last-child td{border-bottom:none}
+
+  /* 分层架构条 */
+  .lane{display:flex;align-items:center;gap:14px;background:var(--bg1);
+    border:1px solid var(--line);border-radius:9px;padding:11px 14px;margin-bottom:8px;
+    position:relative;overflow:hidden}
+  .lane::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--brand)}
+  .lane.l3::before{background:var(--ok)} .lane.l4::before{background:var(--warn)}
+  .lane.l5::before{background:var(--purple)} .lane.l67::before{background:var(--text3)}
+  .lane .n{font-weight:700;font-size:12.5px;min-width:92px}
+  .lane .d{font-size:12px;color:var(--text2)}
+
+  .callout{border:1px solid var(--brand2);background:linear-gradient(180deg,rgba(76,141,255,.08),var(--bg1));
+    border-radius:11px;padding:16px 18px;margin:14px 0}
+  .callout.warn{border-color:rgba(245,197,66,.45);
+    background:linear-gradient(180deg,rgba(245,197,66,.08),var(--bg1))}
+  .callout.risk{border-color:rgba(255,93,93,.42);
+    background:linear-gradient(180deg,rgba(255,93,93,.08),var(--bg1))}
+  .callout .h{font-weight:700;font-size:13.5px;margin-bottom:7px}
+  .callout ul{margin:6px 0 0;padding-left:18px;font-size:12.5px;color:var(--text2)}
+  .callout li{margin-bottom:5px}
+
+  ul.plain{margin:6px 0 14px;padding-left:19px;color:var(--text2);font-size:12.8px}
+  ul.plain li{margin-bottom:6px}
+
+  pre{background:var(--bg);border:1px solid var(--line);border-radius:9px;
+    padding:13px 15px;overflow:auto;font-family:var(--mono);font-size:11.8px;
+    color:#C7D2E0;line-height:1.75;margin:8px 0 16px}
+  pre b{color:var(--brand);font-weight:400} pre i{color:var(--ok);font-style:normal}
+
+  footer{max-width:var(--maxw);margin:40px auto 0;padding:20px 18px 60px;
+    border-top:1px solid var(--line);color:var(--text3);font-size:12px;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  /* hero */
+  .hero{max-width:var(--maxw);margin:0 auto;padding:56px 18px 10px}
+  .hero .big{font-size:44px;font-weight:800;letter-spacing:2px;margin:0 0 4px}
+  .hero .sub{font-size:12px;letter-spacing:5px;color:var(--brand);margin-bottom:20px}
+  .hero .lead{font-size:19px;font-weight:700;color:var(--text);line-height:1.65;
+    max-width:940px;margin:0 0 14px}
+  .hero .lead em{font-style:normal;color:var(--brand)}
+  .hero .meta{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:var(--text3);margin-top:14px}
+  .hero .meta b{color:var(--text2);font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="in">
+    <div class="brand"><b>衡鉴</b><span>HENGJIAN</span><i>2.0.0</i></div>
+    <nav class="nav">
+      <a href="#problem">问题定义</a>
+      <a href="#claim">核心主张</a>
+      <a href="#arch">技术架构</a>
+      <a href="#rules">规则体系</a>
+      <a href="#data">数据与接口</a>
+      <a href="#ui">前端交互</a>
+      <a href="#verify">验证证据</a>
+      <a href="#limit">局限与路线</a>
+      <a href="#deliver">交付物</a>
+    </nav>
+    <span class="kbd">← 点击章节跳转</span>
+  </div>
+</div>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <p class="big">衡鉴</p>
+  <p class="sub">ENTERPRISE CONTRACT REVIEW AGENT</p>
+  <p class="lead">让每一份合同，在审批前先过一遍<em>「数字法务」</em>的脑子 ——
+    <em>风险可定位、依据可追溯、意见可回写</em>。</p>
+  <p style="max-width:900px">衡是「对等公允」，鉴是「明察留痕」。系统读取待审批的合同
+    （DOCX / PDF / 扫描件），自动完成条款切分、风险识别、修改建议与审批意见回写，
+    但<strong style="color:var(--text)">不改变任何审批权责</strong> ——
+    它只写意见，不做决定。</p>
+  <div class="meta">
+    <span>版本 <b>2.0.0</b></span>
+    <span>需求出处 <b>《项目实战》2.4 合同审批审查系统</b></span>
+    <span>验收 <b>八条标准 8/8 满足</b></span>
+    <span>交付人 <b>李奕波</b></span>
+    <span>日期 <b>2026-09-19</b></span>
+  </div>
+</div>
+
+<div class="sec" style="padding-top:30px">
+  <div class="grid g6">
+    <div class="kpi"><div class="k">规则条数</div><div class="v c-brand">32</div><div class="d">高 11 / 中 13 / 低 8</div></div>
+    <div class="kpi"><div class="k">判定类型</div><div class="v c-brand">8</div><div class="d">含缺失与不对等</div></div>
+    <div class="kpi"><div class="k">接口路径</div><div class="v c-brand">33</div><div class="d">OpenAPI 自动生成</div></div>
+    <div class="kpi"><div class="k">单元测试</div><div class="v c-ok">39/39</div><div class="d">全部通过</div></div>
+    <div class="kpi"><div class="k">接口冒烟</div><div class="v c-ok">64/64</div><div class="d">全部通过</div></div>
+    <div class="kpi"><div class="k">高风险召回</div><div class="v c-ok">100%</div><div class="d">误报 0 · 见诚实声明</div></div>
+  </div>
+</div>
+
+<!-- ================= 问题定义 ================= -->
+<section class="sec" id="problem">
+  <div class="kick">一 · 业务建模</div>
+  <h2>审批人只有几分钟，却要读懂几十页合同</h2>
+  <p class="lede">真实痛点从来不是「没有制度」，而是「人不够快、不够专、留不下痕」。</p>
+
+  <div class="grid g3">
+    <div class="card"><div class="t c-high">看不完</div><div class="b">
+      一份采购合同 30–60 页，逐条通读需 2 小时以上。<br>审批流卡在人身上，业务等不起。</div></div>
+    <div class="card"><div class="t c-warn">看不准</div><div class="b">
+      风险藏在违约责任、争议管辖、知识产权等少数条款里。<br>缺一条验收前置条件，可能就是全款风险。</div></div>
+    <div class="card"><div class="t c-purple">说不清</div><div class="b">
+      审批意见靠口头与批注，历史合同无法复盘。<br>出了纠纷，责任链断在半路。</div></div>
+  </div>
+
+  <div class="callout">
+    <div class="h">问题定义</div>
+    <p style="margin:0 0 8px;font-size:15px;font-weight:700;color:var(--text)">
+      在<strong style="color:var(--brand)">不改变审批权责</strong>的前提下，
+      把「读合同、找风险、写意见」三步自动化，让审批人只做一件事 —— 做决定。</p>
+    <ul>
+      <li><strong>边界</strong>：系统只生成审查意见、只写审批评论区；不提供通过 / 拒绝 / 转交 / 撤回等任何改变审批结论的动作。</li>
+      <li><strong>不做</strong>：不做合同起草、不做法务替代、不出具法律意见书。</li>
+      <li><strong>成功判据</strong>：每一条结论都能被逐字核对 —— 点到原文那一句、点到规则那一条、点到法条那一款。</li>
+    </ul>
+  </div>
+
+  <h3>三类目标用户</h3>
+  <table>
+    <tr><th>角色</th><th>核心诉求</th><th>关键成功标准</th></tr>
+    <tr><td>法务审查人</td><td>快速定位风险、核对依据、出意见</td>
+        <td>从打开合同到出完意见 &lt; 10 分钟；每条意见可回溯</td></tr>
+    <tr><td>业务经办人</td><td>提交送审、知道哪里要改、拿到整改建议</td>
+        <td>首次送审即可看出风险点；能下载报告去跟对方谈判</td></tr>
+    <tr><td>系统管理员</td><td>维护规则与模板、监控任务、处置阻塞</td>
+        <td>改规则后能立即验证是否改坏别的地方</td></tr>
+  </table>
+</section>
+
+<!-- ================= 核心主張 ================= -->
+<section class="sec" id="claim">
+  <div class="kick">一 · 问题建模与边界定义</div>
+  <h2>谁有权下结论 —— 整套系统最重要的一条判断</h2>
+  <p class="lede">不是「把合同丢给大模型」，而是明确划分：谁判定、谁表达、谁决定。</p>
+
+  <div class="grid g3">
+    <div class="card accent">
+      <div class="t">规则引擎（主路径）<span class="tag t-info" style="margin-left:6px">判定</span></div>
+      <div class="b">有权：判定风险等级、给出命中项与原文坐标。<br><br>
+        理由：同一份合同任何时候跑都必须得到同一份结论 ——
+        <strong style="color:var(--text)">可复现才能被法务采信</strong>。</div>
+    </div>
+    <div class="card">
+      <div class="t c-purple">大模型（增强路径）<span class="tag t-info" style="margin-left:6px">表达</span></div>
+      <div class="b">只做三件事：解释成因、润色示范条款、检测跨条款矛盾。<br><br>
+        理由：这些恰恰是规则写不出来、而模型擅长的部分。超时或返回非法即降级。</div>
+    </div>
+    <div class="card">
+      <div class="t c-ok">法务审查人<span class="tag t-ok" style="margin-left:6px">决定</span></div>
+      <div class="b">决定：采纳或调整建议、补充批注、是否回写审批单。<br><br>
+        系统的输出是「意见」，不是「结论」。</div>
+    </div>
+  </div>
+
+  <div class="callout risk">
+    <div class="h">约束不是口号，是代码里的硬约束</div>
+    <ul>
+      <li>LLM 的 Prompt 明确禁止新增 / 删除 / 合并风险项，禁止修改风险等级；</li>
+      <li>输出必须通过结构校验，解析失败 / 超时 / 网络异常一律降级为确定性模板生成器；</li>
+      <li>后端<strong style="color:var(--high)">不存在任何改变审批结论的接口</strong>（无通过 / 拒绝 / 转交 / 撤回）。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 技术架构 ================= -->
+<section class="sec" id="arch">
+  <div class="kick">二 · 技术架构</div>
+  <h2>七层架构与三个技术支点</h2>
+  <p class="lede">依赖方向单向向下（api → services → db/config）；解析与审查严格分离，
+    避免带着空正文跑出「看起来正常其实全错」的结论。</p>
+
+  <div class="lane"><div class="n">① 接入层</div><div class="d">本地上传（DOCX / PDF / 扫描件）· 审批系统待办拉取（内置模拟器）</div></div>
+  <div class="lane"><div class="n">② 编排层</div><div class="d">任务状态机 · 幂等控制 · 阻塞重试 · SSE 事件总线</div></div>
+  <div class="lane l3"><div class="n">③ 解析层</div><div class="d">parser_docx / parser_pdf / parser_ocr → coordinator 统一坐标系</div></div>
+  <div class="lane l4"><div class="n">④ 审查层</div><div class="d">rule_engine（32 条规则 / 8 种判定）→ llm（证据约束，可降级）</div></div>
+  <div class="lane l5"><div class="n">⑤ 回写层</div><div class="d">意见组装 + 合同画像 · DRY_RUN + 幂等回写 · 报告导出（MD / PDF）</div></div>
+  <div class="lane l67"><div class="n">⑥ 数据层</div><div class="d">SQLite(WAL) 10 张表：任务 / 文档 / 条款 / 命中 / 意见 / 回写 / 审计 / 评测 / HITL</div></div>
+  <div class="lane l67"><div class="n">⑦ 观测层</div><div class="d">audit_logs 全链路留痕 · eval_runs 评测看板 · /api/system/health 健康检查</div></div>
+
+  <h3>支点一 · 统一坐标系（证据链的地基）</h3>
+  <p>唯一真理坐标系 = 解析出的全文字符串。任何风险必须落到 <code>[char_start, char_end)</code> 区间；
+     <code>page</code> / <code>para_index</code> 只是给人读的「人话定位」。</p>
+  <table>
+    <tr><th>来源</th><th>页码来源</th><th>定位精度</th></tr>
+    <tr><td>DOCX</td><td>识别 <code>w:lastRenderedPageBreak</code> 与显式分页符；<strong style="color:var(--warn)">无分页信息时如实退化为 page=1</strong></td><td>段落 + 字符区间</td></tr>
+    <tr><td>PDF</td><td>PyMuPDF 页序号（天然真实）</td><td>页 + 块 + 字符区间</td></tr>
+    <tr><td>扫描件</td><td>OCR 行框按 (y, x) 还原阅读顺序</td><td>行 + 字符区间</td></tr>
+  </table>
+  <p class="lede" style="margin-bottom:8px">
+    <strong style="color:var(--text)">为什么这是壁垒</strong>：多数方案止步于「给出风险段落文字」。
+    而法务敢采信的前提，是能从结论一路点到原文那一句。它同时让前端只需<strong style="color:var(--text)">一种高亮逻辑</strong>
+    就能支持三种格式。</p>
+  <p class="lede"><strong style="color:var(--warn)">不做什么</strong>：不估算页码，不伪造定位。
+    坐标取不到原文时标记为 <code>-1</code>，前端不渲染定位按钮 —— 假定位比没定位更危险。</p>
+
+  <h3>支点二 · 视角解析（防误报的关键）</h3>
+  <p>「知识产权归甲方所有」这句话，在采购合同里<strong style="color:var(--ok)">对我方有利</strong>，
+     在销售合同里<strong style="color:var(--high)">对我方不利</strong>。
+     脱离视角的关键词匹配必然大面积误报。</p>
+  <table>
+    <tr><th>业务类型</th><th>我方</th><th>对方</th><th>说明</th></tr>
+    <tr><td>采购 / 服务 / 劳动</td><td>甲方</td><td>乙方</td><td>需方 / 委托方 / 用人单位</td></tr>
+    <tr><td>销售</td><td>乙方</td><td>甲方</td><td>卖方 / 供方</td></tr>
+  </table>
+  <p>规则库用 <code>{我方}</code> / <code>{对方}</code> 占位书写，运行期按业务类型实例化。
+     另有三道配套闸门：<strong style="color:var(--text)">biz_types</strong>（规则级适用范围，如"付款须挂钩验收"不适用于劳动合同）、
+     <strong style="color:var(--text)">exclude_keywords</strong>（语境排除，如"累计不超过 20%"是上限保护而非比例风险）、
+     <strong style="color:var(--text)">共现判定</strong>（付款与验收必须同句出现才算已绑定）。</p>
+
+  <h3>支点三 · 双引擎与可降级（演示零事故）</h3>
+  <table>
+    <tr><th>外部依赖</th><th>不可用时的行为</th><th>用户损失</th></tr>
+    <tr><td>大模型接口</td><td>超时（默认 8s）或返回非法 JSON → 切换确定性模板生成器</td>
+        <td>解释文字由模板拼装，<strong style="color:var(--ok)">结论与建议完全不变</strong></td></tr>
+    <tr><td>OCR 引擎</td><td>扫描件进入 blocked，阻塞原因明确写「引擎缺失」</td>
+        <td>提示安装依赖，其他格式不受影响</td></tr>
+    <tr><td>网络</td><td>全链路本地运行，无外网依赖</td><td>无</td></tr>
+  </table>
+</section>
+
+<!-- ================= 规则体系 ================= -->
+<section class="sec" id="rules">
+  <div class="kick">三 · 审核规则体系梳理</div>
+  <h2>32 条规则 · 8 种判定类型 · 14 套标准示范条款</h2>
+  <p class="lede">「没写的」和「写错的」一样危险 —— 因此缺失类判定是一等公民。</p>
+
+  <div class="grid g6">
+    <div class="kpi"><div class="k">高风险</div><div class="v c-high">11</div><div class="d">直接决定结论</div></div>
+    <div class="kpi"><div class="k">中风险</div><div class="v c-warn">13</div><div class="d">建议谈判修正</div></div>
+    <div class="kpi"><div class="k">低风险</div><div class="v" style="color:var(--text3)">8</div><div class="d">文本规范</div></div>
+    <div class="kpi"><div class="k">判定类型</div><div class="v c-brand">8</div><div class="d">见下表</div></div>
+    <div class="kpi"><div class="k">条款本体</div><div class="v c-brand">11</div><div class="d">类一级节点</div></div>
+    <div class="kpi"><div class="k">示范条款</div><div class="v c-ok">14</div><div class="d">可直接落地</div></div>
+  </div>
+
+  <h3>八种判定类型</h3>
+  <table>
+    <tr><th>类型</th><th>语义</th><th id="why">为什么需要它</th></tr>
+    <tr><td class="m">keyword</td><td>关键词命中（any / all / none）</td><td>覆盖绝大多数「明显违规表述」</td></tr>
+    <tr><td class="m">regex</td><td>正则匹配 + 语境排除</td><td>处理「同一方 + 隔几个字 + 加重措辞」的句式</td></tr>
+    <tr><td class="m">numeric</td><td>数值阈值比对（多模式 + 排除设上限表述）</td><td>违约金比例、预付款比例这类<strong>必须算数</strong>的问题</td></tr>
+    <tr><td class="m">imbalance</td><td>权责不对等（关键词版）</td><td>简单配对场景</td></tr>
+    <tr><td class="m">imbalance_regex</td><td>权责不对等（正则版）</td><td>只有跨句比较才能发现的不对等</td></tr>
+    <tr><td class="m">missing_clause</td><td>必备条款缺失</td><td>「没写的」和「写错的」一样危险</td></tr>
+    <tr><td class="m">required_combo</td><td>条款组合缺失（共现 + 前提 + 反向排除）</td><td>「有付款、没验收」这类组合缺陷</td></tr>
+    <tr><td class="m">absent</td><td>全篇缺少某项必要约定（支持前提条件）</td><td>通知送达、金额大写、签署日期等要素级缺失</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <div class="h">两个值得单说的判定难点</div>
+    <ul>
+      <li><strong>跨句才能看出的不对等</strong>：<br>
+        <code>甲方逾期支付款项的，应承担无限赔偿责任，并赔偿乙方因此遭受的一切损失。</code><br>
+        <code>乙方逾期交付的，仅承担合同总价万分之一的违约金，且累计不超过合同总价。</code><br>
+        单看任一句都「语序通顺」，放在一起却是权责严重失衡 —— 用 <code>imbalance_regex</code>
+        表达「同一方 + 若干字符内 + 加重/减轻措辞」，并要求两者出现在同一违约责任章节内。</li>
+      <li><strong>「付款是否挂钩验收」不能全文搜索</strong>：质量保证条款里一句
+        「质保期为验收合格后 12 个月」会让全文搜索误以为"已有验收"，从而漏报付款环节根本没有验收前置的问题。
+        正确判据是<strong style="color:var(--text)">共现</strong>：同一句里既是付款语境、
+        又出现验收语境，才算绑定。另用 <code>require_exclude</code> 处理否定语境
+        （「甲方<strong>无需</strong>另行支付任何经济补偿」不算满足）。</li>
+    </ul>
+  </div>
+
+  <h3>条款切分策略与踩坑记录</h3>
+  <p>四步：① 标题正则识别 → ② 标题语义向下传播 → ③ 正文需 2 个关键词自证才允许切换类型
+     → ④ 切换要求<strong style="color:var(--text)">严格优于当前上下文</strong>（平局保持归属）。</p>
+  <div class="callout risk">
+    <div class="h">踩坑：条款词表里不能出现角色词</div>
+    <p style="margin:0 0 8px;font-size:12.8px">
+      角色词（甲方 / 乙方 / 供方 / 需方）在合同里无处不在。
+      一旦计入打分，「本合同项下乙方为甲方定制开发形成的全部交付成果，其知识产权归乙方所有」
+      会被判成<strong style="color:var(--high)">签约主体段</strong>而不是<strong style="color:var(--ok)">知识产权段</strong>
+      —— 整篇条款类型错位，连带基于 <code>clause_type</code> 的规则全部失效（首轮跑分召回率仅 45%）。</p>
+    <ul>
+      <li>修复一：角色词从打分表移除，主体类只认"主体属性词"（统一社会信用代码、法定代表人、营业执照、资质证书）；</li>
+      <li>修复二：类型切换加"平局不动"规则。修复后该句正确判为 <code>ip</code>，HJ-H-001 恢复命中。</li>
+    </ul>
+  </div>
+
+  <h3>高风险规则（11 条 · 摘录）</h3>
+  <table>
+    <tr><th>编号</th><th>标题</th><th>判定类型</th><th>法律依据</th></tr>
+    <tr><td class="m">HJ-H-001</td><td>知识产权归属相对方，我方未保留任何权利</td><td>keyword</td><td>《民法典》843 / 847；《计算机软件保护条例》11</td></tr>
+    <tr><td class="m">HJ-H-002</td><td>付款缺少验收前置条件（到货/交付即付全款）</td><td>required_combo</td><td>《民法典》626 / 628</td></tr>
+    <tr><td class="m">HJ-H-003</td><td>违约责任严重不对等</td><td>imbalance_regex</td><td>《民法典》585 / 151</td></tr>
+    <tr><td class="m">HJ-H-004</td><td>争议管辖约定不当或约定在相对方所在地</td><td>keyword</td><td>《民事诉讼法》35</td></tr>
+    <tr><td class="m">HJ-H-006</td><td>违约金比例超出法定合理范围（&gt;30%）</td><td>numeric</td><td>《民法典》585(2)</td></tr>
+    <tr><td class="m">HJ-H-007</td><td>预付款比例过高且未约定担保（≥50%）</td><td>numeric</td><td>《民法典》526</td></tr>
+    <tr><td class="m">HJ-H-008</td><td>我方单方承担无限责任或无赔偿上限</td><td>regex</td><td>《民法典》584 / 585</td></tr>
+    <tr><td class="m">HJ-H-009</td><td>缺失违约责任条款</td><td>missing_clause</td><td>《民法典》577 / 584</td></tr>
+    <tr><td class="m">HJ-H-011</td><td>竞业限制未约定经济补偿（劳动类）</td><td>required_combo</td><td>《劳动合同法》23 / 24</td></tr>
+  </table>
+</section>
+
+<!-- ================= 数据与接口 ================= -->
+<section class="sec" id="data">
+  <div class="kick">四 · 数据与接口</div>
+  <h2>10 张表 · 33 个接口 · 5 态任务机 · 6 种阻塞码</h2>
+  <p class="lede">HITL 用「动作流水」代替状态字段 —— 审计信息就是业务数据本身。</p>
+
+  <h3>数据模型</h3>
+  <table>
+    <tr><th>表</th><th>职责</th><th>关键设计</th></tr>
+    <tr><td class="m">contracts</td><td>合同/任务主表</td><td><code>idem_key</code> 条件唯一索引实现幂等</td></tr>
+    <tr><td class="m">documents</td><td>附件与解析状态</td><td>存 <code>sha256</code> 与 <code>parse_engine</code>，可复现</td></tr>
+    <tr><td class="m">clauses</td><td>条款结构树</td><td><code>char_start/char_end</code> 是证据链锚点</td></tr>
+    <tr><td class="m">findings</td><td>风险命中</td><td>同时存证据原文与坐标；区分 <code>judge_mode</code>（rule/llm）</td></tr>
+    <tr><td class="m">reviews</td><td>审查意见</td><td>记录 <code>generated_by</code>（template / llm / human_edited）</td></tr>
+    <tr><td class="m">writebacks</td><td>回写状态机</td><td>幂等键 + 尝试次数 + 错误信息</td></tr>
+    <tr><td class="m">audit_logs</td><td>全链路留痕</td><td>step / tool / 输入输出摘要 / 耗时</td></tr>
+    <tr><td class="m">eval_runs</td><td>评测历史</td><td>每次规则变更的跑分快照</td></tr>
+    <tr><td class="m">platform_comments</td><td>审批评论区（模拟器）</td><td>接入真实系统时替换适配器即可</td></tr>
+    <tr><td class="m">hitl_actions</td><td>人工审核动作流水</td><td><strong>只增不改不删</strong>，当前状态由最后一条推出</td></tr>
+  </table>
+
+  <h3>状态机与阻塞码</h3>
+  <pre>任务： <b>pending</b> → <b>parsing</b> → <b>reviewing</b> → <b>completed</b>
+                    └→ <i>blocked</i>（一键重试，清空重建，幂等键保留）
+
+回写： <b>not_written</b> → <b>writing</b> → <i>success</i> / <i>failed</i>（保留错误与重试入口）</pre>
+  <table>
+    <tr><th>阻塞码</th><th>触发条件</th><th>为什么单独区分</th></tr>
+    <tr><td class="m">DOC_ENCRYPTED</td><td>PDF 需要密码</td><td>需去除密码，重试无意义</td></tr>
+    <tr><td class="m">OCR_ENGINE_UNAVAILABLE</td><td>扫描件且 OCR 未安装</td><td><strong>需装环境，不是文件问题</strong></td></tr>
+    <tr><td class="m">OCR_LOW_CONFIDENCE</td><td>平均置信度 &lt; 0.35</td><td>需换清晰件</td></tr>
+    <tr><td class="m">EMPTY_CONTENT</td><td>正文 &lt; 120 字</td><td>可能是纯图片文档</td></tr>
+    <tr><td class="m">PARSE_FAILED</td><td>解析器异常</td><td>需查审计日志</td></tr>
+    <tr><td class="m">PIPELINE_ERROR</td><td>流水线未预期异常</td><td>需查 detail（含 traceback 片段）</td></tr>
+  </table>
+  <p class="lede" style="margin-bottom:0">「引擎缺失」与「图片模糊」必须分开记录 ——
+    否则用户只会反复点重试然后放弃。</p>
+
+  <h3>人工审核（HITL）与回写安全边界</h3>
+  <div class="grid g4">
+    <div class="card"><div class="t c-ok">approve 同意</div><div class="b">同意结论 → 解锁回写</div></div>
+    <div class="card"><div class="t c-brand">edit 修改后确认</div><div class="b">改等级 / 改写建议 → 自动重算综合等级与结论</div></div>
+    <div class="card"><div class="t c-high">reject 驳回</div><div class="b">清空本次产物，任务回 pending 并重跑</div></div>
+    <div class="card"><div class="t c-warn">resume 恢复</div><div class="b">从阻塞中断点恢复，保留上下文</div></div>
+  </div>
+  <div class="callout risk">
+    <div class="h">门禁：驳回后禁止回写</div>
+    <p style="margin:0;font-size:12.8px">POST /writeback 返回 409，提示「请重新发起审查后再回写」。
+      两道校验：① 任务状态必须 completed；② 最后一次 HITL 动作不得为 reject。</p>
+  </div>
+  <div class="callout">
+    <div class="h">回写四道保险</div>
+    <ul>
+      <li><strong>只写评论</strong>：后端不存在任何审批结论写操作接口；</li>
+      <li><strong>DRY_RUN 前置</strong>：回写前先生成待写入正文给你确认，预览模式只落库不外发；</li>
+      <li><strong>幂等三键</strong>：合同编号 | 附件 SHA256 | 规则版本号 —— 重复触发返回既有结果并记警告日志；</li>
+      <li><strong>审计闭环</strong>：每个步骤写 <code>audit_logs</code>，可从审查意见反查到完整处理链路。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 前端交互 ================= -->
+<section class="sec" id="ui">
+  <div class="kick">五 · 前端实现</div>
+  <h2>零构建前端：4 个页面，深色专业主题</h2>
+  <p class="lede">不用 npm、不用框架、不用 CDN —— 断网也能完整演示。
+    复杂交互用「字符区间求交」实现，跨 DOCX / PDF / OCR 共用一套高亮逻辑。</p>
+
+  <div class="grid g4">
+    <div class="card accent"><div class="t">审查大盘（/）</div>
+      <div class="b">统计卡 · 任务列表（高风险优先）· 多条件筛选 · 上传/拉取 · 实时流水线时间轴 · 状态分布</div></div>
+    <div class="card"><div class="t">智能审查工作台</div>
+      <div class="b">双栏联动 · 风险卡分级 · 成因与依据 · 可编辑采纳 · HITL 面板 · 回写与评论区</div></div>
+    <div class="card"><div class="t">合规规则与模板</div>
+      <div class="b">按条款类型分组的规则树 · 规则编辑 · 14 套示范条款库 · 反向引用提示</div></div>
+    <div class="card"><div class="t">评测与观测</div>
+      <div class="b">六张指标卡 · 逐份样例明细 · 一键跑分 · 系统运行观测</div></div>
+  </div>
+
+  <h3>三个值得单说的交互</h3>
+  <ul class="plain">
+    <li><strong style="color:var(--text)">双向联动</strong>：点风险卡 → 左侧平滑滚动到原文那一段并高亮脉冲；
+      在原文划选一段话 → 弹出「片段研判」列出涉及的风险项。跨三种格式共用同一套逻辑。</li>
+    <li><strong style="color:var(--text)">键盘流</strong>：<code>j</code> / <code>k</code> 切换风险项、
+      <code>Enter</code> 采纳、<code>/</code> 聚焦检索 —— 这是给每天看几十份合同的人准备的。
+      焦点在输入框时除 Esc 外全部放行，避免写法务批注时误跳。</li>
+    <li><strong style="color:var(--text)">实时进度</strong>：SSE 事件流带自增 <code>seq</code>，
+      支持断线续传；服务端空闲后主动关闭。Nginx 侧必须 <code>proxy_buffering off</code>，
+      否则事件会被积压成「进度条一直不动然后瞬间跳满」。</li>
+  </ul>
+
+  <h3>设计系统要点</h3>
+  <p>深色底 <code>#0B0E14</code> + 三级文字层次 + 风险三级色（红 <code>#FF5D5D</code> / 橙
+    <code>#FFA93B</code> / 灰 <code>#7C8798</code>）。
+    <strong style="color:var(--text)">为什么用深色</strong>：这是长时间盯屏的工作界面而非展示页，
+    深色能降低阅读几十页合同正文的视觉疲劳，并让红色风险高亮「跳出来」。
+    <strong style="color:var(--text)">为什么关键字段用等宽字体</strong>：规则编号、字符区间、幂等键
+    会被逐字符核对，等宽能显著降低看错一位的概率。
+    动效只用于表达状态变化，脉冲 1.1s × 2 次后消散，不留永久视觉噪音。</p>
+</section>
+
+<!-- ================= 验证证据 ================= -->
+<section class="sec" id="verify">
+  <div class="kick">六 · 工程与交付 · 验证证据</div>
+  <h2>用可复现的数字说话</h2>
+  <p class="lede">四项验证全部实测通过；每条命令都写在文档里，任何人可以重跑一遍。</p>
+
+  <div class="grid g6">
+    <div class="kpi"><div class="k">单元测试</div><div class="v c-ok">39/39</div><div class="d">pytest</div></div>
+    <div class="kpi"><div class="k">接口冒烟</div><div class="v c-ok">64/64</div><div class="d">ASGI 直连</div></div>
+    <div class="kpi"><div class="k">端到端演示</div><div class="v c-ok">8 步</div><div class="d">demo.py</div></div>
+    <div class="kpi"><div class="k">高风险召回</div><div class="v c-ok">100%</div><div class="d">11/11</div></div>
+    <div class="kpi"><div class="k">误报数</div><div class="v c-ok">0</div><div class="d">5 份干净基线</div></div>
+    <div class="kpi"><div class="k">平均解析耗时</div><div class="v c-brand">≈700ms</div><div class="d">单份</div></div>
+  </div>
+
+  <h3>复现命令</h3>
+  <pre>cd backend
+
+<b># 单元测试：39 项</b>
+python -m pytest -q
+
+<b># 接口冒烟：64 项（ASGI 直连，不需要起服务器）</b>
+python tools/smoke_api.py
+
+<b># 端到端业务演示：8 步（含异常阻塞与重试）</b>
+python demo.py --fresh
+
+<b># 规则回归评测：13 份黄金样例</b>
+python -m app.eval.run_eval</pre>
+
+  <h3>端到端实测输出（01 软件采购合同 · 埋雷版）</h3>
+  <table>
+    <tr><th>环节</th><th>实测结果</th></tr>
+    <tr><td>解析</td><td>python-docx · 4 页 / 1245 字 / 10 个条款节点</td></tr>
+    <tr><td>审查</td><td>命中 <strong style="color:var(--text)">11 项</strong>（高 6 / 中 2 / 低 3）· 规则判定 <strong style="color:var(--ok)">1 ms</strong> · 结论 <strong style="color:var(--high)">建议拒绝</strong></td></tr>
+    <tr><td>高风险定位</td><td class="m">HJ-H-001 知识产权归属相对方 → 第 2 页 段#19 [627,687)<br>
+      HJ-H-003 违约责任严重不对等 → 第 2 页 段#25 [812,846)<br>
+      HJ-H-004 管辖约定在相对方所在地 → 第 3 页 段#32 [1040,1067)</td></tr>
+    <tr><td>回写</td><td>DRY_RUN 预览 1732 字 → 真实写入 <code>CMT-000001</code> → 重复触发幂等跳过 → 评论区仍 1 条</td></tr>
+    <tr><td>报告</td><td>Markdown 3360 字 + PDF 导出成功</td></tr>
+    <tr><td>异常</td><td>加密件 → <code>DOC_ENCRYPTED</code> → 重试仍 blocked 且不产生脏数据</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <div class="h">关于 100% 的诚实说明</div>
+    <p style="margin:0 0 8px;font-size:12.8px">
+      黄金标注与规则库由同一团队同步编写。因此 100% 召回是
+      <strong style="color:var(--warn)">内部回归基线</strong> —— 它的作用是防止「改一条规则、伤三处条款」，
+      <strong style="color:var(--high)">不等于</strong>面对全新语料的泛化能力。</p>
+    <p style="margin:0;font-size:12.8px">
+      类比：单元测试全绿不代表程序没有 bug，只代表已写下的断言都成立。
+      「我们的规则在自建样例集上召回 100%」可验证；
+      「我们的系统能识别 100% 的合同风险」无法验证 —— <strong style="color:var(--text)">我们说前者</strong>。</p>
+  </div>
+</section>
+
+<!-- ================= 局限与路线 ================= -->
+<section class="sec" id="limit">
+  <div class="kick">六 · 工程与交付 · 局限与演进</div>
+  <h2>诚实的局限清单与演进路线</h2>
+  <p class="lede">未完成的事不隐藏在细节里 —— 全部登记，标注优先级。</p>
+
+  <table>
+    <tr><th>#</th><th>未完成事项</th><th>影响</th><th>计划</th></tr>
+    <tr><td class="m">U1</td><td>三角色 RBAC 与登录鉴权</td><td>无法安全暴露公网；不同角色看到相同能力</td>
+        <td>路线图 M1，<span class="tag t-todo">上线前必做</span></td></tr>
+    <tr><td class="m">U2</td><td>真实审批系统对接</td><td>当前为内置模拟器，未验证真实系统兼容性</td>
+        <td>路线图 M3，适配器位置已预留</td></tr>
+    <tr><td class="m">U3</td><td>孪生演示台（单文件 HTML 驾驶舱）</td><td>演示形态少一种</td>
+        <td>已主动降优先级</td></tr>
+    <tr><td class="m">U4</td><td>第三方盲测集与泛化评估</td><td>准确率缺外部验证</td>
+        <td>路线图 M2，<span class="tag t-part">已给路径</span></td></tr>
+    <tr><td class="m">P1</td><td>Docker 镜像未本地实跑构建</td><td>配置就绪、依赖清单已核对，但未端到端验证</td>
+        <td><span class="tag t-part">部分完成</span></td></tr>
+    <tr><td class="m">P2</td><td>CI 流水线未远端实跑</td><td>四道门禁配置完整、各步命令本地验证通过</td>
+        <td><span class="tag t-part">部分完成</span></td></tr>
+  </table>
+
+  <h3>补上泛化能力的路径（M2）</h3>
+  <ul class="plain">
+    <li>① 采集 50–100 份真实合同（脱敏），覆盖更多业务类型与排版风格；</li>
+    <li>② 由<strong style="color:var(--text)">未参与规则编写</strong>的法务人员独立标注风险清单（盲测）；</li>
+    <li>③ 在盲测集上跑分，公开<strong style="color:var(--text)">真实的</strong>召回率与误报率（预期低于 100%，这是正常的）；</li>
+    <li>④ 按漏报 / 误报聚类，定向补充与收紧规则，形成「标注 → 跑分 → 调优」闭环。</li>
+  </ul>
+
+  <h3>下一步行动</h3>
+  <pre><b>P0</b>  三角色 RBAC 与登录鉴权（复用既有 BossPortal SSO 方案）
+<b>P0</b>  本地实跑 docker build + 容器健康检查
+<b>P1</b>  服务器 8130 部署 + 跨端口 SSO 接入　｜　第三方盲测集（50–100 份真实脱敏合同）
+<b>P2</b>  真实审批系统适配器实现　｜　关键路径录屏与演示彩排 2 次
+<b>P3</b>  批量操作、阻塞告警推送</pre>
+</section>
+
+<!-- ================= 交付物 ================= -->
+<section class="sec" id="deliver">
+  <div class="kick">六 · 工程与交付 · 交付物清单</div>
+  <h2>22 份文档 + 可运行系统 + 架构图 + 演示 PPT</h2>
+  <p class="lede">按「基线 → 业务 → 架构 → 实现 → 联调 → 部署 → 交付」七段组织；
+    全部数字以《项目事实基线》为准，未实现项一律标注【未开发】。</p>
+
+  <div class="grid g3">
+    <div class="card accent"><div class="t c-ok">可运行系统</div><div class="b">
+      backend 30 个 Python 文件 + frontend 10 个静态文件<br>
+      13 份样例合同 · git 追踪 58 个文件<br>
+      <strong style="color:var(--text)">双击 start.bat 即可启动</strong></div>
+      <div class="f">零外部服务依赖：SQLite 而非 MySQL/Redis</div></div>
+    <div class="card"><div class="t c-brand">22 份交付文档</div><div class="b">
+      业务建模 7 · 建模交互 8 · 架构数据 12<br>
+      接口实现 6 · 联调 1 · 部署交付 8 · 基线 4</div>
+      <div class="f">含需求指定的全部正式交付物</div></div>
+    <div class="card"><div class="t c-purple">配套产物</div><div class="b">
+      全流程架构图（单文件 HTML）<br>关键文档 Word 版 · 展示版 HTML<br>演示 PPT · 验证证据包</div>
+      <div class="f">断网可打开，无需任何外部依赖</div></div>
+  </div>
+
+  <div class="callout">
+    <div class="h">验收结论</div>
+    <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:var(--text)">
+      需求 2.4.10 八条验收标准：<strong style="color:var(--ok)">8 / 8 满足</strong></p>
+    <p style="margin:0;font-size:12.8px">
+      需求 2.4.1–2.4.9 开发范围：53 项中 <strong style="color:var(--ok)">50 项满足</strong>、
+      2 项部分完成、1 项未完成（RBAC）。<br>
+      交付路径：<code>E:\桌面\合同审批系统-李奕波\08-衡鉴v2.0-完整交付\</code></p>
+  </div>
+
+  <div class="callout">
+    <div class="h">一句话收尾</div>
+    <p style="margin:0;font-size:15px;color:var(--text);line-height:1.8">
+      这套系统值得交付的不是「它能审查合同」，<br>
+      而是<strong style="color:var(--brand)">每一条结论都能被逐字核对</strong> ——
+      点到原文那一句、点到规则那一条、点到法条那一款。<br>
+      至于它还做不到什么，我们都写在了交付物里。</p>
+  </div>
+</section>
+
+<footer>
+  <span>衡鉴 HengJian · 企业合同智能审查系统 v2.0.0 ｜ 需求出处：《项目实战》2.4 合同审批审查系统</span>
+  <span>交付人：李奕波 ｜ 编制：启明 ｜ 2026-09-19</span>
+</footer>
+</body>
+</html>

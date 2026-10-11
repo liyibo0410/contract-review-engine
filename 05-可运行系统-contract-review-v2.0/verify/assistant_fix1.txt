@@ -1,0 +1,7 @@
+ok   (["多少个任务", "有多少", "任务总数", "总体情况", "概况", "统计", "多少份合同", "大盘",
+ok   {"id": "wb-card", "target": "#tabBody .risk-card, #card-\\d+", "ad
+ok   {"id": "wb-edit", "target": "#tabBody textarea.sugg", "advance": "
+ok   {"id": "wb-adopt", "target": "#tabBody button[data-cap=\"edit_sugg
+ok   {"id": "dash-drill", "target": "#stats .stat.clickable", "advance"
+ok   {"id": "rules-row", "target": "#tabBody tr, .rule-row", "advance":
+ok   {"id": "rules-edit", "target": "#tabBody button, .rule-row button"

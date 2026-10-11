@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>衡鉴 2.0 · 项目分工、开发、部署、使用、运维全流程架构图</title>
+<style>
+  :root{
+    --bg:#0B0E14; --bg1:#11161F; --bg2:#161C27; --bg3:#1D2533;
+    --line:#232C3B; --line2:#2E394B;
+    --text:#E6EAF2; --text2:#A7B0C0; --text3:#6E7A8D;
+    --brand:#4C8DFF; --brand2:#2C5FA8;
+    --ok:#35CE8D; --warn:#F5C542; --high:#FF5D5D; --purple:#A98BFF; --cyan:#3FD0D4;
+    --mono:"JetBrains Mono","Cascadia Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;
+    font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1500px;margin:0 auto;padding:28px 24px 60px}
+
+  header{border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:26px}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand .cn{font-size:26px;font-weight:700;letter-spacing:1px}
+  .brand .en{font-size:12px;color:var(--text3);letter-spacing:3px;text-transform:uppercase}
+  .brand .tag{font-size:11px;color:var(--brand);border:1px solid var(--brand2);
+    border-radius:20px;padding:2px 10px}
+  header h2{margin:10px 0 4px;font-size:16px;font-weight:600;color:var(--text)}
+  header p{margin:0;color:var(--text2);font-size:13px;max-width:1000px}
+  .meta{display:flex;gap:22px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--text3)}
+  .meta b{color:var(--text2);font-weight:600}
+
+  /* ---------- 总览指标 ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:30px}
+  @media(max-width:1180px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .kpi{background:var(--bg1);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kpi .k{font-size:11.5px;color:var(--text3)}
+  .kpi .v{font-family:var(--mono);font-size:22px;font-weight:700;margin-top:3px}
+  .kpi .v.ok{color:var(--ok)} .kpi .v.brand{color:var(--brand)}
+
+  /* ---------- 泳道 ---------- */
+  .lane{
+    background:var(--bg1);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px 18px;position:relative;
+  }
+  .lane-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .lane-no{
+    font-family:var(--mono);font-size:12px;font-weight:700;
+    width:30px;height:30px;border-radius:8px;display:grid;place-items:center;
+    background:var(--bg3);border:1px solid var(--line2);
+  }
+  .lane-title{font-size:16px;font-weight:700;letter-spacing:.5px}
+  .lane-owner{font-size:11.5px;color:var(--text3);border:1px solid var(--line2);
+    border-radius:20px;padding:2px 10px}
+  .lane-note{font-size:12px;color:var(--text3);margin-left:auto}
+
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+  @media(max-width:1100px){.flow{flex-wrap:wrap;gap:12px}}
+
+  .node{
+    flex:1 1 0;min-width:172px;background:var(--bg2);
+    border:1px solid var(--line);border-radius:9px;padding:11px 12px;position:relative;
+  }
+  .node.accent{border-color:var(--brand2);background:linear-gradient(180deg,rgba(76,141,255,.10),var(--bg2))}
+  .node.ok{border-color:rgba(53,206,141,.35)}
+  .node.gate{border-color:rgba(245,197,66,.4);background:linear-gradient(180deg,rgba(245,197,66,.08),var(--bg2))}
+  .node.risk{border-color:rgba(255,93,93,.38)}
+  .node .n-title{font-size:13px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+  .node .n-body{font-size:11.5px;color:var(--text2);line-height:1.6}
+  .node .n-out{font-size:11px;color:var(--text3);margin-top:7px;padding-top:7px;border-top:1px dashed var(--line2);
+    font-family:var(--mono);word-break:break-all}
+  .node .badge{font-size:10px;padding:1px 7px;border-radius:20px;font-weight:600;white-space:nowrap}
+  .badge.done{background:rgba(53,206,141,.14);color:var(--ok)}
+  .badge.part{background:rgba(245,197,66,.14);color:var(--warn)}
+  .badge.todo{background:rgba(255,93,93,.14);color:var(--high)}
+  .badge.info{background:rgba(76,141,255,.14);color:var(--brand)}
+
+  .arrow{
+    flex:0 0 26px;display:grid;place-items:center;color:var(--text3);font-size:15px;user-select:none;
+  }
+  @media(max-width:1100px){.arrow{display:none}}
+
+  /* 泳道之间的竖向连接 */
+  .link{display:flex;justify-content:center;padding:6px 0}
+  .link svg{display:block}
+  .link-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
+  .link-label{font-size:11px;color:var(--text3);background:var(--bg);
+    border:1px solid var(--line);border-radius:20px;padding:1px 10px;margin:2px 0}
+
+  /* ---------- 底部：分层与红线 ---------- */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+  @media(max-width:1000px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--bg1);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .card h3{margin:0 0 12px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;color:var(--text3);font-weight:600;font-size:11.5px;
+     padding:7px 8px;border-bottom:1px solid var(--line2)}
+  td{padding:8px;border-bottom:1px solid var(--line);color:var(--text2);vertical-align:top}
+  td.mono{font-family:var(--mono);color:var(--text);font-size:11.5px}
+  ul{margin:0;padding-left:18px;color:var(--text2);font-size:12.5px}
+  li{margin-bottom:6px}
+  .red-line{color:var(--high);font-weight:600}
+
+  footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+    color:var(--text3);font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <span class="cn">衡鉴</span><span class="en">HengJian</span>
+      <span class="tag">合同智能审查 v2.0</span>
+    </div>
+    <h2>项目分工、开发、部署、使用、运维全流程架构图</h2>
+    <p>本图把项目从"谁来做"到"怎么跑起来、谁来用、坏了怎么修"串成一条完整链路。
+       每个节点标注了<strong>责任角色</strong>、<strong>产出物</strong>与<strong>当前状态</strong>；
+       状态为「部分」或「未开始」的节点不做美化处理 —— 交付信息与代码一致，是本项目的底线。</p>
+    <div class="meta">
+      <span>版本 <b>2.0.0</b></span>
+      <span>交付日期 <b>2026-09-19</b></span>
+      <span>交付人 <b>李奕波</b></span>
+      <span>验收 <b>需求 2.4.10 八条 8/8 满足</b></span>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi"><div class="k">规则条数</div><div class="v brand">32</div></div>
+    <div class="kpi"><div class="k">接口路径</div><div class="v brand">33</div></div>
+    <div class="kpi"><div class="k">单元测试</div><div class="v ok">39/39</div></div>
+    <div class="kpi"><div class="k">接口冒烟</div><div class="v ok">64/64</div></div>
+    <div class="kpi"><div class="k">高风险召回</div><div class="v ok">100%</div></div>
+    <div class="kpi"><div class="k">误报</div><div class="v ok">0</div></div>
+  </div>
+
+  <!-- ============ 泳道 1 · 分工 ============ -->
+  <div class="lane">
+    <div class="lane-head">
+      <div class="lane-no">01</div>
+      <div class="lane-title">项目分工</div>
+      <div class="lane-owner">团队负责人编排</div>
+      <div class="lane-note">8 角色 · 4 阶段 · Lead 只做编排不做主力实现</div>
+    </div>
+    <div class="flow">
+      <div class="node accent">
+        <div class="n-title">团队负责人 <span class="badge done">已就绪</span></div>
+        <div class="n-body">定角色 · 卡依赖 · 批计划 · 收结果</div>
+        <div class="n-out">事实基线 / 任务清单 / 会议纪要 / 交付总览</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n-title">探索团队</div>
+        <div class="n-body">业务场景 · 竞品策略 · 审核链路建模 · 业务状态机</div>
+        <div class="n-out">业务问题建模文档 · 审核流程与状态设计</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n-title">架构团队</div>
+        <div class="n-body">智能体架构 · 规则引擎与工具链选型 · 服务边界划分</div>
+        <div class="n-out">系统架构设计 · 领域数据模型 · 接口契约</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n-title">构建团队</div>
+        <div class="n-body">前端交互落地 · 后端 FastAPI 服务 · 数据持久化</div>
+        <div class="n-out">工程代码骨架 · API 规范 · 前端交互规范</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n-title">集成团队</div>
+        <div class="n-body">接口对齐验证 · 全链路联调 · 容器化与交付部署</div>
+        <div class="n-out">集成联调计划 · 部署与运维规范 · 可交付运行产物</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">质量角色 <span class="badge done">横切</span></div>
+        <div class="n-body">性能/安全/边界并行扫描 · 坏链路扫描 · 验收对账</div>
+        <div class="n-out">验收对照表 · 冒烟报告 · 回归评测报告</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="link link-wrap">
+    <svg width="2" height="30"><line x1="1" y1="0" x2="1" y2="30" stroke="#2E394B" stroke-width="2"/></svg>
+    <div class="link-label">规格先行：先锁定契约与事实基线，再并行产出</div>
+    <svg width="2" height="16"><line x1="1" y1="0" x2="1" y2="16" stroke="#2E394B" stroke-width="2"/></svg>
+    <svg width="12" height="8"><path d="M6 8 L0 0 L12 0 Z" fill="#2E394B"/></svg>
+  </div>
+
+  <!-- ============ 泳道 2 · 开发 ============ -->
+  <div class="lane">
+    <div class="lane-head">
+      <div class="lane-no">02</div>
+      <div class="lane-title">开发流程</div>
+      <div class="lane-owner">构建团队 + 探索团队</div>
+      <div class="lane-note">SDD 步骤 S1–S8 · 每步有验收点</div>
+    </div>
+    <div class="flow">
+      <div class="node ok">
+        <div class="n-title">S1–S2 骨架与样例 <span class="badge done">完成</span></div>
+        <div class="n-body">uv 环境 · FastAPI 起服 · SQLite 建表 · 样例生成器</div>
+        <div class="n-out">tools/gen_samples.py → 13 份样例 + 黄金标注</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">S3 解析引擎 <span class="badge done">完成</span></div>
+        <div class="n-body">DOCX 段落树 / PDF 文本层 / OCR 行框 → 统一坐标</div>
+        <div class="n-out">parser_*.py + coordinator.py</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">S4 规则引擎与评测 <span class="badge done">完成</span></div>
+        <div class="n-body">32 条 YAML 规则 · 8 种判定 · 视角解析 · 回归跑分</div>
+        <div class="n-out">rule_engine.py + run_eval.py</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">S5 LLM 语义层 <span class="badge done">完成</span></div>
+        <div class="n-body">证据约束 Prompt · JSON 校验 · 超时降级模板</div>
+        <div class="n-out">llm.py（标准库 urllib 直连）</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">S6 API 层 <span class="badge done">完成</span></div>
+        <div class="n-body">33 个路径 · DRY_RUN · 幂等 · HITL 四动作 · SSE</div>
+        <div class="n-out">api/contracts.py + api/rules.py</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">S7 前端 <span class="badge done">完成</span></div>
+        <div class="n-body">零构建 4 页面 · 双栏字符级联动 · 键盘流</div>
+        <div class="n-out">frontend/（10 个静态文件）</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node part">
+        <div class="n-title">S8 交付封装 <span class="badge part">部分</span></div>
+        <div class="n-body">Docker / compose / nginx / CI 配置就绪</div>
+        <div class="n-out">镜像未本地实跑构建 · 孪生台未开发</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="link link-wrap">
+    <svg width="2" height="30"><line x1="1" y1="0" x2="1" y2="30" stroke="#2E394B" stroke-width="2"/></svg>
+    <div class="link-label">门禁三：规则改动导致召回率退化 → 流水线直接失败</div>
+    <svg width="2" height="16"><line x1="1" y1="0" x2="1" y2="16" stroke="#2E394B" stroke-width="2"/></svg>
+    <svg width="12" height="8"><path d="M6 8 L0 0 L12 0 Z" fill="#2E394B"/></svg>
+  </div>
+
+  <!-- ============ 泳道 3 · 部署 ============ -->
+  <div class="lane">
+    <div class="lane-head">
+      <div class="lane-no">03</div>
+      <div class="lane-title">部署形态</div>
+      <div class="lane-owner">集成团队</div>
+      <div class="lane-note">零外部服务依赖 · 三种形态任选</div>
+    </div>
+    <div class="flow">
+      <div class="node ok">
+        <div class="n-title">形态一 · 本机一键 <span class="badge done">已验证</span></div>
+        <div class="n-body">双击 <code>start.bat</code>：建环境 → 装依赖 → 生成样例 → 起服务 → 开浏览器</div>
+        <div class="n-out">http://127.0.0.1:8130</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node part">
+        <div class="n-title">形态二 · Docker <span class="badge part">配置就绪</span></div>
+        <div class="n-body">多阶段构建（builder→runtime）· compose · 健康检查 30s</div>
+        <div class="n-out">docker compose up -d --build（镜像未实跑）</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node todo">
+        <div class="n-title">形态三 · 服务器 systemd <span class="badge todo">待部署</span></div>
+        <div class="n-body">39.96.200.45:8130 · Restart=always · 接入 BossPortal(8000) 跨端口 SSO</div>
+        <div class="n-out">【待部署】代码就绪，需现场执行</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node gate">
+        <div class="n-title">启动顺序 <span class="badge info">7 步</span></div>
+        <div class="n-body">① 建环境 ② 装依赖 ③ 生成样例 ④ 建表（自动）⑤ 起 uvicorn ⑥ 健康检查 ⑦ 访问控制台</div>
+        <div class="n-out">GET /api/system/health → status=ok</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node risk">
+        <div class="n-title">唯一部署陷阱 <span class="badge todo">必看</span></div>
+        <div class="n-body">Nginx 缓冲会积压 SSE 进度事件；现象是"进度条一直不动然后瞬间跳满"</div>
+        <div class="n-out">proxy_buffering off;</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="link link-wrap">
+    <svg width="2" height="30"><line x1="1" y1="0" x2="1" y2="30" stroke="#2E394B" stroke-width="2"/></svg>
+    <div class="link-label">服务起来之后，三类角色各取所需</div>
+    <svg width="2" height="16"><line x1="1" y1="0" x2="1" y2="16" stroke="#2E394B" stroke-width="2"/></svg>
+    <svg width="12" height="8"><path d="M6 8 L0 0 L12 0 Z" fill="#2E394B"/></svg>
+  </div>
+
+  <!-- ============ 泳道 4 · 使用 ============ -->
+  <div class="lane">
+    <div class="lane-head">
+      <div class="lane-no">04</div>
+      <div class="lane-title">使用链路</div>
+      <div class="lane-owner">法务审查人 / 业务经办人 / 系统管理员</div>
+      <div class="lane-note">4 个页面 · 33 个接口</div>
+    </div>
+    <div class="flow">
+      <div class="node accent">
+        <div class="n-title">① 提交合同</div>
+        <div class="n-body"><b>业务经办人</b>：大盘上传或拉取待办；<b>业务类型必须选对</b>（决定"我方"是哪一方）</div>
+        <div class="n-out">POST /api/contracts/upload</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node accent">
+        <div class="n-title">② 实时进度</div>
+        <div class="n-body">SSE 事件流：解析 → 规则判定 → 语义增强 → 完成；进度条与时间轴同步</div>
+        <div class="n-out">GET /api/contracts/{id}/events</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node accent">
+        <div class="n-title">③ 双向定位 ★</div>
+        <div class="n-body"><b>法务</b>：点风险卡跳原文并高亮；划选原句反查涉及哪几条风险</div>
+        <div class="n-out">/document + /findings（字符区间求交）</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node accent">
+        <div class="n-title">④ 复核与改判</div>
+        <div class="n-body">采纳/编辑建议；HITL 四动作：同意 · 修改后确认 · 驳回 · 恢复</div>
+        <div class="n-out">/findings/{fid}/adopt · /human-review</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node accent">
+        <div class="n-title">⑤ 回写与报告</div>
+        <div class="n-body">先 DRY_RUN 预览再写入；幂等三键防重复；导出 Markdown / PDF</div>
+        <div class="n-out">/writeback · /report?download=true</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node">
+        <div class="n-title">⑥ 管理员</div>
+        <div class="n-body">规则树维护 · 全量回归评测 · 健康检查 · 阻塞任务处置</div>
+        <div class="n-out">PUT /api/rules/{id} · /api/eval/run</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="link link-wrap">
+    <svg width="2" height="30"><line x1="1" y1="0" x2="1" y2="30" stroke="#2E394B" stroke-width="2"/></svg>
+    <div class="link-label">每一次使用都留下可反查的痕迹</div>
+    <svg width="2" height="16"><line x1="1" y1="0" x2="1" y2="16" stroke="#2E394B" stroke-width="2"/></svg>
+    <svg width="12" height="8"><path d="M6 8 L0 0 L12 0 Z" fill="#2E394B"/></svg>
+  </div>
+
+  <!-- ============ 泳道 5 · 运维 ============ -->
+  <div class="lane">
+    <div class="lane-head">
+      <div class="lane-no">05</div>
+      <div class="lane-title">运维与观测</div>
+      <div class="lane-owner">系统管理员 + 质量角色</div>
+      <div class="lane-note">留痕在库里，不在日志文件里</div>
+    </div>
+    <div class="flow">
+      <div class="node ok">
+        <div class="n-title">健康巡检</div>
+        <div class="n-body">规则版本与条数 · 语义层状态 · OCR 状态 · 数据库可写性</div>
+        <div class="n-out">GET /api/system/health</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">审计留痕</div>
+        <div class="n-body">每步记 step / tool / 输入输出摘要 / 耗时；可从意见反查完整链路</div>
+        <div class="n-out">表 audit_logs · /api/system/audit</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node gate">
+        <div class="n-title">规则回归门禁</div>
+        <div class="n-body">改规则必须重跑黄金集；召回 &lt;100% 或误报 &gt;0 即判失败</div>
+        <div class="n-out">python -m app.eval.run_eval</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">阻塞处置</div>
+        <div class="n-body">六种阻塞码分别给处置建议：加密换文件 · 引擎缺失装环境 · 模糊重扫</div>
+        <div class="n-out">POST /api/contracts/{id}/retry</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node ok">
+        <div class="n-title">备份恢复</div>
+        <div class="n-body">SQLite 单文件 + 上传件 + 报告 + 规则库（改规则前先 git commit）</div>
+        <div class="n-out">data/hengjian.db · app/rules/*.yaml</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="node risk">
+        <div class="n-title">未闭环 <span class="badge todo">已登记</span></div>
+        <div class="n-body">RBAC 未开发 · 真实审批对接未开发 · 镜像未实跑 · 盲测集缺失</div>
+        <div class="n-out">详见验收对照表第四章</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 底部两块 ============ -->
+  <div class="grid2">
+    <div class="card">
+      <h3>七层技术架构（运行时视角）</h3>
+      <table>
+        <tr><th>层</th><th>构成</th><th>职责</th></tr>
+        <tr><td class="mono">① 接入层</td><td>本地上传 / 审批待办拉取</td><td>接收合同与任务来源</td></tr>
+        <tr><td class="mono">② 编排层</td><td>pipeline.py</td><td>状态机 · 幂等 · 阻塞重试 · SSE 事件总线</td></tr>
+        <tr><td class="mono">③ 解析层</td><td>parser_docx / pdf / ocr + coordinator</td><td>三格式 → 统一坐标系（段落树 + 页码 + 字符区间）</td></tr>
+        <tr><td class="mono">④ 审查层</td><td>rule_engine（32 条）→ llm（可降级）</td><td>规则下判定，模型做表达</td></tr>
+        <tr><td class="mono">⑤ 回写层</td><td>writer / writeback / report</td><td>意见组装 · DRY_RUN · 幂等回写 · 报告导出</td></tr>
+        <tr><td class="mono">⑥ 数据层</td><td>SQLite(WAL) 10 张表</td><td>任务 / 条款 / 命中 / 意见 / 回写 / 审计 / 评测 / HITL</td></tr>
+        <tr><td class="mono">⑦ 观测层</td><td>audit_logs / eval_runs / health</td><td>留痕 · 跑分 · 健康检查</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>工程红线（不可突破）</h3>
+      <ul>
+        <li><span class="red-line">只写意见，不改结论</span> —— 系统不存在通过 / 拒绝 / 转交 / 撤回接口。</li>
+        <li><span class="red-line">规则主判定，模型只增强</span> —— 风险等级只能由规则引擎产出；LLM 输出必须过结构校验。</li>
+        <li><span class="red-line">坐标唯一真理</span> —— 任何风险必须可溯源到 <code>clauses</code> 表的字符区间。</li>
+        <li><span class="red-line">幂等三键</span> —— 合同编号 + 附件 SHA256 + 规则版本号；回写前强制 DRY_RUN。</li>
+        <li><span class="red-line">审计留痕</span> —— 每个链路步骤必须写 <code>audit_logs</code>。</li>
+        <li><span class="red-line">演示零事故</span> —— 外部依赖（LLM / OCR / 网络）全部有降级路径。</li>
+      </ul>
+      <h3 style="margin-top:18px">数字的诚实口径</h3>
+      <ul>
+        <li>高风险召回 <b>100%（11/11）</b>、误报 <b>0</b> —— 实测，可复现。</li>
+        <li>但这套黄金标注与规则库<b>同源编写</b>，因此它是 <b>内部回归基线</b>，
+            用于防止"改一条规则、伤三处条款"，<b>不等于</b>面对全新合同的泛化能力。</li>
+        <li>泛化能力需第三方独立标注的盲测集，已列入路线图 M2。</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>衡鉴 HengJian · 企业合同智能审查系统 v2.0.0 ｜ 需求出处：《项目实战》2.4</span>
+    <span>交付人：李奕波 ｜ 编制：启明 ｜ 2026-09-19</span>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>模拟审批系统 · 衡鉴 V2.1.7 · 企业合同智能审查系统</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/fx.css">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('cr-theme');
+    if (t !== 'light' && t !== 'dark') t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) { }
+})();
+</script>
+<style id="petStyle">.pet-root{position:fixed;right:20px;bottom:20px;z-index:9000;display:flex;flex-direction:column;align-items:flex-end;gap:10px;pointer-events:none}.pet-root>*{pointer-events:auto}.pet-btn{position:relative;width:62px;height:62px;border-radius:50%;cursor:grab;border:1px solid var(--line);background:var(--panel-solid,#121a28);box-shadow:0 12px 30px -10px rgba(0,0,0,.55),0 0 0 1px var(--brand-soft);display:flex;align-items:center;justify-content:center;padding:0;transition:transform .22s cubic-bezier(.22,.68,.36,1),box-shadow .22s}.pet-btn:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 16px 36px -10px rgba(0,0,0,.6),0 0 0 3px var(--brand-soft)}.pet-btn:focus-visible{outline:2px solid var(--brand);outline-offset:3px}.pet-btn svg{width:40px;height:40px;overflow:visible}.pet-btn .pet-a1{animation:petBreathe 3.2s ease-in-out infinite;transform-origin:50% 50%}.pet-btn .pet-a2{animation:petBreathe 3.2s ease-in-out infinite .35s;transform-origin:50% 50%}.pet-btn .pet-eye{animation:petBlink 4.4s infinite}.pet-btn.think .pet-a1,.pet-btn.think .pet-a2{animation-duration:.9s}@keyframes petBreathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-2.5px) scale(1.035)}}@keyframes petBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.12)}}.pet-badge{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:999px;background:#b3261e;color:#fff;font-size:11px;line-height:18px;text-align:center;padding:0 5px;font-weight:700;display:none}.pet-badge.on{display:block}.pet-tip{position:absolute;right:74px;bottom:12px;white-space:nowrap;font-size:12.5px;background:var(--panel-solid,#121a28);border:1px solid var(--line);color:var(--ink);padding:6px 11px;border-radius:999px;opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;pointer-events:none;box-shadow:var(--shadow-sm)}.pet-btn:hover .pet-tip{opacity:1;transform:translateX(0)}.pet-tip.show{opacity:1;transform:translateX(0)}.pet-btn.attn{animation:petAttn 1.6s ease-in-out 3}@keyframes petAttn{0%,100%{transform:none}50%{transform:translateY(-6px) scale(1.05)}}.pet-panel{width:min(392px,calc(100vw - 32px));max-height:min(620px,calc(100vh - 110px));display:none;flex-direction:column;background:var(--panel-solid,#121a28);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}.pet-panel.on{display:flex;animation:petIn .24s cubic-bezier(.22,.68,.36,1)}@keyframes petIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}.pet-ph{display:flex;align-items:center;gap:9px;padding:11px 13px;border-bottom:1px solid var(--line);background:var(--panel-3)}.pet-ph b{font-size:13.6px}.pet-ph .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}.pet-ph .mode{font-size:11.3px;color:var(--sub)}.pet-ph .spacer{flex:1}.pet-x{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--sub);cursor:pointer;line-height:1;font-size:15px}.pet-x:hover{color:var(--ink);border-color:var(--brand)}.pet-body{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:11px}.pet-msg{display:flex;gap:8px;align-items:flex-start}.pet-msg .av{width:24px;height:24px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--brand-soft);color:var(--brand);font-size:12px}.pet-msg .bd{background:var(--panel-3);border:1px solid var(--line-2);border-radius:2px 12px 12px 12px;padding:9px 12px;font-size:13px;line-height:1.78;max-width:100%;word-break:break-word}.pet-msg.me{flex-direction:row-reverse}.pet-msg.me .av{background:var(--panel-3);color:var(--sub)}.pet-msg.me .bd{background:var(--brand-soft);border-color:transparent;border-radius:12px 2px 12px 12px}.pet-msg .bd p{margin:0 0 7px}.pet-msg .bd p:last-child{margin-bottom:0}.pet-msg .bd ul,.pet-msg .bd ol{margin:5px 0;padding-left:19px}.pet-msg .bd li{margin:3px 0}.pet-msg .bd code{font-family:var(--mono);font-size:11.9px;background:var(--panel-3);border:1px solid var(--line-2);border-radius:5px;padding:1px 5px}.pet-msg .bd table{border-collapse:collapse;font-size:12.3px;margin:6px 0;width:100%}.pet-msg .bd th,.pet-msg .bd td{border:1px solid var(--line-2);padding:4px 8px;text-align:left}.pet-msg .bd th{color:var(--sub);font-weight:600}.pet-msg .bd hr{border:0;border-top:1px dashed var(--line-2);margin:8px 0}.pet-refs{font-size:11.2px;color:var(--faint);margin-top:6px}.pet-acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.pet-act{font-size:12.2px;padding:4px 10px;border-radius:999px;cursor:pointer;border:1px solid var(--brand);background:transparent;color:var(--brand)}.pet-act:hover{background:var(--brand-soft)}.pet-typing span{display:inline-block;width:5px;height:5px;margin:0 1.5px;border-radius:50%;background:var(--sub);animation:petT 1.1s infinite}.pet-typing span:nth-child(2){animation-delay:.16s}.pet-typing span:nth-child(3){animation-delay:.32s}@keyframes petT{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}.pet-chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 13px 10px}.pet-chip{font-size:12.1px;padding:4px 10px;border-radius:999px;cursor:pointer;background:var(--panel-3);border:1px solid var(--line);color:var(--sub)}.pet-chip:hover{color:var(--ink);border-color:var(--brand)}.pet-pf{display:flex;gap:7px;padding:11px 13px;border-top:1px solid var(--line);background:var(--panel-3)}.pet-pf input{flex:1;min-width:0;font-size:13px;padding:8px 11px;border-radius:9px;background:var(--bg);color:var(--ink);border:1px solid var(--line);outline:none}.pet-pf input:focus{border-color:var(--brand)}.pet-pf button{flex:none;padding:8px 14px;border-radius:9px;border:1px solid var(--brand);background:var(--brand);color:#fff;font-size:13px;cursor:pointer}.pet-pf button:disabled{opacity:.5;cursor:not-allowed}.pet-spot{position:fixed;z-index:9500;border-radius:10px;pointer-events:none;box-shadow:0 0 0 9999px rgba(4,8,16,.66),0 0 0 2px var(--brand),0 0 22px 2px var(--brand-soft);transition:top .26s cubic-bezier(.22,.68,.36,1),left .26s cubic-bezier(.22,.68,.36,1),width .26s,height .26s;animation:petPulse 2.2s ease-in-out infinite}@keyframes petPulse{0%,100%{box-shadow:0 0 0 9999px rgba(4,8,16,.66),0 0 0 2px var(--brand),0 0 18px 2px var(--brand-soft)}50%{box-shadow:0 0 0 9999px rgba(4,8,16,.66),0 0 0 3px var(--brand),0 0 30px 6px var(--brand-soft)}}.pet-coach{position:fixed;z-index:9600;width:min(352px,calc(100vw - 28px));background:var(--panel-solid,#121a28);border:1px solid var(--brand);border-radius:14px;box-shadow:0 18px 48px -14px rgba(0,0,0,.7);overflow:hidden}.pet-coach .ch{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line-2);font-size:11.8px;color:var(--sub)}.pet-coach .ch b{color:var(--ink);font-size:12.6px}.pet-coach .cb{padding:11px 13px;font-size:12.8px;line-height:1.8;max-height:44vh;overflow-y:auto}.pet-coach .cb .hint{margin-top:8px;font-size:11.8px;color:var(--mid)}.pet-coach .cf{display:flex;gap:7px;align-items:center;padding:10px 12px;border-top:1px solid var(--line-2);background:var(--panel-3)}.pet-coach .cf .spacer{flex:1}.pet-coach button{font-size:12.4px;padding:5px 12px;border-radius:8px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink)}.pet-coach button.primary{background:var(--brand);border-color:var(--brand);color:#fff}.pet-coach button:disabled{opacity:.45;cursor:not-allowed}.pet-prog{display:flex;gap:3px}.pet-prog i{width:16px;height:3px;border-radius:999px;background:var(--line);display:block}.pet-prog i.on{background:var(--brand)}.pet-wait{font-size:11.6px;color:var(--mid)}@media (max-width:640px){.pet-root{right:12px;bottom:12px}.pet-btn{width:54px;height:54px}.pet-btn svg{width:34px;height:34px}.pet-panel{width:calc(100vw - 24px);max-height:calc(100vh - 96px)}.pet-tip{display:none}.pet-coach{left:12px !important;right:12px;width:auto}}@media (prefers-reduced-motion:reduce){.pet-btn .pet-a1,.pet-btn .pet-a2,.pet-btn .pet-eye,.pet-spot{animation:none}}</style></head>
+<body>
+
+<div class="topbar" id="topbar"><a class="brand" href="/" title="返回审查大盘"><img class="brand-logo" src="/assets/logo-sm.png" alt="衡鉴 V2.1.7 标识" width="30" height="31"><span class="brand-txt"><b>衡鉴 V2.1.7</b><i title="衡鉴 V2.1.7 · 企业合同智能审查系统 · intelligent contract review">企业合同智能审查系统</i></span></a><nav class="nav" aria-label="主导航"><a href="/">审查大盘</a><a href="/workbench">智能审查工作台</a><a href="/twin">动态孪生看板</a><a href="/rules">合规规则与模板</a></nav><div class="spacer"></div><span class="role-bar"><span class="role-chip" id="roleChip" title="配置审批流对接参数、维护合规审查规则与标准条款库、监控审查任务状态并处理阻塞重试"><span class="rc-role">系统管理员</span><span class="rc-user">admin</span></span><select class="role-switch" id="roleSwitch" onchange="CR.roleSwitch(this.value)" aria-label="切换演示身份"><option value="legal">法务审查人</option><option value="applicant">业务经办人</option><option value="admin" selected="">系统管理员</option></select><a class="btn sm ghost" href="/logout" title="退出登录">退出</a></span><span class="env-tag" id="envTag" title="模拟审批平台 · 内置实现">模拟审批平台 · 内置实现</span><a class="btn sm ghost hide-md" href="/mock" title="模拟审批系统（美化查看页）"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px"><path d="M14 4h6v6"></path><path d="M20 4l-8.5 8.5"></path><path d="M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10"></path></svg>模拟审批系统</a><button class="btn sm ghost compact-xs" id="themeBtn" onclick="CR.toggleTheme()" title="切换到浅色主题"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path></svg><span>浅色</span></button></div>
+
+<div class="mock-wrap">
+
+  <div class="mock-head">
+    <h1>
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg>
+      模拟审批系统
+    </h1>
+    <span class="tag" id="todoTag">待办 7 张</span>
+    <span class="faint" style="font-size:12.5px" id="genTag">数据生成于 2026-09-19 18:19:40</span>
+    <div class="spacer" style="flex:1"></div>
+    <button class="btn sm" onclick="toggleRaw()" id="btnRaw">查看原始 JSON</button>
+    <button class="btn sm ghost" onclick="refreshAll()">刷新</button>
+  </div>
+
+  <div class="data-note" style="margin-bottom:14px">
+    <b>这是本系统内置的「模拟审批平台」查看页。</b>
+    按需求构想，真实场景下合同审批在客户既有平台（如飞书审批）中进行，本系统通过
+    HTTP 拉取待办、并把审查意见<button type="button" class="as-link" onclick="scrollToEp()">写回评论区</button>。
+    为可独立演示，这里内置了一个同端口的模拟实现：<b>下方数据全部是它真实的接口返回</b>，
+    而非前端拼凑；接口本身仍以原始 JSON 对外暴露（点右上角「查看原始 JSON」）。
+  </div>
+
+  <div class="mock-grid">
+    <!-- 左：待办单列表 -->
+    <div class="panel reveal cfx cfx-beam in" style="">
+      <div class="panel-head">
+        <span class="ttl">待审合同单（模拟平台侧）</span>
+        <div class="spacer"></div>
+        <span class="faint" style="font-size:12.2px">点击查看详情</span>
+      </div>
+      <div class="panel-body">
+        <input type="search" id="kw" placeholder="搜索单号 / 合同名称 / 申请人" style="width:100%;margin-bottom:10px">
+        <div class="mock-list" id="list"><div class="mock-item cfx cfx-lift" onclick="pick('FS-AP-01')"><div class="t1">核心业务系统软件采购合同</div><div class="t2"><span class="mono">FS-AP-01</span><span>陈明远 · 信息技术部</span><span>purchase</span><span>¥2,860,000.00 (286.0 万)</span><span class="tag ok">已审查</span><span>0 条评论</span></div></div><div class="mock-item cfx cfx-lift" onclick="pick('FS-AP-02')"><div class="t1">服务器及存储设备采购合同</div><div class="t2"><span class="mono">FS-AP-02</span><span>王思远 · 信息技术部</span><span>purchase</span><span>¥1,248,000.00 (124.8 万)</span><span class="tag ok">已审查</span><span>0 条评论</span></div></div><div class="mock-item cfx cfx-lift" onclick="pick('FS-AP-03')"><div class="t1">年度框架销售合同（含大额订单）</div><div class="t2"><span class="mono">FS-AP-03</span><span>刘雨桐 · 销售中心</span><span>sales</span><span>¥9,600,000.00 (960.0 万)</span><span class="tag ok">已审查</span><span>0 条评论</span></div></div><div class="mock-item cfx cfx-lift" onclick="pick('FS-AP-04')"><div class="t1">数据治理与报表开发技术服务合同</div><div class="t2"><span class="mono">FS-AP-04</span><span>赵一鸣 · 数据管理部</span><span>service</span><span>¥680,000.00 (68.0 万)</span><span class="tag ok">已审查</span><span>0 条评论</span></div></div><div class="mock-item cfx cfx-lift" onclick="pick('FS-AP-05')"><div class="t1">劳动合同（技术研发岗）</div><div class="t2"><span class="mono">FS-AP-05</span><span>人力资源部 · 人力资源部</span><span>labor</span><span>¥216,000.00 (21.6 万)</span><span class="tag ok">已审查</span><span>0 条评论</span></div></div><div class="mock-item on cfx cfx-lift" onclick="pick('FS-AP-06')"><div class="t1">智能制造执行系统采购合同（扫描件）</div><div class="t2"><span class="mono">FS-AP-06</span><span>孙立 · 生产制造部</span><span>purchase</span><span>¥1,530,000.00 (153.0 万)</span><span class="tag ok">已审查</span><span>1 条评论</span></div></div><div class="mock-item cfx cfx-lift" onclick="pick('FS-AP-07')"><div class="t1">备品备件采购合同（图片型 PDF）</div><div class="t2"><span class="mono">FS-AP-07</span><span>何静 · 供应链管理部</span><span>purchase</span><span>¥96,000.00 (9.6 万)</span><span class="tag blocked">解析受阻</span><span>0 条评论</span></div></div><div class="mock-item cfx cfx-lift" onclick="pick('FS-AP-08')"><div class="t1">技术保密协议（加密文件）</div><div class="t2"><span class="mono">FS-AP-08</span><span>赵一鸣 · 数据管理部</span><span>service</span><span>¥0.00</span><span class="tag blocked">解析受阻</span><span>0 条评论</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- 右：详情 + 接口清单 -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="panel reveal cfx cfx-beam in" data-d="1" style="">
+        <div class="panel-head">
+          <span class="ttl">审批单详情</span>
+          <div class="spacer"></div>
+          <span class="faint" style="font-size:12.2px" id="detailNo">FS-AP-06</span>
+        </div>
+        <div class="panel-body" id="detail"><div class="mock-kv"><div class="cell cfx cfx-lift" style=""><div class="k">审批单号</div><div class="v"><span class="mono">FS-AP-06</span></div></div><div class="cell cfx cfx-lift" style=""><div class="k">合同名称</div><div class="v">智能制造执行系统采购合同（扫描件）</div></div><div class="cell cfx cfx-lift" style=""><div class="k">申请人 / 部门</div><div class="v">孙立 · 生产制造部</div></div><div class="cell cfx cfx-lift" style=""><div class="k">合同类型 / 金额</div><div class="v">purchase · ¥1,530,000.00 (153.0 万)</div></div><div class="cell cfx cfx-lift" style=""><div class="k">平台侧状态</div><div class="v">done</div></div><div class="cell cfx cfx-lift" style=""><div class="k">提交时间</div><div class="v">-</div></div><div class="cell cfx cfx-lift" style=""><div class="k">附件</div><div class="v"><span class="mono" style="font-size:12.4px">06_软件采购合同_扫描件.png</span></div></div><div class="cell cfx cfx-lift" style=""><div class="k">本系统处理结果</div><div class="v"><span class="tag ok">已审查</span> <span class="tag t-high"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:11px;height:11px"><path d="M12 4.5l8.5 15h-17z"></path><path d="M12 10v4.5"></path><circle cx="12" cy="17.4" r=".9" fill="currentColor" stroke="none"></circle></svg>高风险</span></div></div></div><div class="sep"></div><div style="font-size:12.3px;color:var(--sub);margin-bottom:9px">审批单评论区（本系统写回的审查意见就落在这里）</div><div class="mock-comment cfx" style=""><div class="ch"><b>衡鉴 V2.1.7</b><span>2026-09-19 18:19:21</span><span class="mono">CMT-06-001</span></div><div class="cb">**【合同智能审查意见】**
+
+- 合同名称：智能制造执行系统采购合同（扫描件）（HT-20260919-4E13E6）
+- 业务类型：采购合同
+- 风险总评：建议拒绝（高 2 / 中 4 / 低 0）
+- 综合风险等级：高风险
+- 文档解析：06_软件采购合同_扫描件.png · ocr-win · 1 页 / 18 段
+
+**一、风险摘要**
+命中 2 项高风险、4 项中风险、0 项低风险，综合风险等级判定为【高风险】，建议审批人暂停通过并要求整改后再行送审。
+- 高风险 · 到货即付全款、未设验收前置条件（付款进度）：付款条件与验收脱钩，缺少「验收合格后付款」的前置约束，也未预留质保金
+- 高风险 · 争议管辖约定违规或不利（争议解决）：争议解决机构约定在相对方所在地，且未约定适用法律与仲裁规则，我方异地应诉成本显著上升
+- 中风险 · 保密义务缺少存续期限（保密义务）：保密义务未约定存续期限，条款边界不清：合同终止后保密义务是否延续、延续多久缺乏依据，发生泄密时难以主张
+- 中风险 · 不可抗力未约定通知时效（不可抗力）：不可抗力条款缺少通知期限与证明文件要求，事后双方对免责范围容易产生争议，也可能被一方用来转嫁本应承担的履约风险
+- 中风险 · 缺少验收标准与验收期限（验收标准）：合同未约定验收标准与验收期限，质量争议时缺少客观判据，也无法触发「验收合格后付款」的控制点
+- 中风险 · 缺少数据安全与个人信息保护条款（数据安全）：采购标的涉及系统或数据处理时，未约定数据安全与个人信息保护责任，一旦发生数据泄露事件，责任边界与追偿依据缺失
+
+**二、需重点关注事项**
+…</div></div><div style="margin-top:12px"><a class="btn sm primary" href="/workbench?id=6">打开该合同的审查工作台 →</a></div></div>
+      </div>
+
+      <div class="panel reveal cfx cfx-beam" data-d="2" style="">
+        <div class="panel-head">
+          <span class="ttl">模拟平台对外接口</span>
+          <div class="spacer"></div>
+          <span class="faint" style="font-size:12.2px">与真实平台形态一致，可被外部直接调用</span>
+        </div>
+        <div class="panel-body"><div class="mock-ep" id="eps"><div class="ep"><span class="m">GET</span><span class="p">/mock/feishu/api/todo</span><span class="d">拉取待办审批单列表</span></div><div class="ep"><span class="m">GET</span><span class="p">/mock/feishu/api/instances/{id}</span><span class="d">读取单个审批单详情</span></div><div class="ep"><span class="m">GET</span><span class="p">/mock/feishu/api/instances/{id}/comments</span><span class="d">读取审批单评论区</span></div><div class="ep"><span class="m">POST</span><span class="p">/mock/feishu/api/instances/{id}/comments</span><span class="d">写入审批意见评论（本系统回写即调此接口）</span></div><div class="ep"><span class="m">POST</span><span class="p">/api/mock/fault</span><span class="d">注入故障（要求管理员）</span></div><div class="ep"><span class="m">POST</span><span class="p">/api/mock/reset</span><span class="d">重置演示数据（要求管理员）</span></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 原始 JSON（默认折叠） -->
+  <div class="panel reveal cfx cfx-beam" id="rawPanel" style="display: none; margin: 14px 0px 16px;">
+    <div class="panel-head">
+      <span class="ttl">原始 JSON 响应</span>
+      <div class="spacer"></div>
+      <select id="rawPick" onchange="loadRaw()" style="font-size:12.4px">
+        <option value="/mock/feishu/api/todo">GET /mock/feishu/api/todo</option>
+        <option value="" id="optDetail">GET /mock/feishu/api/instances/{id}</option>
+        <option value="" id="optComments">GET /mock/feishu/api/instances/{id}/comments</option>
+      </select>
+      <button class="btn sm ghost" onclick="copyRaw()">复制</button>
+      <button class="btn sm ghost" onclick="CR.closeModal &amp;&amp; 0; document.getElementById('rawPanel').style.display='none'">
+        收起</button>
+    </div>
+    <div class="panel-body"><div class="raw-json" id="rawBox">加载中…</div></div>
+  </div>
+
+</div>
+
+<script src="/assets/app.js"></script><div class="glow g1"></div><div class="glow g2"></div><div class="scanline"></div>
+<script src="/assets/pet.js"></script>
+<script>
+let DATA = null;
+let CUR = null;
+
+CR.initAuth('/mock', '模拟审批平台 · 内置实现');
+
+window.addEventListener('error', function (ev) {
+  CR.toast('页面脚本异常：' + (ev.message || ''), 'err');
+});
+window.addEventListener('unhandledrejection', function (ev) {
+  CR.toast('请求异常：' + String((ev.reason && ev.reason.message) || ev.reason), 'err');
+});
+
+/* ------------------------------------------------------------------ 列表 */
+function renderList() {
+  const kw = (CR.$('#kw').value || '').trim().toLowerCase();
+  const items = (DATA.instances || []).filter(function (x) {
+    if (!kw) return true;
+    return (x.instance_id + x.title + x.applicant).toLowerCase().indexOf(kw) >= 0;
+  });
+  CR.$('#list').innerHTML = items.length ? items.map(function (x) {
+    const st = x.review_status
+      ? (x.review_status === 'completed' ? '已审查' :
+        x.review_status === 'blocked' ? '解析受阻' : '处理中')
+      : '未接入审查';
+    const cls = x.review_status === 'completed' ? 'ok' :
+      x.review_status === 'blocked' ? 'blocked' : '';
+    return '<div class="mock-item' + (CUR === x.instance_id ? ' on' : '') +
+      '" onclick="pick(\'' + CR.esc(x.instance_id) + '\')">' +
+      '<div class="t1">' + CR.esc(x.title || '(无标题)') + '</div>' +
+      '<div class="t2">' +
+      '<span class="mono">' + CR.esc(x.instance_id) + '</span>' +
+      '<span>' + CR.esc(x.applicant || '-') + ' · ' + CR.esc(x.send_dept || '-') + '</span>' +
+      '<span>' + CR.esc(x.business_type || '-') + '</span>' +
+      '<span>' + CR.money(x.amount).replace(/<[^>]+>/g, '').trim() + '</span>' +
+      '<span class="tag ' + cls + '">' + st + '</span>' +
+      '<span>' + x.comments + ' 条评论</span>' +
+      '</div></div>';
+  }).join('') : '<div class="empty">没有匹配的审批单</div>';
+}
+
+/* ------------------------------------------------------------------ 详情 */
+async function pick(iid) {
+  CUR = iid;
+  renderList();
+  CR.$('#detailNo').textContent = iid;
+  CR.$('#detail').innerHTML = CR.skeleton(4);
+  try {
+    const d = await CR.api('GET', '/api/mock/overview');
+    DATA = d;
+  } catch (e) { /* 用已有数据 */ }
+  const x = (DATA.instances || []).filter(v => v.instance_id === iid)[0];
+  if (!x) { CR.$('#detail').innerHTML = '<div class="empty">未找到该审批单</div>'; return; }
+
+  const stMap = { completed: ['已审查', 'ok'], blocked: ['解析受阻', 'blocked'] };
+  const st = x.review_status ? (stMap[x.review_status] ||
+    [x.review_status, '']) : ['未接入审查', ''];
+
+  let html = '<div class="mock-kv">' +
+    cell('审批单号', '<span class="mono">' + CR.esc(x.instance_id) + '</span>') +
+    cell('合同名称', CR.esc(x.title || '-')) +
+    cell('申请人 / 部门', CR.esc((x.applicant || '-') + ' · ' + (x.send_dept || '-'))) +
+    cell('合同类型 / 金额', CR.esc(x.business_type || '-') + ' · ' +
+         CR.money(x.amount).replace(/<[^>]+>/g, '').trim()) +
+    cell('平台侧状态', CR.esc(x.status || '-')) +
+    cell('提交时间', CR.esc(x.submitted_at || '-')) +
+    cell('附件', '<span class="mono" style="font-size:12.4px">' +
+         CR.esc(x.attachment || '-') + '</span>') +
+    cell('本系统处理结果', x.linked
+      ? '<span class="tag ' + st[1] + '">' + st[0] + '</span> ' +
+        CR.riskTag(x.risk_level, ({high: '高风险', medium: '中风险', low: '低风险'}[x.risk_level] || ''))
+      : '<span class="faint">尚未建立审查任务</span>') +
+    '</div>';
+
+  html += '<div class="sep"></div><div style="font-size:12.3px;color:var(--sub);' +
+    'margin-bottom:9px">审批单评论区（本系统写回的审查意见就落在这里）</div>';
+  const acts = (DATA.instances || []).filter(v => v.instance_id === iid)[0].comment_items || [];
+  if (!acts.length) {
+    html += '<div class="faint" style="font-size:12.5px">' +
+      '评论区还是空的。到工作台点「写回审批单」，这条意见就会出现在这里。</div>';
+  } else {
+    html += acts.slice().reverse().map(c =>
+      '<div class="mock-comment"><div class="ch">' +
+      '<b>' + CR.esc(c.author || '—') + '</b>' +
+      '<span>' + CR.esc(c.created_at || '') + '</span>' +
+      '<span class="mono">' + CR.esc(c.comment_id || '') + '</span></div>' +
+      '<div class="cb">' + CR.esc((c.text || '').slice(0, 700)) +
+      ((c.text || '').length > 700 ? '…' : '') + '</div></div>').join('');
+  }
+  if (x.case_id) {
+    html += '<div style="margin-top:12px"><a class="btn sm primary" href="/workbench?id=' +
+      x.case_id + '">打开该合同的审查工作台 →</a></div>';
+  }
+  CR.$('#detail').innerHTML = html;
+  CR.motion.enter(CR.$('#detail'));
+}
+
+function cell(k, v) {
+  return '<div class="cell"><div class="k">' + CR.esc(k) + '</div><div class="v">' + v + '</div></div>';
+}
+
+/* ------------------------------------------------------------------ 接口清单 */
+function renderEps() {
+  CR.$('#eps').innerHTML = (DATA.endpoints || []).map(function (e) {
+    return '<div class="ep"><span class="m">' + CR.esc(e.method) + '</span>' +
+      '<span class="p">' + CR.esc(e.path) + '</span>' +
+      '<span class="d">' + CR.esc(e.desc) + '</span></div>';
+  }).join('');
+}
+
+function scrollToEp() {
+  CR.$('#eps').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+/* ------------------------------------------------------------------ 原始 JSON */
+function toggleRaw() {
+  const p = CR.$('#rawPanel');
+  const on = p.style.display === 'none';
+  p.style.display = on ? '' : 'none';
+  CR.$('#btnRaw').textContent = on ? '收起原始 JSON' : '查看原始 JSON';
+  if (on) loadRaw();
+}
+
+function syncRawOptions() {
+  if (!CUR) return;
+  CR.$('#optDetail').value = '/mock/feishu/api/instances/' + CUR;
+  CR.$('#optDetail').textContent = 'GET /mock/feishu/api/instances/' + CUR;
+  CR.$('#optComments').value = '/mock/feishu/api/instances/' + CUR + '/comments';
+  CR.$('#optComments').textContent = 'GET /mock/feishu/api/instances/' + CUR + '/comments';
+}
+
+async function loadRaw() {
+  syncRawOptions();
+  const pick = CR.$('#rawPick');
+  const path = pick.value || '/mock/feishu/api/todo';
+  CR.$('#rawBox').textContent = '加载中…';
+  try {
+    const r = await fetch(path, { headers: { 'Accept': 'application/json' } });
+    const j = await r.json();
+    CR.$('#rawBox').textContent = JSON.stringify(j, null, 2);
+  } catch (e) {
+    CR.$('#rawBox').textContent = '读取失败：' + e.message;
+  }
+}
+
+function copyRaw() {
+  CR.copyText(CR.$('#rawBox').textContent).then(function () {
+    CR.toast('已复制原始 JSON', 'ok');
+  });
+}
+
+/* ------------------------------------------------------------------ 拉取 */
+async function refreshAll() {
+  try {
+    DATA = await CR.api('GET', '/api/mock/overview');
+  } catch (e) {
+    CR.$('#list').innerHTML = '<div class="empty">读取模拟平台数据失败：' +
+      CR.esc(e.message) + '</div>';
+    return;
+  }
+  CR.$('#todoTag').textContent = '待办 ' + DATA.todo_count + ' 张';
+  CR.$('#genTag').textContent = '数据生成于 ' + DATA.generated_at +
+    (DATA.fault_rate ? ' · 已注入故障率 ' + DATA.fault_rate : '');
+  renderList();
+  renderEps();
+  CR.motion.enter();
+  if (CUR) pick(CUR);
+}
+
+CR.$('#kw').addEventListener('input', renderList);
+(async function () {
+  await refreshAll();
+  // 默认选中「有评论的那张单」—— 打开就能看到本系统写回的审查意见，
+  // 而不是停在一张空评论区上。
+  const all = DATA.instances || [];
+  const first = all.filter(x => x.comments > 0)[0] ||
+    all.filter(x => x.linked)[0] || all[0];
+  if (first) pick(first.instance_id);
+  CR.initReveal();
+})();
+</script><div id="topbar-progress" class="" style="width: 0px;"></div>
+
+
+<span id="petErrLog" hidden="" aria-hidden="true"></span><div class="pet-root" id="petRoot"><div class="pet-panel" id="petPanel" role="dialog" aria-label="AI 助手对话框"><div class="pet-ph"><span class="dot" id="petDot"></span><b>小亦 · 使用助手</b><span class="mode" id="petMode"></span><div class="spacer"></div><button class="pet-x" id="petTour" type="button" title="开始新手引导">引导</button><button class="pet-x" id="petClose" type="button" aria-label="关闭">×</button></div><div class="pet-body" id="petBody" aria-live="polite"></div><div class="pet-chips" id="petChips"></div><div class="pet-pf"><input id="petInput" type="text" autocomplete="off" placeholder="问点关于审查、权限、操作的问题…" aria-label="输入问题"><button id="petSend" type="button">发送</button></div></div><button class="pet-btn attn" id="petBtn" type="button" aria-expanded="false" aria-controls="petPanel" title="点我提问，或让我带你走一遍"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><defs><linearGradient id="petG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5aa8ff"></stop><stop offset="1" stop-color="#2fbfa8"></stop></linearGradient></defs><ellipse class="pet-a1" cx="24" cy="30" rx="14" ry="12" fill="url(#petG)" opacity=".22"></ellipse><path class="pet-a2" d="M11 20c0-8 5.8-13 13-13s13 5 13 13v9c0 6-5.8 10-13 10s-13-4-13-10z" fill="url(#petG)" opacity=".9"></path><path d="M13 15l3.5-8 4.5 6.2M35 15l-3.5-8-4.5 6.2" stroke="url(#petG)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"></path><g class="pet-eye"><circle cx="19.5" cy="24" r="2.6" fill="#0b1220"></circle><circle cx="28.8" cy="24" r="2.6" fill="#0b1220"></circle><circle cx="20.4" cy="23.1" r=".9" fill="#fff"></circle><circle cx="29.7" cy="23.1" r=".9" fill="#fff"></circle></g><path d="M21 31c1.8 1.6 4.2 1.6 6 0" stroke="#0b1220" stroke-width="1.9" stroke-linecap="round" fill="none"></path></svg><span class="pet-tip show">有问题点我，或让我带你走一遍</span><span class="pet-badge on" id="petBadge">1</span></button></div><footer class="site-footer"><div class="fl"><img src="/assets/logo-sm.png" alt="衡鉴 V2.1.7"><span class="sig">（HENGJIAN）</span><span>© 2026 衡鉴 V2.1.7 · 保留所有权利</span></div><div class="spacer"></div><div class="fl"><span>规则引擎判定 · 大模型辅以措辞 · 全程可离线运行</span><span class="dot-sep">|</span><a href="/twin">动态孪生看板</a><span class="dot-sep">|</span><a href="/mock/feishu/api/todo" target="_blank" rel="noopener">模拟审批系统</a></div></footer></body></html>
